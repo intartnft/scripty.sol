@@ -1,0 +1,43 @@
+<html><body style='margin:0;'><script>let _sb={};_sb.events=[];_sb.scripts={};_sb.addEvent=(s,e)=>{if(!_sb.events[s]){_sb.events[s]=[e]}else{_sb.events[s].push(e)}};_sb.callEvents=(s,...e)=>{if(_sb.events[s]){_sb.events[s].forEach((s=>s(...e)))}};_sb.createMainCanvas=()=>{if(_sb.mainCanvas){return _sb.mainCanvas}const s=document.createElement("canvas");_sb.mainCanvas=s;_sb.mainContext2d=s.getContext("2d");document.body.appendChild(s);return s};
+function drawCircles(count) {
+    let c = _sb.createMainCanvas();
+    let ctx = _sb.mainContext2d;
+
+    for (let i=0; i<count; i++) {
+        let px = Math.random() * c.width;
+        let py = Math.random() * c.height;
+        let r = 1 + Math.random() * 50;
+        ctx.beginPath();
+        ctx.arc(px, py, r, 0, 2 * Math.PI, false);
+        ctx.lineWidth = Math.random() * 5 + 1;
+        ctx.stroke();
+    }
+}
+
+function drawRectangles(count) {
+    let c = _sb.createMainCanvas();
+    let ctx = _sb.mainContext2d;
+
+    for (let i=0; i<count; i++) {
+        let px = Math.random() * c.width;
+        let py = Math.random() * c.height;
+        let s = 1 + Math.random() * 100;
+        ctx.beginPath();
+        ctx.rect(px, py, s, s);
+        ctx.lineWidth = Math.random() * 5 + 1;
+        ctx.stroke();
+    }
+}
+function drawShapes(circleCount, rectangleCount) {
+    let c = _sb.createMainCanvas();
+
+    function draw() {
+        window.requestAnimationFrame(draw);
+        c.width = window.innerWidth
+        c.height = window.innerHeight
+        drawCircles(circleCount)
+        drawRectangles(rectangleCount)   
+    }
+
+    window.requestAnimationFrame(draw);
+}drawShapes(219,219);</script></body></html>
