@@ -21,7 +21,7 @@ async function deployOrGetContracts(networkName) {
     if (networkName == "localhost") {
         // ETHFSFileStorage depends on ethfs's FileStore. We deploy ETHFSFileStorage on localhost
         // by passing ethfs's FileStore mainnet address.
-        const ethfsFileStorageAddress = deployedContracts.addressFor("mainnet", "ethfs_FileStore")
+        const ethfsFileStorageAddress = deployedContracts.addressFor("ethereum", "ethfs_FileStore")
         const ethfsFileStorageContract = await (await ethers.getContractFactory("ETHFSFileStorage")).deploy(
             ethfsFileStorageAddress
         )

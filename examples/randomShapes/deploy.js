@@ -17,53 +17,38 @@ const delay = (ms) => {
 async function deployOrGetContracts(networkName) {
 	// If this script runs on localhost network, deploy all the contracts
 	// Otherwise, use already deployed contracts
-    if (networkName == "localhost") {
-        // ETHFSFileStorage depends on ethfs's FileStore. We deploy ETHFSFileStorage on localhost
-        // by passing ethfs's FileStore mainnet address.
-        const ethfsFileStorageAddress = deployedContracts.addressFor("mainnet", "ethfs_FileStore")
-        const ethfsFileStorageContract = await (await ethers.getContractFactory("ETHFSFileStorage")).deploy(
-            ethfsFileStorageAddress
-        )
-        await ethfsFileStorageContract.deployed()
+	if (networkName == "localhost") {
+		const contentStoreContract = await (await ethers.getContractFactory("ContentStore")).deploy()
+		await contentStoreContract.deployed()
 
-        const contentStoreContract = await (await ethers.getContractFactory("ContentStore")).deploy()
-        await contentStoreContract.deployed()
+		const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyStorage")).deploy(
+			contentStoreContract.address
+		)
+		await scriptyStorageContract.deployed()
+		console.log("ScriptyStorage deployed");
 
-        const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyStorage")).deploy(
-            contentStoreContract.address
-        )
-        await scriptyStorageContract.deployed()
-        console.log("ScriptyStorage deployed");
+		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilder")).deploy()
+		await scriptyBuilderContract.deployed()
+		console.log("ScriptyBuilder deployed");
 
-        const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilder")).deploy()
-        await scriptyBuilderContract.deployed()
-        console.log("ScriptyBuilder deployed");
+		return { scriptyStorageContract, scriptyBuilderContract }
+	}else{
+		const scriptyStorageAddress = deployedContracts.addressFor(networkName, "ScriptyStorage")
+		const scriptyStorageContract = await ethers.getContractAt(
+			"ScriptyStorage",
+			scriptyStorageAddress
+		);
+		console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
 
-        return { ethfsFileStorageContract, scriptyStorageContract, scriptyBuilderContract }
-    }else{
-        const ethfsFileStorageAddress = deployedContracts.addressFor(networkName, "ETHFSFileStorage")
-        const ethfsFileStorageContract = await ethers.getContractAt(
-            "ETHFSFileStorage",
-            ethfsFileStorageAddress
-        );
-        console.log("ETHFSFileStorage is already deployed at", ethfsFileStorageAddress);
+		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilder")
+		const scriptyBuilderContract = await ethers.getContractAt(
+			"ScriptyBuilder",
+			scriptyBuilderAddress
+		);
+		console.log("ScriptyBuilder is already deployed at", scriptyBuilderAddress);
 
-        const scriptyStorageAddress = deployedContracts.addressFor(networkName, "ScriptyStorage")
-        const scriptyStorageContract = await ethers.getContractAt(
-            "ScriptyStorage",
-            scriptyStorageAddress
-        );
-        console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
-
-        const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilder")
-        const scriptyBuilderContract = await ethers.getContractAt(
-            "ScriptyBuilder",
-            scriptyBuilderAddress
-        );
-        console.log("ScriptyBuilder is already deployed at", scriptyBuilderAddress);
-
-        return { ethfsFileStorageContract, scriptyStorageContract, scriptyBuilderContract }
-    }
+		return { scriptyStorageContract, scriptyBuilderContract }
+	}
 }
 
 async function storeScript(storageContract, name, filePath) {
