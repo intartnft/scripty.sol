@@ -51,3 +51,13 @@ Assembles PNG compressed base64 encoded `three.js` with a demo scene. Metadata a
 
 #### [Cube3D - PNG Compressed - URL Safe with custom wrap](https://testnets.opensea.io/assets/goerli/0x00CBa94Cbe7bB53D0611Ac3a18A7ec91d2De9026/0) 
 Assembles PNG compressed base64 encoded `three.js` with a demo scene. Metadata and animation URL are both URL encoded. It uses custom script wraps.
+
+#### [LazyDev](https://testnets.opensea.io/assets/goerli/0x242d0acd3667B85da5fC675fF32C0Ad90dAcC3e3/0)
+Same functionality as `Random Shapes` but without having to compute the bufferSize off-chain. Instead buffersize is computed as part of `tokenURI()`. Less code to write, in your deployment scripts, but it does makes `tokenURI()` more costly.
+
+#### [ThreeJS Module - GZIP Compressed - URL Safe with custom wrap](https://testnets.opensea.io/assets/goerli/0xd16681f2d7656c695613bb3a716111aa73f0857f/0)
+Assembles GZIP compressed base64 encoded `modular three.js` with a demo scene. Metadata and animation URL are both URL encoded. It uses custom script wraps. This is the most complex of all the examples. It demonstrates how to:
+- dynamically inject data into your javascript code
+- load gzipped javascript modules in the desired order, using gzipped es-module-shim for full browser support
+- embed custom javascript
+- make it all URL safe
