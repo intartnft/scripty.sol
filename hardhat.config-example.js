@@ -1,7 +1,5 @@
 /** @type import('hardhat/config').HardhatUserConfig */
 require("@nomicfoundation/hardhat-toolbox");
-require("hardhat-gas-reporter");
-require('hardhat-ignore-warnings');
 require("dotenv").config();
 
 // KEYS
@@ -30,7 +28,10 @@ module.exports = {
             timeout: 100000000
         },
         hardhat: {
-            blockGasLimit: 50000000
+            blockGasLimit: 50000000,
+            forking: {
+                url: process.env.ETHEREUM_PROVIDER
+            },
         },
         ethereum: {
             url: process.env.ETHEREUM_PROVIDER || 'http://127.0.0.1:8555',
