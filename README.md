@@ -61,3 +61,11 @@ Assembles GZIP compressed base64 encoded `modular three.js` with a demo scene. M
 - load gzipped javascript modules in the desired order, using gzipped es-module-shim for full browser support
 - embed custom javascript
 - make it all URL safe
+
+## Authors
+- [0xthedude](https://twitter.com/0xthedude)
+- [@xtremetom](https://twitter.com/xtremetom)
+
+## Acknowledgments 
+- [EthFS](https://github.com/holic/ethfs) - [@frolic](https://twitter.com/frolic)
+- DynamicBuffer - [@cxkoda](https://twitter.com/cxkoda)
