@@ -6,3 +6,5 @@ npx hardhat run examples/ethfs_p5/deploy.js --network $npm_config_network
 npx hardhat run examples/ethfs_p5_URLSafe/deploy.js --network $npm_config_network
 npx hardhat run examples/randomShapes/deploy.js --network $npm_config_network
 npx hardhat run examples/stacked3DObjects/deploy.js --network $npm_config_network
+npx hardhat run examples/lazyDev/deploy.js --network $npm_config_network
+npx hardhat run examples/threeJSModules_URLSafe/deploy.js --network $npm_config_network
