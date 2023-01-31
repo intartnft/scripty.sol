@@ -63,7 +63,7 @@ Assembles GZIP compressed base64 encoded `modular three.js` with a demo scene. M
 - make it all URL safe
 
 ## Authors
-- [0xthedude](https://twitter.com/0xthedude)
+- [@0xthedude](https://twitter.com/0xthedude)
 - [@xtremetom](https://twitter.com/xtremetom)
 
 ## Acknowledgments 
