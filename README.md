@@ -14,6 +14,13 @@
 - Supports injecting dynamically created scripts between statically stored scripts.
 - Provides multiple JS assembling options.
 
+## Installation
+Contracts and verified scripts(JS) are published through npm:
+
+    npm install scripty.sol --save-dev
+
+## Deployed Contracts
+
 ### Ethereum Mainnet contracts:
 -  **ScriptyStorage** - [0x096451F43800f207FC32B4FF86F286EdaF736eE3](https://etherscan.io/address/0x096451F43800f207FC32B4FF86F286EdaF736eE3)
 -  **ScriptyBuilder** - [0x16b727a2Fc9322C724F4Bc562910c99a5edA5084](https://etherscan.io/address/0x16b727a2Fc9322C724F4Bc562910c99a5edA5084)
@@ -25,10 +32,6 @@
 -  **ScriptyBuilder** - [0xc9AB9815d4D5461F3b53Ebd857b6582E82A45C49](https://goerli.etherscan.io/address/0xc9AB9815d4D5461F3b53Ebd857b6582E82A45C49)
 -  **ETHFSFileStorage** - [0x70a78d91A434C1073D47b2deBe31C184aA8CA9Fa](https://goerli.etherscan.io/address/0x70a78d91A434C1073D47b2deBe31C184aA8CA9Fa)
 
-## Installation
-Contracts and verified scripts(JS) are published through npm:
-
-    npm install scripty.sol --save-dev
 
 ## Examples
 
