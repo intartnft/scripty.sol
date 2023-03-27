@@ -14,6 +14,12 @@ pragma solidity ^0.8.17;
 //                            STRUCTS
 // =============================================================
 
+struct HeadRequest {
+    bytes wrapPrefix;
+    bytes wrapSuffix;
+    bytes scriptContent;
+}
+
 struct WrappedScriptRequest {
     string name;
     address contractAddress;
@@ -257,7 +263,7 @@ interface IScriptyBuilder {
     function getBufferSizeForURLSafeHTMLWrapped(
         WrappedScriptRequest[] calldata requests
     ) external view returns (uint256);
-    
+
     /**
      * @notice Get the buffer size for encoded HTML inline scripts
      * @param requests - InlineScriptRequests data for code

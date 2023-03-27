@@ -21,11 +21,13 @@ pragma solidity ^0.8.17;
 */
 
 import {DynamicBuffer} from "./utils/DynamicBuffer.sol";
-import {IScriptyBuilder, InlineScriptRequest, WrappedScriptRequest} from "./IScriptyBuilder.sol";
+import {HeadRequest, InlineScriptRequest, WrappedScriptRequest} from "./IScriptyBuilder.sol";
 import {IScriptyStorage} from "./IScriptyStorage.sol";
 import {IContractScript} from "./IContractScript.sol";
 
 contract ScriptyCore {
+
+    using DynamicBuffer for bytes;
 
     error InvalidRequestsLength();
 
@@ -94,6 +96,38 @@ contract ScriptyCore {
     // HTML_OPEN + HEAD_OPEN + HEAD_CLOSE + BODY_OPEN + HTML_BODY_CLOSED
     uint256 public constant URLS_SAFE_BYTES = 62;
 
+    // [RAW]
+    // HTML_OPEN + HTML_CLOSE
+    uint256 public constant HTML_RAW_BYTES = 13;
+
+    // [RAW]
+    // HEAD_OPEN + HEAD_CLOSE
+    uint256 public constant HEAD_RAW_BYTES = 13;
+
+    // [RAW]
+    // BODY_OPEN + BODY_CLOSE
+    uint256 public constant BODY_RAW_BYTES = 13;
+
+    // All raw
+    // HTML_RAW_BYTES + HEAD_RAW_BYTES + BODY_RAW_BYTES
+    uint256 public constant RAW_BYTES = 39;
+
+    // [URL_SAFE]
+    // HTML_OPEN + HTML_CLOSE
+    uint256 public constant HTML_URL_SAFE_BYTES = 23;
+
+    // [URL_SAFE]
+    // HEAD_OPEN + HEAD_CLOSE
+    uint256 public constant HEAD_URL_SAFE_BYTES = 23;
+
+    // [URL_SAFE]
+    // BODY_OPEN + BODY_CLOSE
+    uint256 public constant BODY_SAFE_BYTES = 23;
+
+    // All url safe
+    // TML_URL_SAFE_BYTES + HEAD_URL_SAFE_BYTES + BODY_URL_SAFE_BYTES
+    uint256 public constant URL_SAFE_BYTES = 69;
+
     // <script></script>
     uint256 public constant SCRIPT_INLINE_BYTES = 17;
 
@@ -103,28 +137,6 @@ contract ScriptyCore {
     // =============================================================
     //                           INTERNAL
     // =============================================================
-
-    /**
-     * @notice Grabs requested script from storage
-     * @param scriptName - Name given to the script. Eg: threejs.min.js_r148
-     * @param storageAddress - Address of scripty storage contract
-     * @param contractData - Arbitrary data to be passed to storage
-     * @param scriptContent - Small custom script to inject
-     * @return Requested script as bytes
-     */
-    function _fetchScript(
-        string memory scriptName,
-        address storageAddress,
-        bytes memory contractData,
-        bytes memory scriptContent
-    ) internal view returns (bytes memory) {
-        if (scriptContent.length > 0) {
-            return scriptContent;
-        }
-
-        return
-        IContractScript(storageAddress).getScript(scriptName, contractData);
-    }
 
     /**
      * @notice Grab script wrapping based on script type
@@ -225,6 +237,96 @@ contract ScriptyCore {
             );
         }
         return (request.wrapPrefix, request.wrapSuffix);
+    }
+
+    /**
+     * @notice Grabs requested script from storage
+     * @param scriptName - Name given to the script. Eg: threejs.min.js_r148
+     * @param storageAddress - Address of scripty storage contract
+     * @param contractData - Arbitrary data to be passed to storage
+     * @param scriptContent - Small custom script to inject
+     * @return Requested script as bytes
+     */
+    function _fetchScript(
+        string memory scriptName,
+        address storageAddress,
+        bytes memory contractData,
+        bytes memory scriptContent
+    ) internal view returns (bytes memory) {
+        if (scriptContent.length > 0) {
+            return scriptContent;
+        }
+
+        return
+        IContractScript(storageAddress).getScript(scriptName, contractData);
+    }
+
+    function _appendWrappedHTMLRequests(
+        bytes memory htmlFile,
+        WrappedScriptRequest memory request,
+        bool isSafe
+    ) internal view returns(bytes memory) {
+        htmlFile.appendSafe(request.wrapPrefix);
+        if (isSafe) {
+            htmlFile.appendSafeBase64(
+                _fetchScript(
+                    request.name,
+                    request.contractAddress,
+                    request.contractData,
+                    request.scriptContent
+                ),
+                false,
+                false
+            );
+        } else {
+            htmlFile.appendSafe(
+                _fetchScript(
+                    request.name,
+                    request.contractAddress,
+                    request.contractData,
+                    request.scriptContent
+                )
+            );
+        }
+        htmlFile.appendSafe(request.wrapSuffix);
+
+        return htmlFile;
+    }
+
+    function _appendHeadRequests(
+        bytes memory htmlFile,
+        HeadRequest[] calldata headRequests
+    ) internal view returns(bytes memory) {
+        HeadRequest memory headRequest;
+        uint256 i;
+        htmlFile.appendSafe(HEAD_OPEN_RAW);
+        do {
+            headRequest = headRequests[i];
+            htmlFile.appendSafe(headRequest.wrapPrefix);
+            htmlFile.appendSafe(headRequest.scriptContent);
+            htmlFile.appendSafe(headRequest.wrapSuffix);
+        } while (++i < headRequests.length);
+        htmlFile.appendSafe(HEAD_CLOSE_RAW);
+
+        return htmlFile;
+    }
+
+    function getBufferSizeForHeadTags(
+        HeadRequest[] calldata headRequests
+    ) public view returns (uint256 size) {
+        HeadRequest memory headRequest;
+        uint256 i;
+        unchecked {
+            do {
+                headRequest = headRequests[i];
+                size += headRequest.scriptContent.length;
+                size += headRequest.wrapPrefix.length;
+                size += headRequest.wrapSuffix.length;
+            } while (++i < headRequests.length);
+
+            // handle <head></head>
+            size += HEAD_RAW_BYTES;
+        }
     }
 
     /**

@@ -15,7 +15,9 @@ pragma solidity ^0.8.17;
 import "./ScriptyCore.sol";
 
 contract ScriptyWrappedURLSafe is ScriptyCore {
+
     using DynamicBuffer for bytes;
+
     // =============================================================
     //                      RAW HTML GETTERS
     // =============================================================
@@ -71,30 +73,17 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
                 (wrapPrefix, wrapSuffix) = _wrapURLSafePrefixAndSuffixFor(
                     request
                 );
+                request.wrapPrefix = wrapPrefix;
+                request.wrapSuffix = wrapSuffix;
+
                 htmlFile.appendSafe(wrapPrefix);
 
                 // convert raw code into base64
-                if (request.wrapType == 0) {
-                    htmlFile.appendSafeBase64(
-                        _fetchScript(
-                            request.name,
-                            request.contractAddress,
-                            request.contractData,
-                            request.scriptContent
-                        ),
-                        false,
-                        false
-                    );
-                } else {
-                    htmlFile.appendSafe(
-                        _fetchScript(
-                            request.name,
-                            request.contractAddress,
-                            request.contractData,
-                            request.scriptContent
-                        )
-                    );
-                }
+                // 0 = appendSafeBase64
+                (request.wrapType == 0)
+                    ? _appendWrappedHTMLRequests(htmlFile, request, true)
+                    : _appendWrappedHTMLRequests(htmlFile, request, false);
+
                 htmlFile.appendSafe(wrapSuffix);
             } while (++i < length);
         }
