@@ -17,6 +17,7 @@ interface IScriptyStorage {
 
     struct Script {
         bool isVerified;
+        bool isFrozen;
         address owner;
         uint256 size;
         bytes details;
@@ -37,9 +38,20 @@ interface IScriptyStorage {
      */
     error NotScriptOwner();
 
+    /**
+     * @notice Error for, The Script you are trying to edit is frozen
+     */
+    error ScriptIsFrozen(string name);
+
     // =============================================================
     //                            EVENTS
     // =============================================================
+
+    /**
+     * @notice Event for, Successful freezing of a script
+     * @param name - Name given to the script. Eg: threejs.min.js_r148
+     */
+    event ScriptFrozen(string indexed name);
 
     /**
      * @notice Event for, Successful update of script verification status

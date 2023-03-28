@@ -26,7 +26,12 @@ contract ScriptWrappedHTML is ScriptyCore {
      * @notice Get requested scripts housed in <body> with custom wrappers
      * @dev Your requested scripts are returned in the following format:
      *      <html>
-     *          <head></head>
+     *          <head>
+     *              [wrapPrefix[0]]{headTagRequest[0]}[wrapSuffix[0]]
+     *              [wrapPrefix[1]]{headTagRequest[1]}[wrapSuffix[1]]
+     *              ...
+     *              [wrapPrefix[n]]{headTagRequest[n]}[wrapSuffix[n]]
+     *          </head>
      *          <body style='margin:0;'>
      *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
      *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
@@ -53,19 +58,31 @@ contract ScriptWrappedHTML is ScriptyCore {
         htmlFile.appendSafe(HTML_OPEN_RAW);
 
         // <head>
+        htmlFile.appendSafe(HEAD_OPEN_RAW);
         if (headRequests.length > 0) {
             htmlFile = _appendHeadRequests(htmlFile, headRequests);
         }
+        htmlFile.appendSafe(HEAD_CLOSE_RAW);
         // </head>
 
         // <body>
+        htmlFile.appendSafe(BODY_OPEN_RAW);
         if (length > 0) {
             htmlFile = _appendWrappedBody(htmlFile, requests);
         }
+        htmlFile.appendSafe(HTML_BODY_CLOSED_RAW);
         // </body>
         // </html>
 
         return htmlFile;
+    }
+
+    function getHTMLWrapped(
+        HeadRequest[] calldata headRequests,
+        WrappedScriptRequest[] calldata requests
+    ) public view returns (bytes memory) {
+        uint256 bufferSize = getBufferSizeForHTMLWrapped(headRequests, requests);
+        return getHTMLWrapped(headRequests, requests, bufferSize);
     }
 
     function _appendWrappedBody(
@@ -77,7 +94,6 @@ contract ScriptWrappedHTML is ScriptyCore {
         WrappedScriptRequest memory request;
         uint256 i;
 
-        htmlFile.appendSafe(BODY_OPEN_RAW);
         unchecked {
             do {
                 request = requests[i];
@@ -88,7 +104,6 @@ contract ScriptWrappedHTML is ScriptyCore {
                 htmlFile = _appendWrappedHTMLRequests(htmlFile, request, false);
             } while (++i < requests.length);
         }
-        htmlFile.appendSafe(HTML_BODY_CLOSED_RAW);
 
         return htmlFile;
     }
@@ -111,8 +126,7 @@ contract ScriptWrappedHTML is ScriptyCore {
         unchecked {
             bytes memory rawHTML = getHTMLWrapped(headRequests, requests, bufferSize);
 
-            uint256 sizeForEncoding = HTML_BASE64_DATA_URI_BYTES +
-            _sizeForBase64Encoding(rawHTML.length);
+            uint256 sizeForEncoding = _sizeForBase64Encoding(rawHTML.length);
 
             bytes memory htmlFile = DynamicBuffer.allocate(sizeForEncoding);
             htmlFile.appendSafe("data:text/html;base64,");
@@ -162,15 +176,11 @@ contract ScriptWrappedHTML is ScriptyCore {
         WrappedScriptRequest[] calldata requests
     ) public view returns (uint256 size) {
         unchecked {
-            // <html></html>
-            size = HTML_RAW_BYTES;
+            // <html><head></head><body></body></html>
+            size = URLS_RAW_BYTES;
 
-            // get size for head
-            // <head>[tags]</head>
             size += getBufferSizeForHeadTags(headRequests);
 
-            // get size for body
-            // <body>[scripts]</body>
             size += getBufferSizeForHTMLWrappedBody(requests);
         }
     }
@@ -187,9 +197,6 @@ contract ScriptWrappedHTML is ScriptyCore {
                 request = requests[i];
                 size += getWrappedScriptSize(request);
             } while (++i < length);
-
-            // <body></body>
-            size += BODY_RAW_BYTES;
         }
     }
 

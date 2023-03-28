@@ -9,6 +9,8 @@ pragma solidity ^0.8.17;
 // ██████╔╝╚█████╔╝██║░░██║██║██║░░░░░░░░██║░░░░░░██║░░░ //
 // ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░░░░╚═╝░░░░░░╚═╝░░░ //
 ///////////////////////////////////////////////////////////
+//░░░░░░░░░░░░░░░░░░░░    STORAGE    ░░░░░░░░░░░░░░░░░░░░//
+///////////////////////////////////////////////////////////
 
 /**
   @title A generic data storage contract.
@@ -39,7 +41,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
      * @notice Check if the msg.sender is the owner of the script
      * @param name - Name given to the script. Eg: threejs.min.js_r148
      */
-    modifier scriptOwner(string memory name) {
+    modifier scriptOwner(string calldata name) {
         if (msg.sender != scripts[name].owner) revert NotScriptOwner();
         _;
     }
@@ -48,8 +50,17 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
      * @notice Check if a script can be created by checking if it already exists
      * @param name - Name given to the script. Eg: threejs.min.js_r148
      */
-    modifier canCreate(string memory name) {
+    modifier canCreate(string calldata name) {
         if (scripts[name].owner != address(0)) revert ScriptExists();
+        _;
+    }
+
+    /**
+     * @notice Check if a script is frozen
+     * @param name - Name given to the script. Eg: threejs.min.js_r148
+     */
+    modifier isFrozen(string calldata name) {
+        if (scripts[name].isFrozen) revert ScriptIsFrozen(name);
         _;
     }
 
@@ -68,7 +79,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
         public
         canCreate(name)
     {
-        scripts[name] = Script(false, msg.sender, 0, details, new address[](0));
+        scripts[name] = Script(false, false, msg.sender, 0, details, new address[](0));
         emit ScriptCreated(name, msg.sender, details);
     }
 
@@ -81,6 +92,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
      */
     function addChunkToScript(string calldata name, bytes calldata chunk)
         public
+        isFrozen(name)
         scriptOwner(name)
     {
         (, address pointer) = contentStore.addContent(chunk);
@@ -98,6 +110,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
      */
     function updateDetails(string calldata name, bytes calldata details)
         public
+        isFrozen(name)
         scriptOwner(name)
     {
         scripts[name].details = details;
@@ -113,10 +126,27 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
      */
     function updateScriptVerification(string calldata name, bool isVerified)
         public
-        onlyOwner
+        isFrozen(name)
+        scriptOwner(name)
     {
         scripts[name].isVerified = isVerified;
         emit ScriptVerificationUpdated(name, isVerified);
+    }
+
+    /**
+     * @notice Update the frozen status of the script
+     * @dev [WARNING] Once a script it frozen is can no longer be edited
+     * @param name - Name given to the script. Eg: threejs.min.js_r148
+     *
+     * Emits an {ScriptFrozen} event.
+     */
+    function freezeScript(string calldata name)
+        public
+        isFrozen(name)
+        scriptOwner(name)
+    {
+        scripts[name].isFrozen = true;
+        emit ScriptFrozen(name);
     }
 
     // =============================================================
@@ -136,7 +166,6 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
     {
         return AddressChunks.mergeChunks(scripts[name].chunks);
     }
-
 
     /**
      * @notice Get script's chunk pointer list

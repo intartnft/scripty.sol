@@ -296,24 +296,24 @@ contract ScriptyCore {
     function _appendHeadRequests(
         bytes memory htmlFile,
         HeadRequest[] calldata headRequests
-    ) internal view returns(bytes memory) {
+    ) internal pure returns(bytes memory) {
         HeadRequest memory headRequest;
         uint256 i;
-        htmlFile.appendSafe(HEAD_OPEN_RAW);
-        do {
-            headRequest = headRequests[i];
-            htmlFile.appendSafe(headRequest.wrapPrefix);
-            htmlFile.appendSafe(headRequest.scriptContent);
-            htmlFile.appendSafe(headRequest.wrapSuffix);
-        } while (++i < headRequests.length);
-        htmlFile.appendSafe(HEAD_CLOSE_RAW);
+        unchecked {
+            do {
+                headRequest = headRequests[i];
+                htmlFile.appendSafe(headRequest.wrapPrefix);
+                htmlFile.appendSafe(headRequest.scriptContent);
+                htmlFile.appendSafe(headRequest.wrapSuffix);
+            } while (++i < headRequests.length);
+        }
 
         return htmlFile;
     }
 
     function getBufferSizeForHeadTags(
         HeadRequest[] calldata headRequests
-    ) public view returns (uint256 size) {
+    ) public pure returns (uint256 size) {
         HeadRequest memory headRequest;
         uint256 i;
         unchecked {
@@ -323,9 +323,6 @@ contract ScriptyCore {
                 size += headRequest.wrapPrefix.length;
                 size += headRequest.wrapSuffix.length;
             } while (++i < headRequests.length);
-
-            // handle <head></head>
-            size += HEAD_RAW_BYTES;
         }
     }
 
