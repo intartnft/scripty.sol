@@ -48,9 +48,6 @@ contract ScriptWrappedHTML is ScriptyCore {
         WrappedScriptRequest[] calldata requests,
         uint256 bufferSize
     ) public view returns (bytes memory) {
-        uint256 headLength = headRequests.length;
-        uint256 length = requests.length;
-        if (length == 0 && headLength == 0) revert InvalidRequestsLength();
 
         bytes memory htmlFile = DynamicBuffer.allocate(bufferSize);
 
@@ -67,7 +64,7 @@ contract ScriptWrappedHTML is ScriptyCore {
 
         // <body>
         htmlFile.appendSafe(BODY_OPEN_RAW);
-        if (length > 0) {
+        if (requests.length > 0) {
             htmlFile = _appendWrappedBody(htmlFile, requests);
         }
         htmlFile.appendSafe(HTML_BODY_CLOSED_RAW);

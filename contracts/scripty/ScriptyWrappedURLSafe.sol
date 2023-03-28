@@ -33,7 +33,12 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
      *
      *      Your requested scripts are returned in the following format:
      *      <html>
-     *          <head></head>
+     *          <head>
+     *              [wrapPrefix[0]]{headTagRequest[0]}[wrapSuffix[0]]
+     *              [wrapPrefix[1]]{headTagRequest[1]}[wrapSuffix[1]]
+     *              ...
+     *              [wrapPrefix[n]]{headTagRequest[n]}[wrapSuffix[n]]
+     *          </head>
      *          <body style='margin:0;'>
      *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
      *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
@@ -46,23 +51,52 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
      * @return Full URL Safe wrapped scripts
      */
     function getHTMLWrappedURLSafe(
+        HeadRequest[] calldata headRequests,
         WrappedScriptRequest[] calldata requests,
         uint256 bufferSize
     ) public view returns (bytes memory) {
-        uint256 length = requests.length;
-        if (length == 0) revert InvalidRequestsLength();
 
         bytes memory htmlFile = DynamicBuffer.allocate(bufferSize);
-        bytes memory wrapPrefix;
-        bytes memory wrapSuffix;
-        WrappedScriptRequest memory request;
-        uint256 i;
 
         // <html>
         htmlFile.appendSafe(HTML_OPEN_URL_SAFE);
 
+        // <head>
+        htmlFile.appendSafe(HEAD_OPEN_URL_SAFE);
+        if (headRequests.length > 0) {
+            htmlFile = _appendHeadRequests(htmlFile, headRequests);
+        }
+        htmlFile.appendSafe(HEAD_CLOSE_URL_SAFE);
+        // </head>
+
         // <body>
         htmlFile.appendSafe(BODY_OPEN_URL_SAFE);
+        if (requests.length > 0) {
+            htmlFile = _appendHTMLWrappedURLSafeBody(htmlFile, requests);
+        }
+        htmlFile.appendSafe(HTML_BODY_CLOSED_URL_SAFE);
+        // </body>
+        // </html>
+
+        return htmlFile;
+    }
+
+    function getHTMLWrappedURLSafe(
+        HeadRequest[] calldata headRequests,
+        WrappedScriptRequest[] calldata requests
+    ) public view returns (bytes memory) {
+        uint256 bufferSize = getBufferSizeForHTMLWrappedURLSafe(headRequests, requests);
+        return getHTMLWrappedURLSafe(headRequests, requests, bufferSize);
+    }
+
+    function _appendHTMLWrappedURLSafeBody (
+        bytes memory htmlFile,
+        WrappedScriptRequest[] calldata requests
+    ) internal view returns(bytes memory) {
+        bytes memory wrapPrefix;
+        bytes memory wrapSuffix;
+        WrappedScriptRequest memory request;
+        uint256 i;
 
         // Iterate through scripts and convert any non base64 into base64
         // Dont touch any existing base64
@@ -76,21 +110,13 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
                 request.wrapPrefix = wrapPrefix;
                 request.wrapSuffix = wrapSuffix;
 
-                htmlFile.appendSafe(wrapPrefix);
-
-                // convert raw code into base64
-                // 0 = appendSafeBase64
                 (request.wrapType == 0)
-                    ? _appendWrappedHTMLRequests(htmlFile, request, true)
-                    : _appendWrappedHTMLRequests(htmlFile, request, false);
+                ? htmlFile = _appendWrappedHTMLRequests(htmlFile, request, true)
+                : htmlFile = _appendWrappedHTMLRequests(htmlFile, request, false);
 
                 htmlFile.appendSafe(wrapSuffix);
-            } while (++i < length);
+            } while (++i < requests.length);
         }
-
-        htmlFile.appendSafe(HTML_BODY_CLOSED_URL_SAFE);
-        // </body>
-        // </html>
 
         return htmlFile;
     }
@@ -105,16 +131,46 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
      * @param bufferSize - Total buffer size of all requested scripts
      * @return {getHTMLWrappedURLSafe} as a string
      */
-    function getURLSafeHTMLWrappedString(
+    function getHTMLWrappedURLSafeString(
+        HeadRequest[] calldata headRequests,
         WrappedScriptRequest[] calldata requests,
         uint256 bufferSize
     ) public view returns (string memory) {
-        return string(getHTMLWrappedURLSafe(requests, bufferSize));
+        return string(getHTMLWrappedURLSafe(headRequests, requests, bufferSize));
     }
 
     // =============================================================
     //                      OFF-CHAIN UTILITIES
     // =============================================================
+
+    function getBufferSizeForHTMLWrappedURLSafe(
+        HeadRequest[] calldata headRequests,
+        WrappedScriptRequest[] calldata requests
+    ) public view returns (uint256 size) {
+        unchecked {
+            // urlencode(<html><head></head><body></body></html>)
+            size = URLS_SAFE_BYTES;
+
+            size += getBufferSizeForHeadTags(headRequests);
+
+            size += getBufferSizeForHTMLWrappedURLSafeBody(requests);
+        }
+    }
+
+    function getBufferSizeForHTMLWrappedURLSafeBody(
+        WrappedScriptRequest[] calldata requests
+    ) public view returns (uint256 size) {
+        uint256 i;
+        uint256 length = requests.length;
+        WrappedScriptRequest memory request;
+
+        unchecked {
+            do {
+                request = requests[i];
+                size += getHTMLWrappedURLSafeScriptSize(request);
+            } while (++i < length);
+        }
+    }
 
     /**
      * @notice Get the buffer size of a single wrapped requested code
@@ -123,11 +179,9 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
      * @param request - WrappedScriptRequest data for code
      * @return Buffer size as an unit256
      */
-    function getURLSafeWrappedScriptSize(WrappedScriptRequest memory request)
-        public
-        view
-        returns (uint256)
-    {
+    function getHTMLWrappedURLSafeScriptSize(
+        WrappedScriptRequest memory request
+    ) public view returns (uint256) {
         unchecked {
             (
                 bytes memory wrapPrefix,
@@ -146,30 +200,6 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
             }
 
             return wrapPrefix.length + wrapSuffix.length + scriptSize;
-        }
-    }
-
-    /**
-     * @notice Get the buffer size of an array of URL safe html wrapped scripts
-     * @param requests - WrappedScriptRequests data for code
-     * @return Buffer size as an unit256
-     */
-    function getBufferSizeForURLSafeHTMLWrapped(
-        WrappedScriptRequest[] calldata requests
-    ) public view returns (uint256) {
-        uint256 size;
-        uint256 i;
-        uint256 length = requests.length;
-        WrappedScriptRequest memory request;
-
-        unchecked {
-            if (length > 0) {
-                do {
-                    request = requests[i];
-                    size += getURLSafeWrappedScriptSize(request);
-                } while (++i < length);
-            }
-            return size + URLS_SAFE_BYTES;
         }
     }
 }
