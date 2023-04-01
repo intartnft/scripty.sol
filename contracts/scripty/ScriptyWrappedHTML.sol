@@ -14,7 +14,7 @@ pragma solidity ^0.8.17;
 
 import "./ScriptyCore.sol";
 
-contract ScriptWrappedHTML is ScriptyCore {
+contract ScriptyWrappedHTML is ScriptyCore {
 
     using DynamicBuffer for bytes;
 
@@ -74,7 +74,8 @@ contract ScriptWrappedHTML is ScriptyCore {
         return htmlFile;
     }
 
-    function getHTMLWrapped(
+    // TODO: rename
+    function getHTMLWrapped2(
         HeadRequest[] calldata headRequests,
         WrappedScriptRequest[] calldata requests
     ) public view returns (bytes memory) {

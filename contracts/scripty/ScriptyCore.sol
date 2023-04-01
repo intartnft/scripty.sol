@@ -17,7 +17,7 @@ pragma solidity ^0.8.17;
   @author @0xthedude
   @author @xtremetom
 
-  Special thanks to @cxkoda and @frolic
+  Special thanks to @cxkoda, @frolic and @dhof
 */
 
 import {DynamicBuffer} from "./utils/DynamicBuffer.sol";
@@ -156,7 +156,6 @@ contract ScriptyCore {
      *      wrapType: 4 or any other:
      *          [wrapPrefix][scriptContent or scriptFromContract][wrapSuffix]
      *
-     *
      *      [IMPORTANT NOTE]: The tags `text/javascript+gzip` and `text/javascript+png` are used to identify scripts
      *      during decompression
      *
@@ -201,7 +200,6 @@ contract ScriptyCore {
      *
      *      wrapType: 4 or any other:
      *          [wrapPrefix][scriptContent or scriptFromContract][wrapSuffix]
-     *
      *
      *      [IMPORTANT NOTE]: The tags `text/javascript+gzip` and `text/javascript+png` are used to identify scripts
      *      during decompression
