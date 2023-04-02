@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const utilities = require("../utilities/utilities")
 
-const recordMode = false
+const recordMode = false;
 const expectedResultsPath = __dirname + "/expectedResults/";
 
 const writeHTMLResult = (name, result) => {
@@ -107,108 +107,69 @@ describe.only("ScriptyWrappedHTML Tests", function () {
         }
     }
 
-    describe.only("Store Script and get raw HTML", async function () {
-        it("Store Script and get HTML - Wrapped - Wrap Type 0", async function () {
+    describe("Store Script and get raw HTML", async function () {
+
+        async function wrapTypeTest(title, wrapType) {
             const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
+            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, wrapType)
 
             const headTags = [await addHeadTag()];
-            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests);
+            await wrappedCallWithSizeCheck(title, scriptyWrappedHTMLContract, headTags, scriptRequests);
+        }
+
+        it("Store Script and get HTML - Wrapped - Wrap Type 0", async function () {
+            await wrapTypeTest(this.test.fullTitle(),0)
         });
 
         it("Store Script and get HTML - Wrapped - Wrap Type 1", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 1)
-
-            const headTags = [await addHeadTag()];
-            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests);
+            await wrapTypeTest(this.test.fullTitle(),1)
         });
 
         it("Store Script and get HTML - Wrapped - Wrap Type 2", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 2)
-
-            const headTags = [await addHeadTag()];
-            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests);
+            await wrapTypeTest(this.test.fullTitle(),2)
         });
 
         it("Store Script and get HTML - Wrapped - Wrap Type 3", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 3)
-
-            const headTags = [await addHeadTag()];
-            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests);
+            await wrapTypeTest(this.test.fullTitle(),3)
         });
 
         it("Store Script and get HTML - Wrapped - Wrap Type 4", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 4)
-
-            const headTags = [await addHeadTag()];
-            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests);
+            await wrapTypeTest(this.test.fullTitle(),4)
         });
     })
 
-    describe.only("Store Script and get raw HTML with controller script", async function () {
+    describe("Store Script and get raw HTML with controller script", async function () {
 
-        it("Store Script and get HTML - Wrapped - Controller Script (wrapType 0)", async function () {
+        async function controllerScriptTest(title, wrapType) {
             const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
             let { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
 
             scriptRequests.push(
-                createControllerScriptRequestWrapped(0)
+                createControllerScriptRequestWrapped(wrapType)
             );
 
             const headTags = [await addHeadTag()];
-            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests);
+            await wrappedCallWithSizeCheck(title, scriptyWrappedHTMLContract, headTags, scriptRequests, false);
+        }
+
+        it("Store Script and get HTML - Wrapped - Controller Script (wrapType 0)", async function () {
+            await controllerScriptTest(this.test.fullTitle(),0)
         });
 
         it("Store Script and get HTML - Wrapped - Controller Script (wrapType 1)", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            let { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
-
-            scriptRequests.push(
-                createControllerScriptRequestWrapped(1)
-            );
-
-            const headTags = [await addHeadTag()];
-            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests);
+            await controllerScriptTest(this.test.fullTitle(),1)
         });
 
         it("Store Script and get HTML - Wrapped - Controller Script (wrapType 2)", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            let { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
-
-            scriptRequests.push(
-                createControllerScriptRequestWrapped(2)
-            );
-
-            const headTags = [await addHeadTag()];
-            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests);
+            await controllerScriptTest(this.test.fullTitle(),2)
         });
 
         it("Store Script and get HTML - Wrapped - Controller Script (wrapType 3)", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            let { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
-
-            scriptRequests.push(
-                createControllerScriptRequestWrapped(3)
-            );
-
-            const headTags = [await addHeadTag()];
-            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests);
+            await controllerScriptTest(this.test.fullTitle(),3)
         });
 
         it("Store Script and get HTML - Wrapped - Controller Script (wrapType 4)", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            let { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
-
-            scriptRequests.push(
-                createControllerScriptRequestWrapped(4)
-            );
-
-            const headTags = [await addHeadTag()];
-            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests);
+            await controllerScriptTest(this.test.fullTitle(),4)
         });
 
         it("Store Script and get HTML - Wrapped - Controller Script at beginning", async function () {
@@ -236,110 +197,73 @@ describe.only("ScriptyWrappedHTML Tests", function () {
         });
 
         it("Store Script and get HTML - Wrapped - Controller Script at the end", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            let { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
-
-            scriptRequests.push(
-                createControllerScriptRequestWrapped(0)
-            );
-
-            const headTags = [await addHeadTag()];
-            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests);
+            await controllerScriptTest(this.test.fullTitle(),0)
         });
     })
 
     describe("Store Script and get encoded HTML", async function () {
-        it("Store Script and get Encoded HTML - Wrapped - Wrap Type 0", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
 
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+        async function wrapTypeWithEncodingTest(title, wrapType) {
+            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
+            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, wrapType)
+
+            const headTags = [await addHeadTag()];
+            await wrappedCallWithSizeCheck(title, scriptyWrappedHTMLContract, headTags, scriptRequests, true);
+        }
+
+        it("Store Script and get Encoded HTML - Wrapped - Wrap Type 0", async function () {
+            await wrapTypeWithEncodingTest(this.test.fullTitle(),0)
         });
 
         it("Store Script and get Encoded HTML - Wrapped - Wrap Type 1", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 1)
-
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            await wrapTypeWithEncodingTest(this.test.fullTitle(),1)
         });
 
         it("Store Script and get Encoded HTML - Wrapped - Wrap Type 2", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 2)
-
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            await wrapTypeWithEncodingTest(this.test.fullTitle(),2)
         });
 
         it("Store Script and get Encoded HTML - Wrapped - Wrap Type 3", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 3)
-
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            await wrapTypeWithEncodingTest(this.test.fullTitle(),3)
         });
 
         it("Store Script and get Encoded HTML - Wrapped - Wrap Type 4", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            const { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 4)
-
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            await wrapTypeWithEncodingTest(this.test.fullTitle(),4)
         });
     })
 
     describe("Store Script and get Encoded HTML with controller script", async function () {
 
-        it("Store Script and get Encoded HTML - Wrapped - Controller Script (wrapType 0)", async function () {
+        async function controllerScriptWithEncodingTest(title, wrapType) {
             const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
             let { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
 
             scriptRequests.push(
-                createControllerScriptRequestWrapped(0)
+                createControllerScriptRequestWrapped(wrapType)
             );
 
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            const headTags = [await addHeadTag()];
+            await wrappedCallWithSizeCheck(title, scriptyWrappedHTMLContract, headTags, scriptRequests, true);
+        }
+
+        it("Store Script and get Encoded HTML - Wrapped - Controller Script (wrapType 0)", async function () {
+            await controllerScriptWithEncodingTest(this.test.fullTitle(),0);
         });
 
         it("Store Script and get Encoded HTML - Wrapped - Controller Script (wrapType 1)", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            let { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
-
-            scriptRequests.push(
-                createControllerScriptRequestWrapped(1)
-            );
-
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            await controllerScriptWithEncodingTest(this.test.fullTitle(),1);
         });
 
         it("Store Script and get Encoded HTML - Wrapped - Controller Script (wrapType 2)", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            let { scriptRequests } = await addWrappedScripts(scriptyWrappedHTMLContract, 0)
-
-            scriptRequests.push(
-                createControllerScriptRequestWrapped(2)
-            );
-
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            await controllerScriptWithEncodingTest(this.test.fullTitle(),2);
         });
 
         it("Store Script and get Encoded HTML - Wrapped - Controller Script (wrapType 3)", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            let { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
-
-            scriptRequests.push(
-                createControllerScriptRequestWrapped(3)
-            );
-
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            await controllerScriptWithEncodingTest(this.test.fullTitle(),3);
         });
 
         it("Store Script and get Encoded HTML - Wrapped - Controller Script (wrapType 4)", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            let { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
-
-            scriptRequests.push(
-                createControllerScriptRequestWrapped(4)
-            );
-
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            await controllerScriptWithEncodingTest(this.test.fullTitle(),4);
         });
 
         it("Store Script and get Encoded HTML - Wrapped - Controller Script at beginning", async function () {
@@ -350,7 +274,8 @@ describe.only("ScriptyWrappedHTML Tests", function () {
                 createControllerScriptRequestWrapped(0)
             );
 
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            const headTags = [await addHeadTag()];
+            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests, true);
         });
 
         it("Store Script and get Encoded HTML - Wrapped - Controller Script in middle", async function () {
@@ -361,18 +286,12 @@ describe.only("ScriptyWrappedHTML Tests", function () {
                 createControllerScriptRequestWrapped(0)
             );
 
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            const headTags = [await addHeadTag()];
+            await wrappedCallWithSizeCheck(this.test.fullTitle(), scriptyWrappedHTMLContract, headTags, scriptRequests, true);
         });
 
         it("Store Script and get Encoded HTML - Wrapped - Controller Script at the end", async function () {
-            const { scriptyStorageContract, scriptyWrappedHTMLContract } = await deploy()
-            let { scriptRequests } = await addWrappedScripts(scriptyStorageContract, 0)
-
-            scriptRequests.push(
-                createControllerScriptRequestWrapped(0)
-            );
-
-            await wrappedCallWithSizeCheck(scriptyWrappedHTMLContract, scriptRequests, true);
+            await controllerScriptWithEncodingTest(this.test.fullTitle(),0);
         });
     })
 });

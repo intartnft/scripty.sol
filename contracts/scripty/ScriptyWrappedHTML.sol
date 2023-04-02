@@ -125,6 +125,7 @@ contract ScriptyWrappedHTML is ScriptyCore {
             bytes memory rawHTML = getHTMLWrapped(headRequests, requests, bufferSize);
 
             uint256 sizeForEncoding = _sizeForBase64Encoding(rawHTML.length);
+            sizeForEncoding += HTML_BASE64_DATA_URI_BYTES;
 
             bytes memory htmlFile = DynamicBuffer.allocate(sizeForEncoding);
             htmlFile.appendSafe("data:text/html;base64,");
