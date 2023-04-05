@@ -89,6 +89,28 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
         return getHTMLWrappedURLSafe(headRequests, requests, bufferSize);
     }
 
+    /**
+     * @notice Append URL safe HTML wrapped requests to the buffer
+     * @dev If you submit a request that uses wrapType = 0, it will undergo a few changes:
+     *
+     *      Example request with wrapType of 0:
+     *      console.log("Hello World")
+     *
+     *      1. `_wrapURLSafePrefixAndSuffixFor()` will convert the wrap to the following
+     *      - <script>  =>  %253Cscript%2520src%253D%2522data%253Atext%252Fjavascript%253Bbase64%252C
+     *      - </script> =>  %2522%253E%253C%252Fscript%253E
+     *
+     *      2. `_appendWrappedHTMLRequests()` will base64 encode the script to the following
+     *      - console.log("Hello World") => Y29uc29sZS5sb2coIkhlbGxvIFdvcmxkIik=
+     *
+     *      Due to the above, it is highly advised that you do not attempt to use `wrapType = 0` in
+     *      conjunction with a large JS script. This contract will try to base64 encode it which could
+     *      result in a gas out. Instead use a a base64 encoded version of the script and `wrapType = 1`
+     *
+     * @param htmlFile - Final buffer holding all requests
+     * @param requests - Array of WrappedScriptRequests
+     * @return buffer holding requests
+     */
     function _appendHTMLWrappedURLSafeBody (
         bytes memory htmlFile,
         WrappedScriptRequest[] calldata requests
@@ -98,9 +120,6 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
         WrappedScriptRequest memory request;
         uint256 i;
 
-        // Iterate through scripts and convert any non base64 into base64
-        // Dont touch any existing base64
-        // Wrap code in appropriate urlencoded tags
         unchecked {
             do {
                 request = requests[i];
@@ -142,6 +161,12 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
     //                      OFF-CHAIN UTILITIES
     // =============================================================
 
+    /**
+     * @notice Get final buffer size for URL safe HTML wrapped
+     * @param headRequests - Array of head tags
+     * @param requests - Array of wrapped script requests
+     * @return size - Final buffer size
+     */
     function getBufferSizeForHTMLWrappedURLSafe(
         HeadRequest[] calldata headRequests,
         WrappedScriptRequest[] calldata requests
@@ -156,6 +181,11 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
         }
     }
 
+    /**
+     * @notice Get final buffer size for URL safe HTML wrapped body
+     * @param requests - Array of wrapped script requests
+     * @return size - Final buffer size
+     */
     function getBufferSizeForHTMLWrappedURLSafeBody(
         WrappedScriptRequest[] calldata requests
     ) public view returns (uint256 size) {

@@ -83,6 +83,12 @@ contract ScriptyWrappedHTML is ScriptyCore {
         return getHTMLWrapped(headRequests, requests, bufferSize);
     }
 
+    /**
+     * @notice Append wrapped HTML requests to the buffer
+     * @param htmlFile - Final buffer holding all requests
+     * @param requests - Array of WrappedScriptRequests
+     * @return buffer holding requests
+     */
     function _appendWrappedBody(
         bytes memory htmlFile,
         WrappedScriptRequest[] calldata requests
@@ -170,6 +176,12 @@ contract ScriptyWrappedHTML is ScriptyCore {
     //                      OFF-CHAIN UTILITIES
     // =============================================================
 
+    /**
+     * @notice Get final buffer size for HTML wrapped
+     * @param headRequests - Array of head tags
+     * @param requests - Array of wrapped script requests
+     * @return size - Final buffer size
+     */
     function getBufferSizeForHTMLWrapped(
         HeadRequest[] calldata headRequests,
         WrappedScriptRequest[] calldata requests
@@ -184,6 +196,11 @@ contract ScriptyWrappedHTML is ScriptyCore {
         }
     }
 
+    /**
+     * @notice Get final buffer size for HTML wrapped body
+     * @param requests - Array of wrapped script requests
+     * @return size - Final buffer size
+     */
     function getBufferSizeForHTMLWrappedBody(
         WrappedScriptRequest[] calldata requests
     ) public view returns (uint256 size) {
@@ -199,6 +216,11 @@ contract ScriptyWrappedHTML is ScriptyCore {
         }
     }
 
+    /**
+     * @notice Get buffer size for a single wrapped request
+     * @param request - Wrapped script request
+     * @return size - Final buffer size
+     */
     function getWrappedScriptSize(WrappedScriptRequest memory request)
         public
         view
@@ -221,6 +243,12 @@ contract ScriptyWrappedHTML is ScriptyCore {
         }
     }
 
+    /**
+     * @notice Get buffer size for encoded HTML wrapped
+     * @param headRequests - Array of head tags
+     * @param requests - Array of wrapped script requests
+     * @return size - Final buffer size
+     */
     function getBufferSizeForEncodedHTMLWrapped(
         HeadRequest[] calldata headRequests,
         WrappedScriptRequest[] calldata requests

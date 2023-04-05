@@ -260,13 +260,20 @@ contract ScriptyCore {
         IContractScript(storageAddress).getScript(scriptName, contractData);
     }
 
+    /**
+     * @notice Append HTML requests to the html buffer
+     * @param htmlFile - bytes buffer
+     * @param request - Request being added to buffer
+     * @param isSafeBase64 - Should we use the appendSafeBase64 method
+     * @return buffer with new appended request
+     */
     function _appendWrappedHTMLRequests(
         bytes memory htmlFile,
         WrappedScriptRequest memory request,
-        bool isSafe
+        bool isSafeBase64
     ) internal view returns(bytes memory) {
         htmlFile.appendSafe(request.wrapPrefix);
-        if (isSafe) {
+        if (isSafeBase64) {
             htmlFile.appendSafeBase64(
                 _fetchScript(
                     request.name,
@@ -292,6 +299,12 @@ contract ScriptyCore {
         return htmlFile;
     }
 
+    /**
+     * @notice Append requests to the html buffer for head tags
+     * @param htmlFile - bytes buffer
+     * @param headRequests - Request being added to buffer
+     * @return buffer with new appended request
+     */
     function _appendHeadRequests(
         bytes memory htmlFile,
         HeadRequest[] calldata headRequests
@@ -310,6 +323,11 @@ contract ScriptyCore {
         return htmlFile;
     }
 
+    /**
+     * @notice Get the total buffer size for the head tags
+     * @param headRequests - Request being added to buffer
+     * @return size - buffer size for head tags
+     */
     function getBufferSizeForHeadTags(
         HeadRequest[] calldata headRequests
     ) public pure returns (uint256 size) {
