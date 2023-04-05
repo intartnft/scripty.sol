@@ -69,8 +69,8 @@ contract ScriptyCore {
     // </body></html>
     // 14 bytes
     bytes public constant HTML_BODY_CLOSED_RAW = "</body></html>";
-    // 19 bytes
-    bytes public constant HTML_BODY_CLOSED_URL_SAFE = "%253C%252Fbody%253E";
+    // 26 bytes
+    bytes public constant HTML_BODY_CLOSED_URL_SAFE = "%3C%2Fbody%3E%3C%2Fhtml%3E";
 
     // <script>,
     // raw
@@ -85,7 +85,7 @@ contract ScriptyCore {
     // 9 bytes
     bytes public constant SCRIPT_CLOSE_RAW = "</script>";
     // url encoded
-    // 13 bytes
+    // 15 bytes
     bytes public constant SCRIPT_CLOSE_URL_SAFE = "%3C%2Fscript%3E";
 
     // [RAW]
@@ -94,7 +94,7 @@ contract ScriptyCore {
 
     // [URL_SAFE]
     // HTML_OPEN + HEAD_OPEN + HEAD_CLOSE + BODY_OPEN + HTML_BODY_CLOSED
-    uint256 public constant URLS_SAFE_BYTES = 62;
+    uint256 public constant URLS_SAFE_BYTES = 69;
 
     // [RAW]
     // HTML_OPEN + HTML_CLOSE
@@ -125,7 +125,8 @@ contract ScriptyCore {
     uint256 public constant BODY_SAFE_BYTES = 23;
 
     // All url safe
-    // TML_URL_SAFE_BYTES + HEAD_URL_SAFE_BYTES + BODY_URL_SAFE_BYTES
+    // HTML_URL_SAFE_BYTES + HEAD_URL_SAFE_BYTES + BODY_URL_SAFE_BYTES
+    // %3Chtml%3E%3Chead%3E%3C%2Fhead%3E%3Cbody%3E%3C%2Fbody%3E%3C%2Fhtml%3E
     uint256 public constant URL_SAFE_BYTES = 69;
 
     // <script></script>

@@ -81,7 +81,7 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
         return htmlFile;
     }
 
-    function getHTMLWrappedURLSafe(
+    function getHTMLWrappedURLSafe2(
         HeadRequest[] calldata headRequests,
         WrappedScriptRequest[] calldata requests
     ) public view returns (bytes memory) {
@@ -114,7 +114,6 @@ contract ScriptyWrappedURLSafe is ScriptyCore {
                 ? htmlFile = _appendWrappedHTMLRequests(htmlFile, request, true)
                 : htmlFile = _appendWrappedHTMLRequests(htmlFile, request, false);
 
-                htmlFile.appendSafe(wrapSuffix);
             } while (++i < requests.length);
         }
 

@@ -24,7 +24,7 @@ const expectHTML = (name, actual) => {
     expect(actual).to.equal(expected)
 }
 
-describe.only("ScriptyWrappedHTML Tests", function () {
+describe("ScriptyWrappedHTML Tests", function () {
     const controllerScript = "controllerScript"
 
     async function deploy() {
