@@ -55,9 +55,11 @@ contract ScriptyInlineHTML is ScriptyCore {
         htmlFile.appendSafe(HTML_OPEN_RAW);
 
         // <head>
+        htmlFile.appendSafe(HEAD_OPEN_RAW);
         if (headRequests.length > 0) {
             htmlFile = _appendHeadRequests(htmlFile, headRequests);
         }
+        htmlFile.appendSafe(HEAD_CLOSE_RAW);
         // </head>
 
         // <body>
@@ -119,6 +121,7 @@ contract ScriptyInlineHTML is ScriptyCore {
             bytes memory rawHTML = getHTMLInline(headRequests, requests, bufferSize);
 
             uint256 sizeForEncoding = _sizeForBase64Encoding(rawHTML.length);
+            sizeForEncoding += HTML_BASE64_DATA_URI_BYTES;
 
             bytes memory htmlFile = DynamicBuffer.allocate(sizeForEncoding);
             htmlFile.appendSafe("data:text/html;base64,");
@@ -170,14 +173,11 @@ contract ScriptyInlineHTML is ScriptyCore {
     ) public view returns (uint256 size) {
         unchecked {
             // <html><head></head><body></body></html>
-            size = URLS_RAW_BYTES;
+            // <script></script>
+            size = URLS_RAW_BYTES + SCRIPT_INLINE_BYTES;
 
-            // get size for head
-            // <head>[tags]</head>
             size += getBufferSizeForHeadTags(headRequests);
 
-            // get size for body
-            // <body>[scripts]</body>
             size += getBufferSizeForHTMLInlineBody(requests);
         }
     }
@@ -204,7 +204,7 @@ contract ScriptyInlineHTML is ScriptyCore {
                     size += getInlineScriptSize(request);
                 } while (++i < length);
             }
-            return size + SCRIPT_INLINE_BYTES;
+            return size;
         }
     }
 
