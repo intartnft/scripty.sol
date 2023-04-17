@@ -15,7 +15,6 @@ pragma solidity ^0.8.17;
 import "./ScriptyCore.sol";
 
 contract ScriptyWrappedHTML is ScriptyCore {
-
     using DynamicBuffer for bytes;
 
     // =============================================================
@@ -45,11 +44,15 @@ contract ScriptyWrappedHTML is ScriptyCore {
      */
     function getHTMLWrapped(
         HeadRequest[] calldata headRequests,
-        WrappedScriptRequest[] calldata requests,
+        WrappedScriptRequest[] memory requests,
         uint256 bufferSize
     ) public view returns (bytes memory) {
+        (
+            WrappedScriptRequest[] memory fetchedRequests,
+            uint256 totalSize
+        ) = fetchWrappedScripts(requests);
 
-        bytes memory htmlFile = DynamicBuffer.allocate(bufferSize);
+        bytes memory htmlFile = DynamicBuffer.allocate(totalSize);
 
         // <html>
         htmlFile.appendSafe(HTML_OPEN_RAW);
@@ -65,22 +68,13 @@ contract ScriptyWrappedHTML is ScriptyCore {
         // <body>
         htmlFile.appendSafe(BODY_OPEN_RAW);
         if (requests.length > 0) {
-            htmlFile = _appendWrappedBody(htmlFile, requests);
+            htmlFile = _appendWrappedBody(htmlFile, fetchedRequests);
         }
         htmlFile.appendSafe(HTML_BODY_CLOSED_RAW);
         // </body>
         // </html>
 
         return htmlFile;
-    }
-
-    // TODO: rename
-    function getHTMLWrapped2(
-        HeadRequest[] calldata headRequests,
-        WrappedScriptRequest[] calldata requests
-    ) public view returns (bytes memory) {
-        uint256 bufferSize = getBufferSizeForHTMLWrapped(headRequests, requests);
-        return getHTMLWrapped(headRequests, requests, bufferSize);
     }
 
     /**
@@ -91,8 +85,8 @@ contract ScriptyWrappedHTML is ScriptyCore {
      */
     function _appendWrappedBody(
         bytes memory htmlFile,
-        WrappedScriptRequest[] calldata requests
-    ) internal view returns(bytes memory) {
+        WrappedScriptRequest[] memory requests
+    ) internal view returns (bytes memory) {
         bytes memory wrapPrefix;
         bytes memory wrapSuffix;
         WrappedScriptRequest memory request;
@@ -128,7 +122,11 @@ contract ScriptyWrappedHTML is ScriptyCore {
         uint256 bufferSize
     ) public view returns (bytes memory) {
         unchecked {
-            bytes memory rawHTML = getHTMLWrapped(headRequests, requests, bufferSize);
+            bytes memory rawHTML = getHTMLWrapped(
+                headRequests,
+                requests,
+                bufferSize
+            );
 
             uint256 sizeForEncoding = _sizeForBase64Encoding(rawHTML.length);
             sizeForEncoding += HTML_BASE64_DATA_URI_BYTES;
@@ -169,7 +167,8 @@ contract ScriptyWrappedHTML is ScriptyCore {
         WrappedScriptRequest[] calldata requests,
         uint256 bufferSize
     ) public view returns (string memory) {
-        return string(getEncodedHTMLWrapped(headRequests, requests, bufferSize));
+        return
+            string(getEncodedHTMLWrapped(headRequests, requests, bufferSize));
     }
 
     // =============================================================
@@ -221,11 +220,9 @@ contract ScriptyWrappedHTML is ScriptyCore {
      * @param request - Wrapped script request
      * @return size - Final buffer size
      */
-    function getWrappedScriptSize(WrappedScriptRequest memory request)
-        public
-        view
-        returns (uint256 size)
-    {
+    function getWrappedScriptSize(
+        WrappedScriptRequest memory request
+    ) public view returns (uint256 size) {
         unchecked {
             (
                 bytes memory wrapPrefix,
@@ -253,8 +250,9 @@ contract ScriptyWrappedHTML is ScriptyCore {
         HeadRequest[] calldata headRequests,
         WrappedScriptRequest[] calldata requests
     ) public view returns (uint256 size) {
-        return _sizeForBase64Encoding(
-            getBufferSizeForHTMLWrapped(headRequests, requests)
-        );
+        return
+            _sizeForBase64Encoding(
+                getBufferSizeForHTMLWrapped(headRequests, requests)
+            );
     }
 }
