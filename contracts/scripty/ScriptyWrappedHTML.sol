@@ -13,8 +13,9 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 
 import "./ScriptyCore.sol";
+import {IScriptyWrappedHTML} from "./IScriptyWrappedHTML.sol";
 
-contract ScriptyWrappedHTML is ScriptyCore {
+contract ScriptyWrappedHTML is IScriptyWrappedHTML, ScriptyCore {
     using DynamicBuffer for bytes;
 
     // =============================================================
@@ -39,20 +40,20 @@ contract ScriptyWrappedHTML is ScriptyCore {
      *          </body>
      *      </html>
      * @param requests - Array of WrappedScriptRequests
-     * @param bufferSize - Total buffer size of all requested scripts
      * @return Full html wrapped scripts
      */
     function getHTMLWrapped(
         HeadRequest[] calldata headRequests,
-        WrappedScriptRequest[] memory requests,
-        uint256 bufferSize
+        WrappedScriptRequest[] memory requests
     ) public view returns (bytes memory) {
         (
             WrappedScriptRequest[] memory fetchedRequests,
             uint256 totalSize
         ) = fetchWrappedScripts(requests);
 
-        bytes memory htmlFile = DynamicBuffer.allocate(totalSize);
+        bytes memory htmlFile = DynamicBuffer.allocate(
+            totalSize + URLS_RAW_BYTES
+        );
 
         // <html>
         htmlFile.appendSafe(HTML_OPEN_RAW);
@@ -86,22 +87,40 @@ contract ScriptyWrappedHTML is ScriptyCore {
     function _appendWrappedBody(
         bytes memory htmlFile,
         WrappedScriptRequest[] memory requests
-    ) internal view returns (bytes memory) {
-        bytes memory wrapPrefix;
-        bytes memory wrapSuffix;
-        WrappedScriptRequest memory request;
+    ) internal pure returns (bytes memory) {
         uint256 i;
-
         unchecked {
             do {
-                request = requests[i];
-                (wrapPrefix, wrapSuffix) = _wrapPrefixAndSuffixFor(request);
-                request.wrapPrefix = wrapPrefix;
-                request.wrapSuffix = wrapSuffix;
-
-                htmlFile = _appendWrappedHTMLRequests(htmlFile, request, false);
+                htmlFile = _appendWrappedScriptRequests(
+                    htmlFile,
+                    requests[i],
+                    false
+                );
             } while (++i < requests.length);
         }
+
+        return htmlFile;
+    }
+
+    /**
+     * @notice Append HTML requests to the html buffer
+     * @param htmlFile - bytes buffer
+     * @param request - Request being added to buffer
+     * @param isSafeBase64 - Should we use the appendSafeBase64 method
+     * @return buffer with new appended request
+     */
+    function _appendWrappedScriptRequests(
+        bytes memory htmlFile,
+        WrappedScriptRequest memory request,
+        bool isSafeBase64
+    ) internal pure returns (bytes memory) {
+        htmlFile.appendSafe(request.wrapPrefix);
+        if (isSafeBase64) {
+            htmlFile.appendSafeBase64(request.scriptContent, false, false);
+        } else {
+            htmlFile.appendSafe(request.scriptContent);
+        }
+        htmlFile.appendSafe(request.wrapSuffix);
 
         return htmlFile;
     }
@@ -113,19 +132,16 @@ contract ScriptyWrappedHTML is ScriptyCore {
     /**
      * @notice Get {getHTMLWrapped} and base64 encode it
      * @param requests - Array of WrappedScriptRequests
-     * @param bufferSize - Total buffer size of all requested scripts
      * @return Full html wrapped scripts, base64 encoded
      */
     function getEncodedHTMLWrapped(
         HeadRequest[] calldata headRequests,
-        WrappedScriptRequest[] calldata requests,
-        uint256 bufferSize
+        WrappedScriptRequest[] calldata requests
     ) public view returns (bytes memory) {
         unchecked {
             bytes memory rawHTML = getHTMLWrapped(
                 headRequests,
-                requests,
-                bufferSize
+                requests
             );
 
             uint256 sizeForEncoding = _sizeForBase64Encoding(rawHTML.length);
@@ -145,114 +161,25 @@ contract ScriptyWrappedHTML is ScriptyCore {
     /**
      * @notice Convert {getHTMLWrapped} output to a string
      * @param requests - Array of WrappedScriptRequests
-     * @param bufferSize - Total buffer size of all requested scripts
      * @return {getHTMLWrapped} as a string
      */
     function getHTMLWrappedString(
         HeadRequest[] calldata headRequests,
-        WrappedScriptRequest[] calldata requests,
-        uint256 bufferSize
+        WrappedScriptRequest[] calldata requests
     ) public view returns (string memory) {
-        return string(getHTMLWrapped(headRequests, requests, bufferSize));
+        return string(getHTMLWrapped(headRequests, requests));
     }
 
     /**
      * @notice Convert {getEncodedHTMLWrapped} output to a string
      * @param requests - Array of WrappedScriptRequests
-     * @param bufferSize - Total buffer size of all requested scripts
      * @return {getEncodedHTMLWrapped} as a string
      */
     function getEncodedHTMLWrappedString(
         HeadRequest[] calldata headRequests,
-        WrappedScriptRequest[] calldata requests,
-        uint256 bufferSize
+        WrappedScriptRequest[] calldata requests
     ) public view returns (string memory) {
         return
-            string(getEncodedHTMLWrapped(headRequests, requests, bufferSize));
-    }
-
-    // =============================================================
-    //                      OFF-CHAIN UTILITIES
-    // =============================================================
-
-    /**
-     * @notice Get final buffer size for HTML wrapped
-     * @param headRequests - Array of head tags
-     * @param requests - Array of wrapped script requests
-     * @return size - Final buffer size
-     */
-    function getBufferSizeForHTMLWrapped(
-        HeadRequest[] calldata headRequests,
-        WrappedScriptRequest[] calldata requests
-    ) public view returns (uint256 size) {
-        unchecked {
-            // <html><head></head><body></body></html>
-            size = URLS_RAW_BYTES;
-
-            size += getBufferSizeForHeadTags(headRequests);
-
-            size += getBufferSizeForHTMLWrappedBody(requests);
-        }
-    }
-
-    /**
-     * @notice Get final buffer size for HTML wrapped body
-     * @param requests - Array of wrapped script requests
-     * @return size - Final buffer size
-     */
-    function getBufferSizeForHTMLWrappedBody(
-        WrappedScriptRequest[] calldata requests
-    ) public view returns (uint256 size) {
-        uint256 i;
-        uint256 length = requests.length;
-        WrappedScriptRequest memory request;
-
-        unchecked {
-            do {
-                request = requests[i];
-                size += getWrappedScriptSize(request);
-            } while (++i < length);
-        }
-    }
-
-    /**
-     * @notice Get buffer size for a single wrapped request
-     * @param request - Wrapped script request
-     * @return size - Final buffer size
-     */
-    function getWrappedScriptSize(
-        WrappedScriptRequest memory request
-    ) public view returns (uint256 size) {
-        unchecked {
-            (
-                bytes memory wrapPrefix,
-                bytes memory wrapSuffix
-            ) = _wrapPrefixAndSuffixFor(request);
-
-            uint256 scriptSize = _fetchScript(
-                request.name,
-                request.contractAddress,
-                request.contractData,
-                request.scriptContent
-            ).length;
-
-            return wrapPrefix.length + wrapSuffix.length + scriptSize;
-        }
-    }
-
-    /**
-     * @notice Get buffer size for encoded HTML wrapped
-     * @param headRequests - Array of head tags
-     * @param requests - Array of wrapped script requests
-     * @return size - Final buffer size
-     */
-    function getBufferSizeForEncodedHTMLWrapped(
-        HeadRequest[] calldata headRequests,
-        WrappedScriptRequest[] calldata requests
-    ) public view returns (uint256 size) {
-        return
-            _sizeForBase64Encoding(
-                getBufferSizeForHTMLWrapped(headRequests, requests)
-            );
+            string(getEncodedHTMLWrapped(headRequests, requests));
     }
 }

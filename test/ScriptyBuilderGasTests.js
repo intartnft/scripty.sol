@@ -15,7 +15,12 @@ describe.only("ScriptyBuilder Gas Tests", function () {
 		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilder")).deploy()
 		await scriptyBuilderContract.deployed()
 
-		const scriptyTestContract = await (await ethers.getContractFactory("ScriptyBuilderGasTest")).deploy(scriptyBuilderContract.address)
+		const scriptyWrappedHTMLContract = await (await ethers.getContractFactory("ScriptyWrappedHTML")).deploy()
+		await scriptyWrappedHTMLContract.deployed()
+
+		const scriptyTestContract = await (await ethers.getContractFactory("ScriptyBuilderGasTest")).deploy(
+			scriptyWrappedHTMLContract.address
+		)
 		await scriptyTestContract.deployed()
 
 		return { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract }
@@ -54,34 +59,32 @@ describe.only("ScriptyBuilder Gas Tests", function () {
 		return { scriptRequests }
 	}
 
-	describe("Scripty Gas Tests - Inline", function () {
-		it("Gas Test - Encoded HTML - Inline - Few", async function () {
-			const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
-			const { scriptRequests } = await addInlineScripts(2, scriptyStorageContract)
+	// describe("Scripty Gas Tests - Inline", function () {
+	// 	it("Gas Test - Encoded HTML - Inline - Few", async function () {
+	// 		const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
+	// 		const { scriptRequests } = await addInlineScripts(2, scriptyStorageContract)
 
-			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLInline(scriptRequests)
+	// 		const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLInline(scriptRequests)
 
-			await scriptyTestContract.getEncodedHTMLInline_Few(scriptRequests, size)
-		});
+	// 		await scriptyTestContract.getEncodedHTMLInline_Few(scriptRequests, size)
+	// 	});
 
-		it("Gas Test - Encoded HTML - Inline - Many", async function () {
-			const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
-			const { scriptRequests } = await addInlineScripts(100, scriptyStorageContract)
+	// 	it("Gas Test - Encoded HTML - Inline - Many", async function () {
+	// 		const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
+	// 		const { scriptRequests } = await addInlineScripts(100, scriptyStorageContract)
 
-			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLInline(scriptRequests)
+	// 		const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLInline(scriptRequests)
 
-			await scriptyTestContract.getEncodedHTMLInline_Many(scriptRequests, size)
-		});
-	})
+	// 		await scriptyTestContract.getEncodedHTMLInline_Many(scriptRequests, size)
+	// 	});
+	// })
 
 	describe("Scripty Gas Tests - Wrapped", function () {
 		it("Gas Test - Encoded HTML - Wrapped - Wrap Type 0 - Few", async function () {
 			const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
 			const { scriptRequests } = await addWrappedScripts(2, scriptyStorageContract, 0)
 
-			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLWrapped(scriptRequests)
-
-			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_0_Few(scriptRequests, size)
+			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_0_Few([], scriptRequests)
 		});
 
 		it("Gas Test - Encoded HTML - Wrapped - Wrap Type 1 - Few", async function () {
@@ -90,7 +93,7 @@ describe.only("ScriptyBuilder Gas Tests", function () {
 
 			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLWrapped(scriptRequests)
 
-			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_1_Few(scriptRequests, size)
+			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_1_Few([], scriptRequests)
 		});
 
 		it("Gas Test - Encoded HTML - Wrapped - Wrap Type 2 - Few", async function () {
@@ -99,7 +102,7 @@ describe.only("ScriptyBuilder Gas Tests", function () {
 
 			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLWrapped(scriptRequests)
 
-			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_2_Few(scriptRequests, size)
+			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_2_Few([], scriptRequests)
 		});
 
 		//
@@ -110,7 +113,7 @@ describe.only("ScriptyBuilder Gas Tests", function () {
 
 			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLWrapped(scriptRequests)
 
-			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_0_Many(scriptRequests, size)
+			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_0_Many([], scriptRequests)
 		});
 
 		it("Gas Test - Encoded HTML - Wrapped - Wrap Type 1 - Many", async function () {
@@ -119,7 +122,7 @@ describe.only("ScriptyBuilder Gas Tests", function () {
 
 			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLWrapped(scriptRequests)
 
-			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_1_Many(scriptRequests, size)
+			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_1_Many([], scriptRequests)
 		});
 
 		it("Gas Test - Encoded HTML - Wrapped - Wrap Type 2 - Many", async function () {
@@ -128,7 +131,7 @@ describe.only("ScriptyBuilder Gas Tests", function () {
 
 			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLWrapped(scriptRequests)
 
-			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_2_Many(scriptRequests, size)
+			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_2_Many([], scriptRequests)
 		});
 	})
 });

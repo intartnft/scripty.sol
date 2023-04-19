@@ -234,43 +234,37 @@ contract ScriptyCore {
         return (request.wrapPrefix, request.wrapSuffix);
     }
 
-    function fetchInlineScripts(
-        InlineScriptRequest[] memory requests
-    ) internal view returns (InlineScriptRequest[] memory, uint256) {
-        if (requests.length == 0) {
-            return (requests, 0);
-        }
-        uint256 i;
-        uint256 length = requests.length;
-        uint256 totalSize;
-        unchecked {
-            do {
-                bytes memory script = IContractScript(
-                    requests[i].contractAddress
-                ).getScript(requests[i].name, requests[i].contractData);
-                requests[i].scriptContent = script;
-                totalSize += script.length;
-            } while (++i < length);
-        }
-        return (requests, totalSize);
-    }
-
     function fetchWrappedScripts(
         WrappedScriptRequest[] memory requests
     ) internal view returns (WrappedScriptRequest[] memory, uint256) {
         if (requests.length == 0) {
             return (requests, 0);
         }
+        WrappedScriptRequest memory request;
+        bytes memory wrapPrefix;
+        bytes memory wrapSuffix;
+
         uint256 i;
         uint256 length = requests.length;
         uint256 totalSize;
         unchecked {
             do {
-                bytes memory script = IContractScript(
-                    requests[i].contractAddress
-                ).getScript(requests[i].name, requests[i].contractData);
-                requests[i].scriptContent = script;
+                request = requests[i];
+                bytes memory script = _fetchScript(
+                    request.name,
+                    request.contractAddress,
+                    request.contractData,
+                    request.scriptContent
+                );
+                request.scriptContent = script;
+
+                (wrapPrefix, wrapSuffix) = _wrapPrefixAndSuffixFor(request);
+                request.wrapPrefix = wrapPrefix;
+                request.wrapSuffix = wrapSuffix;
+
+                totalSize += wrapPrefix.length;
                 totalSize += script.length;
+                totalSize += wrapSuffix.length;
             } while (++i < length);
         }
         return (requests, totalSize);
@@ -309,7 +303,7 @@ contract ScriptyCore {
         bytes memory htmlFile,
         WrappedScriptRequest memory request,
         bool isSafeBase64
-    ) internal view returns (bytes memory) {
+    ) internal pure returns (bytes memory) {
         htmlFile.appendSafe(request.wrapPrefix);
         if (isSafeBase64) {
             htmlFile.appendSafeBase64(request.scriptContent, false, false);
