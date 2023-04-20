@@ -30,6 +30,16 @@ struct WrappedScriptRequest {
     bytes scriptContent;
 }
 
+struct ScriptRequest {
+    string name;
+    address contractAddress;
+    bytes contractData;
+    uint8 wrapType;
+    bytes wrapPrefix;
+    bytes wrapSuffix;
+    bytes scriptContent;
+}
+
 struct InlineScriptRequest {
     string name;
     address contractAddress;

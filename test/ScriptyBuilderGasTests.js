@@ -18,15 +18,19 @@ describe.only("ScriptyBuilder Gas Tests", function () {
 		const scriptyWrappedHTMLContract = await (await ethers.getContractFactory("ScriptyWrappedHTML")).deploy()
 		await scriptyWrappedHTMLContract.deployed()
 
+		const scriptyInlineHTMLContract = await (await ethers.getContractFactory("ScriptyInlineHTML")).deploy()
+		await scriptyInlineHTMLContract.deployed()
+
 		const scriptyTestContract = await (await ethers.getContractFactory("ScriptyBuilderGasTest")).deploy(
-			scriptyWrappedHTMLContract.address
+			scriptyWrappedHTMLContract.address,
+			scriptyInlineHTMLContract.address
 		)
 		await scriptyTestContract.deployed()
 
 		return { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract }
 	}
 
-	async function addWrappedScripts(count, scriptyStorageContract, type) {
+	async function addScripts(count, scriptyStorageContract, type) {
 		let scriptRequests = []
 
 		let wrappedScript = script;
@@ -36,71 +40,52 @@ describe.only("ScriptyBuilder Gas Tests", function () {
 			wrappedScript = utilities.toGZIPBase64String(wrappedScript)
 		}
 
+		let totalSize = 0
 		for (let i = 0; i < count; i++) {
 			let scriptName = "script" + i
 			await scriptyStorageContract.createScript(scriptName, utilities.stringToBytes("details"))
 			await scriptyStorageContract.addChunkToScript(scriptName, utilities.stringToBytes(script))
+			totalSize += script.length
 			scriptRequests.push([scriptName, scriptyStorageContract.address, 0, type, utilities.emptyBytes(), utilities.emptyBytes(), utilities.emptyBytes()])
 		}
 
 		return { scriptRequests }
 	}
 
-	async function addInlineScripts(count, scriptyStorageContract) {
-		let scriptRequests = []
+	describe("Scripty Gas Tests - Inline", function () {
+		it("Gas Test - Encoded HTML - Inline - Few", async function () {
+			const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
+			const { scriptRequests } = await addScripts(2, scriptyStorageContract, 0)
 
-		for (let i = 0; i < count; i++) {
-			let scriptName = "script" + i
-			await scriptyStorageContract.createScript(scriptName, utilities.stringToBytes("details"))
-			await scriptyStorageContract.addChunkToScript(scriptName, utilities.stringToBytes(script))
-			scriptRequests.push([scriptName, scriptyStorageContract.address, 0, utilities.emptyBytes()])
-		}
+			await scriptyTestContract.getEncodedHTMLInline_Few([], scriptRequests)
+		});
 
-		return { scriptRequests }
-	}
+		it("Gas Test - Encoded HTML - Inline - Many", async function () {
+			const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
+			const { scriptRequests } = await addScripts(100, scriptyStorageContract, 0)
 
-	// describe("Scripty Gas Tests - Inline", function () {
-	// 	it("Gas Test - Encoded HTML - Inline - Few", async function () {
-	// 		const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
-	// 		const { scriptRequests } = await addInlineScripts(2, scriptyStorageContract)
-
-	// 		const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLInline(scriptRequests)
-
-	// 		await scriptyTestContract.getEncodedHTMLInline_Few(scriptRequests, size)
-	// 	});
-
-	// 	it("Gas Test - Encoded HTML - Inline - Many", async function () {
-	// 		const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
-	// 		const { scriptRequests } = await addInlineScripts(100, scriptyStorageContract)
-
-	// 		const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLInline(scriptRequests)
-
-	// 		await scriptyTestContract.getEncodedHTMLInline_Many(scriptRequests, size)
-	// 	});
-	// })
+			await scriptyTestContract.getEncodedHTMLInline_Many([], scriptRequests)
+		});
+	})
 
 	describe("Scripty Gas Tests - Wrapped", function () {
 		it("Gas Test - Encoded HTML - Wrapped - Wrap Type 0 - Few", async function () {
 			const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
-			const { scriptRequests } = await addWrappedScripts(2, scriptyStorageContract, 0)
+			const { scriptRequests } = await addScripts(2, scriptyStorageContract, 0)
 
 			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_0_Few([], scriptRequests)
 		});
 
 		it("Gas Test - Encoded HTML - Wrapped - Wrap Type 1 - Few", async function () {
 			const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
-			const { scriptRequests } = await addWrappedScripts(2, scriptyStorageContract, 0)
-
-			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLWrapped(scriptRequests)
+			const { scriptRequests } = await addScripts(2, scriptyStorageContract, 0)
 
 			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_1_Few([], scriptRequests)
 		});
 
 		it("Gas Test - Encoded HTML - Wrapped - Wrap Type 2 - Few", async function () {
 			const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
-			const { scriptRequests } = await addWrappedScripts(2, scriptyStorageContract, 0)
-
-			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLWrapped(scriptRequests)
+			const { scriptRequests } = await addScripts(2, scriptyStorageContract, 0)
 
 			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_2_Few([], scriptRequests)
 		});
@@ -109,27 +94,21 @@ describe.only("ScriptyBuilder Gas Tests", function () {
 
 		it("Gas Test - Encoded HTML - Wrapped - Wrap Type 0 - Many", async function () {
 			const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
-			const { scriptRequests } = await addWrappedScripts(100, scriptyStorageContract, 0)
-
-			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLWrapped(scriptRequests)
+			const { scriptRequests } = await addScripts(100, scriptyStorageContract, 0)
 
 			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_0_Many([], scriptRequests)
 		});
 
 		it("Gas Test - Encoded HTML - Wrapped - Wrap Type 1 - Many", async function () {
 			const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
-			const { scriptRequests } = await addWrappedScripts(100, scriptyStorageContract, 0)
-
-			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLWrapped(scriptRequests)
+			const { scriptRequests } = await addScripts(100, scriptyStorageContract, 0)
 
 			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_1_Many([], scriptRequests)
 		});
 
 		it("Gas Test - Encoded HTML - Wrapped - Wrap Type 2 - Many", async function () {
 			const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
-			const { scriptRequests } = await addWrappedScripts(100, scriptyStorageContract, 0)
-
-			const size = await scriptyBuilderContract.getBufferSizeForEncodedHTMLWrapped(scriptRequests)
+			const { scriptRequests } = await addScripts(100, scriptyStorageContract, 0)
 
 			await scriptyTestContract.getEncodedHTMLWrapped_WrapType_2_Many([], scriptRequests)
 		});

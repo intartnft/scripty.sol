@@ -347,28 +347,6 @@
       {
         "components": [
           {
-            "internalType": "bytes",
-            "name": "wrapPrefix",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "wrapSuffix",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "scriptContent",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct HeadRequest[]",
-        "name": "headRequests",
-        "type": "tuple[]"
-      },
-      {
-        "components": [
-          {
             "internalType": "string",
             "name": "name",
             "type": "string"
@@ -384,17 +362,32 @@
             "type": "bytes"
           },
           {
+            "internalType": "uint8",
+            "name": "wrapType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapPrefix",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapSuffix",
+            "type": "bytes"
+          },
+          {
             "internalType": "bytes",
             "name": "scriptContent",
             "type": "bytes"
           }
         ],
-        "internalType": "struct InlineScriptRequest[]",
+        "internalType": "struct ScriptRequest[]",
         "name": "requests",
         "type": "tuple[]"
       }
     ],
-    "name": "getBufferSizeForEncodedHTMLInline",
+    "name": "buildInlineScriptsAndGetSize",
     "outputs": [
       {
         "internalType": "uint256",
@@ -410,6 +403,26 @@
       {
         "components": [
           {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes",
+            "name": "contractData",
+            "type": "bytes"
+          },
+          {
+            "internalType": "uint8",
+            "name": "wrapType",
+            "type": "uint8"
+          },
+          {
             "internalType": "bytes",
             "name": "wrapPrefix",
             "type": "bytes"
@@ -425,80 +438,12 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct HeadRequest[]",
-        "name": "headRequests",
-        "type": "tuple[]"
-      },
-      {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "address",
-            "name": "contractAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "bytes",
-            "name": "contractData",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "scriptContent",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct InlineScriptRequest[]",
+        "internalType": "struct ScriptRequest[]",
         "name": "requests",
         "type": "tuple[]"
       }
     ],
-    "name": "getBufferSizeForHTMLInline",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "size",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "address",
-            "name": "contractAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "bytes",
-            "name": "contractData",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "scriptContent",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct InlineScriptRequest[]",
-        "name": "requests",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "getBufferSizeForHTMLInlineBody",
+    "name": "buildWrappedScriptsAndGetSize",
     "outputs": [
       {
         "internalType": "uint256",
@@ -535,6 +480,62 @@
       }
     ],
     "name": "getBufferSizeForHeadTags",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "size",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes",
+            "name": "contractData",
+            "type": "bytes"
+          },
+          {
+            "internalType": "uint8",
+            "name": "wrapType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapPrefix",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapSuffix",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "scriptContent",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct ScriptRequest[]",
+        "name": "scriptRequests",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "getBufferSizeForScriptRequests",
     "outputs": [
       {
         "internalType": "uint256",
@@ -587,19 +588,29 @@
             "type": "bytes"
           },
           {
+            "internalType": "uint8",
+            "name": "wrapType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapPrefix",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapSuffix",
+            "type": "bytes"
+          },
+          {
             "internalType": "bytes",
             "name": "scriptContent",
             "type": "bytes"
           }
         ],
-        "internalType": "struct InlineScriptRequest[]",
-        "name": "requests",
+        "internalType": "struct ScriptRequest[]",
+        "name": "scriptRequests",
         "type": "tuple[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "bufferSize",
-        "type": "uint256"
       }
     ],
     "name": "getEncodedHTMLInline",
@@ -655,19 +666,29 @@
             "type": "bytes"
           },
           {
+            "internalType": "uint8",
+            "name": "wrapType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapPrefix",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapSuffix",
+            "type": "bytes"
+          },
+          {
             "internalType": "bytes",
             "name": "scriptContent",
             "type": "bytes"
           }
         ],
-        "internalType": "struct InlineScriptRequest[]",
-        "name": "requests",
+        "internalType": "struct ScriptRequest[]",
+        "name": "scriptRequests",
         "type": "tuple[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "bufferSize",
-        "type": "uint256"
       }
     ],
     "name": "getEncodedHTMLInlineString",
@@ -723,19 +744,29 @@
             "type": "bytes"
           },
           {
+            "internalType": "uint8",
+            "name": "wrapType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapPrefix",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapSuffix",
+            "type": "bytes"
+          },
+          {
             "internalType": "bytes",
             "name": "scriptContent",
             "type": "bytes"
           }
         ],
-        "internalType": "struct InlineScriptRequest[]",
-        "name": "requests",
+        "internalType": "struct ScriptRequest[]",
+        "name": "scriptRequests",
         "type": "tuple[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "bufferSize",
-        "type": "uint256"
       }
     ],
     "name": "getHTMLInline",
@@ -747,6 +778,47 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "wrapPrefix",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapSuffix",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "scriptContent",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct HeadRequest[]",
+        "name": "headRequests",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "scriptSize",
+        "type": "uint256"
+      }
+    ],
+    "name": "getHTMLInlineBufferSize",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "size",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -791,19 +863,29 @@
             "type": "bytes"
           },
           {
+            "internalType": "uint8",
+            "name": "wrapType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapPrefix",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "wrapSuffix",
+            "type": "bytes"
+          },
+          {
             "internalType": "bytes",
             "name": "scriptContent",
             "type": "bytes"
           }
         ],
-        "internalType": "struct InlineScriptRequest[]",
-        "name": "requests",
+        "internalType": "struct ScriptRequest[]",
+        "name": "scriptRequests",
         "type": "tuple[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "bufferSize",
-        "type": "uint256"
       }
     ],
     "name": "getHTMLInlineString",
@@ -812,47 +894,6 @@
         "internalType": "string",
         "name": "",
         "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "address",
-            "name": "contractAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "bytes",
-            "name": "contractData",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "scriptContent",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct InlineScriptRequest",
-        "name": "request",
-        "type": "tuple"
-      }
-    ],
-    "name": "getInlineScriptSize",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",

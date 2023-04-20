@@ -20,8 +20,23 @@ pragma solidity ^0.8.17;
   Special thanks to @cxkoda, @frolic and @dhof
 */
 
+struct HeadRequest {
+    bytes wrapPrefix;
+    bytes wrapSuffix;
+    bytes scriptContent;
+}
+
+struct ScriptRequest {
+    string name;
+    address contractAddress;
+    bytes contractData;
+    uint8 wrapType;
+    bytes wrapPrefix;
+    bytes wrapSuffix;
+    bytes scriptContent;
+}
+
 import {DynamicBuffer} from "./utils/DynamicBuffer.sol";
-import {HeadRequest, InlineScriptRequest, WrappedScriptRequest} from "./IScriptyBuilder.sol";
 import {IScriptyStorage} from "./IScriptyStorage.sol";
 import {IContractScript} from "./IContractScript.sol";
 
@@ -164,7 +179,7 @@ contract ScriptyCore {
      * @return (prefix, suffix) - Type specific prefix and suffix as a tuple
      */
     function _wrapPrefixAndSuffixFor(
-        WrappedScriptRequest memory request
+        ScriptRequest memory request
     ) internal pure returns (bytes memory, bytes memory) {
         if (request.wrapType == 0) {
             return ("<script>", "</script>");
@@ -207,7 +222,7 @@ contract ScriptyCore {
      * @return (prefix, suffix) - Type specific prefix and suffix as a tuple
      */
     function _wrapURLSafePrefixAndSuffixFor(
-        WrappedScriptRequest memory request
+        ScriptRequest memory request
     ) internal pure returns (bytes memory, bytes memory) {
         if (request.wrapType <= 1) {
             // <script src="data:text/javascript;base64,
@@ -234,13 +249,13 @@ contract ScriptyCore {
         return (request.wrapPrefix, request.wrapSuffix);
     }
 
-    function fetchWrappedScripts(
-        WrappedScriptRequest[] memory requests
-    ) internal view returns (WrappedScriptRequest[] memory, uint256) {
+    // Making public as this can be used without scripty html builder
+    function buildWrappedScriptsAndGetSize(
+        ScriptRequest[] memory requests
+    ) public view returns (uint256) {
         if (requests.length == 0) {
-            return (requests, 0);
+            return 0;
         }
-        WrappedScriptRequest memory request;
         bytes memory wrapPrefix;
         bytes memory wrapSuffix;
 
@@ -249,82 +264,70 @@ contract ScriptyCore {
         uint256 totalSize;
         unchecked {
             do {
-                request = requests[i];
-                bytes memory script = _fetchScript(
-                    request.name,
-                    request.contractAddress,
-                    request.contractData,
-                    request.scriptContent
-                );
-                request.scriptContent = script;
+                bytes memory script = _fetchScript(requests[i]);
+                requests[i].scriptContent = script;
 
-                (wrapPrefix, wrapSuffix) = _wrapPrefixAndSuffixFor(request);
-                request.wrapPrefix = wrapPrefix;
-                request.wrapSuffix = wrapSuffix;
+                (wrapPrefix, wrapSuffix) = _wrapPrefixAndSuffixFor(requests[i]);
+                requests[i].wrapPrefix = wrapPrefix;
+                requests[i].wrapSuffix = wrapSuffix;
 
                 totalSize += wrapPrefix.length;
                 totalSize += script.length;
                 totalSize += wrapSuffix.length;
             } while (++i < length);
         }
-        return (requests, totalSize);
+        return totalSize;
+    }
+
+    // Making public as this can be used without scripty html builder
+    // this can be also unified with above. shouldIncludeTags: Bool
+    function buildInlineScriptsAndGetSize(
+        ScriptRequest[] memory requests
+    ) public view returns (uint256) {
+        if (requests.length == 0) {
+            return 0;
+        }
+        uint256 i;
+        uint256 length = requests.length;
+        uint256 totalSize;
+        unchecked {
+            do {
+                bytes memory script = _fetchScript(requests[i]);
+                requests[i].scriptContent = script;
+
+                totalSize += script.length;
+            } while (++i < length);
+        }
+        return totalSize;
     }
 
     /**
      * @notice Grabs requested script from storage
-     * @param scriptName - Name given to the script. Eg: threejs.min.js_r148
-     * @param storageAddress - Address of scripty storage contract
-     * @param contractData - Arbitrary data to be passed to storage
-     * @param scriptContent - Small custom script to inject
-     * @return Requested script as bytes
+     * @param scriptRequest - Name given to the script. Eg: threejs.min.js_r148
      */
     function _fetchScript(
-        string memory scriptName,
-        address storageAddress,
-        bytes memory contractData,
-        bytes memory scriptContent
+        ScriptRequest memory scriptRequest
     ) internal view returns (bytes memory) {
-        if (scriptContent.length > 0) {
-            return scriptContent;
+        if (scriptRequest.scriptContent.length > 0) {
+            return scriptRequest.scriptContent;
         }
 
         return
-            IContractScript(storageAddress).getScript(scriptName, contractData);
-    }
-
-    /**
-     * @notice Append HTML requests to the html buffer
-     * @param htmlFile - bytes buffer
-     * @param request - Request being added to buffer
-     * @param isSafeBase64 - Should we use the appendSafeBase64 method
-     * @return buffer with new appended request
-     */
-    function _appendWrappedHTMLRequests(
-        bytes memory htmlFile,
-        WrappedScriptRequest memory request,
-        bool isSafeBase64
-    ) internal pure returns (bytes memory) {
-        htmlFile.appendSafe(request.wrapPrefix);
-        if (isSafeBase64) {
-            htmlFile.appendSafeBase64(request.scriptContent, false, false);
-        } else {
-            htmlFile.appendSafe(request.scriptContent);
-        }
-        htmlFile.appendSafe(request.wrapSuffix);
-
-        return htmlFile;
+            IContractScript(scriptRequest.contractAddress).getScript(
+                scriptRequest.name,
+                scriptRequest.contractData
+            );
     }
 
     /**
      * @notice Append requests to the html buffer for head tags
      * @param htmlFile - bytes buffer
      * @param headRequests - Request being added to buffer
-     * @return buffer with new appended request
      */
     function _appendHeadRequests(
         bytes memory htmlFile,
         HeadRequest[] calldata headRequests
-    ) internal pure returns (bytes memory) {
+    ) internal pure {
         HeadRequest memory headRequest;
         uint256 i;
         unchecked {
@@ -335,8 +338,48 @@ contract ScriptyCore {
                 htmlFile.appendSafe(headRequest.wrapSuffix);
             } while (++i < headRequests.length);
         }
+    }
 
-        return htmlFile;
+    function _appendScriptRequests(
+        bytes memory htmlFile,
+        ScriptRequest[] memory scriptRequests,
+        bool includeTags,
+        bool encodeScripts
+    ) internal view {
+        uint256 i;
+        unchecked {
+            do {
+                _appendScriptRequest(
+                    htmlFile,
+                    scriptRequests[i],
+                    includeTags,
+                    encodeScripts
+                );
+            } while (++i < scriptRequests.length);
+        }
+    }
+
+    function _appendScriptRequest(
+        bytes memory htmlFile,
+        ScriptRequest memory scriptRequest,
+        bool includeTags,
+        bool encodeScripts
+    ) internal view {        
+        if (includeTags) {
+            htmlFile.appendSafe(scriptRequest.wrapPrefix);
+        }
+        if (encodeScripts) {
+            htmlFile.appendSafeBase64(
+                scriptRequest.scriptContent,
+                false,
+                false
+            );
+        } else {
+            htmlFile.appendSafe(scriptRequest.scriptContent);
+        }
+        if (includeTags) {
+            htmlFile.appendSafe(scriptRequest.wrapSuffix);
+        }
     }
 
     /**
@@ -347,6 +390,9 @@ contract ScriptyCore {
     function getBufferSizeForHeadTags(
         HeadRequest[] calldata headRequests
     ) public pure returns (uint256 size) {
+        if (headRequests.length == 0) {
+            return 0;
+        }
         HeadRequest memory headRequest;
         uint256 i;
         unchecked {
@@ -358,6 +404,30 @@ contract ScriptyCore {
             } while (++i < headRequests.length);
         }
     }
+
+
+    // Might be useful for offchain. It just calculates the 
+    // buffer size for scripts. If this sripts are not fetched/built
+    // then this method will return wrong buffer size. Should we 
+    // keep it?
+    function getBufferSizeForScriptRequests(
+        ScriptRequest[] calldata scriptRequests
+    ) public pure returns (uint256 size) {
+        if (scriptRequests.length == 0) {
+            return 0;
+        }
+        ScriptRequest memory scriptRequest;
+        uint256 i;
+        unchecked {
+            do {
+                scriptRequest = scriptRequests[i];
+                size += scriptRequest.scriptContent.length;
+                size += scriptRequest.wrapPrefix.length;
+                size += scriptRequest.wrapSuffix.length;
+            } while (++i < scriptRequests.length);
+        }
+    }
+
 
     /**
      * @notice Calculate the buffer size post base64 encoding
