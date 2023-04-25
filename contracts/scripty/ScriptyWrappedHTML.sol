@@ -15,7 +15,7 @@ pragma solidity ^0.8.17;
 import "./ScriptyCore.sol";
 import "./interfaces/IScriptyWrappedHTML.sol";
 
-contract ScriptyWrappedHTML is IScriptyWrappedHTML, ScriptyCore {
+contract ScriptyWrappedHTML is ScriptyCore, IScriptyWrappedHTML {
     using DynamicBuffer for bytes;
 
     // =============================================================
@@ -39,20 +39,18 @@ contract ScriptyWrappedHTML is IScriptyWrappedHTML, ScriptyCore {
      *              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
      *          </body>
      *      </html>
-     * @param headRequests - Array of HeadRequests
-     * @param scriptRequests - Array of ScriptRequests
+     * @param htmlRequest - Array of HeadRequests
      * @return Full html wrapped scripts
      */
     function getHTMLWrapped(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] memory scriptRequests
+        HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
         uint256 scriptBufferSize = buildWrappedScriptsAndGetSize(
-            scriptRequests
+            htmlRequest.scriptRequests
         );
 
         bytes memory htmlFile = DynamicBuffer.allocate(
-            getHTMLWrapBufferSize(headRequests, scriptBufferSize)
+            getHTMLWrapBufferSize(htmlRequest.headRequests, scriptBufferSize)
         );
 
         // <html>
@@ -60,16 +58,16 @@ contract ScriptyWrappedHTML is IScriptyWrappedHTML, ScriptyCore {
 
         // <head>
         htmlFile.appendSafe(HEAD_OPEN_RAW);
-        if (headRequests.length > 0) {
-            _appendHeadRequests(htmlFile, headRequests);
+        if (htmlRequest.headRequests.length > 0) {
+            _appendHeadRequests(htmlFile, htmlRequest.headRequests);
         }
         htmlFile.appendSafe(HEAD_CLOSE_RAW);
         // </head>
 
         // <body>
         htmlFile.appendSafe(BODY_OPEN_RAW);
-        if (scriptRequests.length > 0) {
-            _appendScriptRequests(htmlFile, scriptRequests, true, false);
+        if (htmlRequest.scriptRequests.length > 0) {
+            _appendScriptRequests(htmlFile, htmlRequest.scriptRequests, true, false);
         }
         htmlFile.appendSafe(HTML_BODY_CLOSED_RAW);
         // </body>
@@ -79,7 +77,7 @@ contract ScriptyWrappedHTML is IScriptyWrappedHTML, ScriptyCore {
     }
 
     function getHTMLWrapBufferSize(
-        HeadRequest[] calldata headRequests,
+        HeadRequest[] memory headRequests,
         uint256 scriptSize
     ) public pure returns (uint256 size) {
         unchecked {
@@ -96,15 +94,14 @@ contract ScriptyWrappedHTML is IScriptyWrappedHTML, ScriptyCore {
 
     /**
      * @notice Get {getHTMLWrapped} and base64 encode it
-     * @param scriptRequests - Array of WrappedScriptRequests
+     * @param htmlRequest - Array of WrappedScriptRequests
      * @return Full html wrapped scripts, base64 encoded
      */
     function getEncodedHTMLWrapped(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
         unchecked {
-            bytes memory rawHTML = getHTMLWrapped(headRequests, scriptRequests);
+            bytes memory rawHTML = getHTMLWrapped(htmlRequest);
 
             uint256 sizeForEncoding = _sizeForBase64Encoding(rawHTML.length);
             sizeForEncoding += HTML_BASE64_DATA_URI_BYTES;
@@ -122,25 +119,23 @@ contract ScriptyWrappedHTML is IScriptyWrappedHTML, ScriptyCore {
 
     /**
      * @notice Convert {getHTMLWrapped} output to a string
-     * @param scriptRequests - Array of WrappedScriptRequests
+     * @param htmlRequest - Array of WrappedScriptRequests
      * @return {getHTMLWrapped} as a string
      */
     function getHTMLWrappedString(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) public view returns (string memory) {
-        return string(getHTMLWrapped(headRequests, scriptRequests));
+        return string(getHTMLWrapped(htmlRequest));
     }
 
     /**
      * @notice Convert {getEncodedHTMLWrapped} output to a string
-     * @param scriptRequests - Array of WrappedScriptRequests
+     * @param htmlRequest - Array of WrappedScriptRequests
      * @return {getEncodedHTMLWrapped} as a string
      */
     function getEncodedHTMLWrappedString(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) public view returns (string memory) {
-        return string(getEncodedHTMLWrapped(headRequests, scriptRequests));
+        return string(getEncodedHTMLWrapped(htmlRequest));
     }
 }

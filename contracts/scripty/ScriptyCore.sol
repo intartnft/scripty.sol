@@ -20,6 +20,11 @@ pragma solidity ^0.8.17;
   Special thanks to @cxkoda, @frolic and @dhof
 */
 
+struct HTMLRequest {
+    HeadRequest[] headRequests;
+    ScriptRequest[] scriptRequests;
+}
+
 struct HeadRequest {
     bytes wrapPrefix;
     bytes wrapSuffix;
@@ -326,7 +331,7 @@ contract ScriptyCore {
      */
     function _appendHeadRequests(
         bytes memory htmlFile,
-        HeadRequest[] calldata headRequests
+        HeadRequest[] memory headRequests
     ) internal pure {
         HeadRequest memory headRequest;
         uint256 i;
@@ -345,7 +350,7 @@ contract ScriptyCore {
         ScriptRequest[] memory scriptRequests,
         bool includeTags,
         bool encodeScripts
-    ) internal view {
+    ) internal pure {
         uint256 i;
         unchecked {
             do {
@@ -364,7 +369,7 @@ contract ScriptyCore {
         ScriptRequest memory scriptRequest,
         bool includeTags,
         bool encodeScripts
-    ) internal view {        
+    ) internal pure {        
         if (includeTags) {
             htmlFile.appendSafe(scriptRequest.wrapPrefix);
         }
@@ -388,7 +393,7 @@ contract ScriptyCore {
      * @return size - buffer size for head tags
      */
     function getBufferSizeForHeadTags(
-        HeadRequest[] calldata headRequests
+        HeadRequest[] memory headRequests
     ) public pure returns (uint256 size) {
         if (headRequests.length == 0) {
             return 0;

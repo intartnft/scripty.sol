@@ -10,7 +10,7 @@ pragma solidity ^0.8.17;
 // ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░░░░╚═╝░░░░░░╚═╝░░░ //
 ///////////////////////////////////////////////////////////
 
-import {HeadRequest, ScriptRequest} from "./../ScriptyCore.sol";
+import {HTMLRequest, HeadRequest, ScriptRequest} from "./../ScriptyCore.sol";
 
 interface IScriptyWrappedHTML {
     // =============================================================
@@ -29,12 +29,11 @@ interface IScriptyWrappedHTML {
      *              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
      *          </body>
      *      </html>
-     * @param scriptRequests - Array of WrappedScriptRequests
+     * @param htmlRequest - Array of WrappedScriptRequests
      * @return Full html wrapped scripts
      */
     function getHTMLWrapped(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external view returns (bytes memory);
 
     // =============================================================
@@ -43,12 +42,11 @@ interface IScriptyWrappedHTML {
 
     /**
      * @notice Get {getHTMLWrapped} and base64 encode it
-     * @param scriptRequests - Array of WrappedScriptRequests
+     * @param htmlRequest - Array of WrappedScriptRequests
      * @return Full html wrapped scripts, base64 encoded
      */
     function getEncodedHTMLWrapped(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external view returns (bytes memory);
 
     // =============================================================
@@ -57,21 +55,19 @@ interface IScriptyWrappedHTML {
 
     /**
      * @notice Convert {getHTMLWrapped} output to a string
-     * @param scriptRequests - Array of WrappedScriptRequests
+     * @param htmlRequest - Array of WrappedScriptRequests
      * @return {getHTMLWrapped} as a string
      */
     function getHTMLWrappedString(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external view returns (string memory);
 
     /**
      * @notice Convert {getEncodedHTMLWrapped} output to a string
-     * @param scriptRequests - Array of WrappedScriptRequests
+     * @param htmlRequest - Array of WrappedScriptRequests
      * @return {getEncodedHTMLWrapped} as a string
      */
     function getEncodedHTMLWrappedString(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external view returns (string memory);
 }

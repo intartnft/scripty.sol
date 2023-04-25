@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.17;
 
-import {HeadRequest, ScriptRequest} from "../scripty/ScriptyCore.sol";
+import {HTMLRequest, HeadRequest, ScriptRequest} from "../scripty/ScriptyCore.sol";
 import {IScriptyWrappedHTML} from "../scripty/interfaces/IScriptyWrappedHTML.sol";
 import {IScriptyInlineHTML} from "../scripty/interfaces/IScriptyInlineHTML.sol";
 
@@ -19,23 +19,19 @@ contract ScriptyBuilderGasTest {
 
     // solc-ignore-next-line func-mutability
     function getEncodedHTMLInline_Few(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external {
         IScriptyInlineHTML(scriptyInlineHTMLAddress).getEncodedHTMLInline(
-            headRequests,
-            scriptRequests
+            htmlRequest
         );
     }
 
     // solc-ignore-next-line func-mutability
     function getEncodedHTMLInline_Many(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external {
         IScriptyInlineHTML(scriptyInlineHTMLAddress).getEncodedHTMLInline(
-            headRequests,
-            scriptRequests
+            htmlRequest
         );
     }
 
@@ -45,67 +41,55 @@ contract ScriptyBuilderGasTest {
 
     // solc-ignore-next-line func-mutability
     function getEncodedHTMLWrapped_WrapType_0_Few(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external {
         IScriptyWrappedHTML(scriptyWrappedHTMLAddress).getEncodedHTMLWrapped(
-            headRequests,
-            scriptRequests
+            htmlRequest
         );
     }
 
     // solc-ignore-next-line func-mutability
     function getEncodedHTMLWrapped_WrapType_1_Few(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external {
         IScriptyWrappedHTML(scriptyWrappedHTMLAddress).getEncodedHTMLWrapped(
-            headRequests,
-            scriptRequests
+            htmlRequest
         );
     }
 
     // solc-ignore-next-line func-mutability
     function getEncodedHTMLWrapped_WrapType_2_Few(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external {
         IScriptyWrappedHTML(scriptyWrappedHTMLAddress).getEncodedHTMLWrapped(
-            headRequests,
-            scriptRequests
+            htmlRequest
         );
     }
 
     // solc-ignore-next-line func-mutability
     function getEncodedHTMLWrapped_WrapType_0_Many(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external {
         IScriptyWrappedHTML(scriptyWrappedHTMLAddress).getEncodedHTMLWrapped(
-            headRequests,
-            scriptRequests
+            htmlRequest
         );
     }
 
     // solc-ignore-next-line func-mutability
     function getEncodedHTMLWrapped_WrapType_1_Many(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external {
         IScriptyWrappedHTML(scriptyWrappedHTMLAddress).getEncodedHTMLWrapped(
-            headRequests,
-            scriptRequests
+            htmlRequest
         );
     }
 
     // solc-ignore-next-line func-mutability
     function getEncodedHTMLWrapped_WrapType_2_Many(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) external {
         IScriptyWrappedHTML(scriptyWrappedHTMLAddress).getEncodedHTMLWrapped(
-            headRequests,
-            scriptRequests
+            htmlRequest
         );
     }
 

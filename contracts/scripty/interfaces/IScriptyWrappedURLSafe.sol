@@ -12,16 +12,28 @@ pragma solidity ^0.8.17;
 
 import {HTMLRequest, HeadRequest, ScriptRequest} from "./../ScriptyCore.sol";
 
-interface IScriptyInlineHTML {
+interface IScriptyWrappedURLSafe {
     // =============================================================
     //                      RAW HTML GETTERS
     // =============================================================
 
     /**
-     * @notice Get requested scripts housed in <body> with custom wrappers
-     * @dev Your requested scripts are returned in the following format:
+     * @notice Get requested scripts housed in URL Safe wrappers
+     * @dev Any wrapper type 0 scripts are converted to base64 and wrapped
+     *      with <script src="data:text/javascript;base64,[SCRIPT]"></script>
+     *
+     *      [WARNING]: Large non-base64 libraries that need base64 encoding
+     *      carry a high risk of causing a gas out. Highly advised the use
+     *      of base64 encoded scripts where possible
+     *
+     *      Your requested scripts are returned in the following format:
      *      <html>
-     *          <head></head>
+     *          <head>
+     *              [wrapPrefix[0]]{headTagRequest[0]}[wrapSuffix[0]]
+     *              [wrapPrefix[1]]{headTagRequest[1]}[wrapSuffix[1]]
+     *              ...
+     *              [wrapPrefix[n]]{headTagRequest[n]}[wrapSuffix[n]]
+     *          </head>
      *          <body style='margin:0;'>
      *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
      *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
@@ -30,22 +42,9 @@ interface IScriptyInlineHTML {
      *          </body>
      *      </html>
      * @param htmlRequest - Array of WrappedScriptRequests
-     * @return Full html wrapped scripts
+     * @return Full URL Safe wrapped scripts
      */
-    function getHTMLInline(
-        HTMLRequest memory htmlRequest
-    ) external view returns (bytes memory);
-
-    // =============================================================
-    //                      ENCODED HTML GETTERS
-    // =============================================================
-
-    /**
-     * @notice Get {getHTMLInline} and base64 encode it
-     * @param htmlRequest - Array of InlineScriptRequests
-     * @return Full html wrapped scripts, base64 encoded
-     */
-    function getEncodedHTMLInline(
+    function getHTMLWrappedURLSafe(
         HTMLRequest memory htmlRequest
     ) external view returns (bytes memory);
 
@@ -54,20 +53,11 @@ interface IScriptyInlineHTML {
     // =============================================================
 
     /**
-     * @notice Convert {getHTMLInline} output to a string
-     * @param htmlRequest - Array of InlineScriptRequests
-     * @return {getHTMLInline} as a string
+     * @notice Convert {getHTMLWrappedURLSafe} output to a string
+     * @param htmlRequest - Array of WrappedScriptRequests
+     * @return {getHTMLWrappedURLSafe} as a string
      */
-    function getHTMLInlineString(
-        HTMLRequest memory htmlRequest
-    ) external view returns (string memory);
-
-    /**
-     * @notice Convert {getEncodedHTMLInline} output to a string
-     * @param htmlRequest - Array of InlineScriptRequests
-     * @return {getEncodedHTMLInline} as a string
-     */
-    function getEncodedHTMLInlineString(
+    function getHTMLWrappedURLSafeString(
         HTMLRequest memory htmlRequest
     ) external view returns (string memory);
 }

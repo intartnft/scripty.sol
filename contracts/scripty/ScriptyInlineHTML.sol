@@ -13,8 +13,9 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 
 import "./ScriptyCore.sol";
+import "./interfaces/IScriptyInlineHTML.sol";
 
-contract ScriptyInlineHTML is ScriptyCore {
+contract ScriptyInlineHTML is ScriptyCore, IScriptyInlineHTML {
     using DynamicBuffer for bytes;
 
     // =============================================================
@@ -40,17 +41,16 @@ contract ScriptyInlineHTML is ScriptyCore {
      *              </script>
      *          </body>
      *      </html>
-     * @param scriptRequests - Array of InlineScriptRequest
+     * @param htmlRequest - Array of InlineScriptRequest
      * @return Full html wrapped scripts
      */
     function getHTMLInline(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] memory scriptRequests
+        HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
-        uint256 scriptBufferSize = buildInlineScriptsAndGetSize(scriptRequests);
+        uint256 scriptBufferSize = buildInlineScriptsAndGetSize(htmlRequest.scriptRequests);
 
         bytes memory htmlFile = DynamicBuffer.allocate(
-            getHTMLInlineBufferSize(headRequests, scriptBufferSize)
+            getHTMLInlineBufferSize(htmlRequest.headRequests, scriptBufferSize)
         );
 
         // <html>
@@ -58,8 +58,8 @@ contract ScriptyInlineHTML is ScriptyCore {
 
         // <head>
         htmlFile.appendSafe(HEAD_OPEN_RAW);
-        if (headRequests.length > 0) {
-            _appendHeadRequests(htmlFile, headRequests);
+        if (htmlRequest.headRequests.length > 0) {
+            _appendHeadRequests(htmlFile, htmlRequest.headRequests);
         }
         htmlFile.appendSafe(HEAD_CLOSE_RAW);
         // </head>
@@ -68,8 +68,8 @@ contract ScriptyInlineHTML is ScriptyCore {
         // <script>
         htmlFile.appendSafe(BODY_OPEN_RAW);
         htmlFile.appendSafe(SCRIPT_OPEN_RAW);
-        if (scriptRequests.length > 0) {
-            _appendScriptRequests(htmlFile, scriptRequests, false, false);
+        if (htmlRequest.scriptRequests.length > 0) {
+            _appendScriptRequests(htmlFile, htmlRequest.scriptRequests, false, false);
         }
         htmlFile.appendSafe(SCRIPT_CLOSE_RAW);
         htmlFile.appendSafe(HTML_BODY_CLOSED_RAW);
@@ -81,7 +81,7 @@ contract ScriptyInlineHTML is ScriptyCore {
     }
 
     function getHTMLInlineBufferSize(
-        HeadRequest[] calldata headRequests,
+        HeadRequest[] memory headRequests,
         uint256 scriptSize
     ) public pure returns (uint256 size) {
         unchecked {
@@ -99,15 +99,14 @@ contract ScriptyInlineHTML is ScriptyCore {
 
     /**
      * @notice Get {getHTMLInline} and base64 encode it
-     * @param scriptRequests - Array of InlineScriptRequests
+     * @param htmlRequest - Array of InlineScriptRequests
      * @return Full html wrapped scripts, base64 encoded
      */
     function getEncodedHTMLInline(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
         unchecked {
-            bytes memory rawHTML = getHTMLInline(headRequests, scriptRequests);
+            bytes memory rawHTML = getHTMLInline(htmlRequest);
 
             uint256 sizeForEncoding = _sizeForBase64Encoding(rawHTML.length);
             sizeForEncoding += HTML_BASE64_DATA_URI_BYTES;
@@ -126,25 +125,23 @@ contract ScriptyInlineHTML is ScriptyCore {
 
     /**
      * @notice Convert {getHTMLInline} output to a string
-     * @param scriptRequests - Array of InlineScriptRequests
+     * @param htmlRequest - Array of InlineScriptRequests
      * @return {getHTMLInline} as a string
      */
     function getHTMLInlineString(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) public view returns (string memory) {
-        return string(getHTMLInline(headRequests, scriptRequests));
+        return string(getHTMLInline(htmlRequest));
     }
 
     /**
      * @notice Convert {getEncodedHTMLInline} output to a string
-     * @param scriptRequests - Array of InlineScriptRequests
+     * @param htmlRequest - Array of InlineScriptRequests
      * @return {getEncodedHTMLInline} as a string
      */
     function getEncodedHTMLInlineString(
-        HeadRequest[] calldata headRequests,
-        ScriptRequest[] calldata scriptRequests
+        HTMLRequest memory htmlRequest
     ) public view returns (string memory) {
-        return string(getEncodedHTMLInline(headRequests, scriptRequests));
+        return string(getEncodedHTMLInline(htmlRequest));
     }
 }
