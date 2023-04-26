@@ -27,7 +27,7 @@ async function deployOrGetContracts(networkName) {
 		await scriptyStorageContract.deployed()
 		console.log("ScriptyStorage deployed");
 
-		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilder")).deploy()
+		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
 		await scriptyBuilderContract.deployed()
 		console.log("ScriptyBuilder deployed");
 
@@ -91,52 +91,9 @@ async function main() {
 	await storeScript(scriptyStorageContract, "gunzipScripts-0.0.1", "../../baseScripts/dist/gunzipScripts-0.0.1.js");
 	await storeScript(scriptyStorageContract, "cube3D_GZIP", "scripts/cube3D_GZIP.js");
 
-	const scriptRequests = [
-		{
-			name: "scriptyBase",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 0,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		},
-		{
-			name: "three.min.js.gz",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 2,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		},
-		{
-			name: "gunzipScripts-0.0.1",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 0,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		},
-		{
-			name: "cube3D_GZIP",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 0,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		}
-	]
-
-	const rawBufferSize = await scriptyBuilderContract.getBufferSizeForURLSafeHTMLWrapped(scriptRequests)
-	console.log("Buffer size:", rawBufferSize);
-
 	const nftContract = await (await ethers.getContractFactory("Cube3D_GZIP_URLSafe")).deploy(
 		scriptyStorageContract.address,
-		scriptyBuilderContract.address,
-		rawBufferSize
+		scriptyBuilderContract.address
 	)
 	await nftContract.deployed()
 	console.log("NFT Contract is deployed", nftContract.address);
@@ -144,6 +101,7 @@ async function main() {
 	const tokenURI = await nftContract.tokenURI(0)
 	const tokenURIDecoded = utilities.parseEscapedDataURI(tokenURI)
 	const tokenURIJSONDecoded = JSON.parse(tokenURIDecoded)
+	console.log(tokenURIJSONDecoded);
 	const animationURL = utilities.parseEscapedDataURI(tokenURIJSONDecoded.animation_url)
 	
 	utilities.writeFile(path.join(__dirname, "tokenURI.txt"), tokenURI)
@@ -159,8 +117,7 @@ async function main() {
 			address: nftContract.address,
 			constructorArguments: [
 				scriptyStorageContract.address,
-				scriptyBuilderContract.address,
-				rawBufferSize
+				scriptyBuilderContract.address
 			],
 		});
 	}
