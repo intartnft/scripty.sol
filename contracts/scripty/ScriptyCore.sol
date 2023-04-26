@@ -254,58 +254,6 @@ contract ScriptyCore {
         return (request.wrapPrefix, request.wrapSuffix);
     }
 
-    // Making public as this can be used without scripty html builder
-    function buildWrappedScriptsAndGetSize(
-        ScriptRequest[] memory requests
-    ) public view returns (uint256) {
-        if (requests.length == 0) {
-            return 0;
-        }
-        bytes memory wrapPrefix;
-        bytes memory wrapSuffix;
-
-        uint256 i;
-        uint256 length = requests.length;
-        uint256 totalSize;
-        unchecked {
-            do {
-                bytes memory script = _fetchScript(requests[i]);
-                requests[i].scriptContent = script;
-
-                (wrapPrefix, wrapSuffix) = _wrapPrefixAndSuffixFor(requests[i]);
-                requests[i].wrapPrefix = wrapPrefix;
-                requests[i].wrapSuffix = wrapSuffix;
-
-                totalSize += wrapPrefix.length;
-                totalSize += script.length;
-                totalSize += wrapSuffix.length;
-            } while (++i < length);
-        }
-        return totalSize;
-    }
-
-    // Making public as this can be used without scripty html builder
-    // this can be also unified with above. shouldIncludeTags: Bool
-    function buildInlineScriptsAndGetSize(
-        ScriptRequest[] memory requests
-    ) public view returns (uint256) {
-        if (requests.length == 0) {
-            return 0;
-        }
-        uint256 i;
-        uint256 length = requests.length;
-        uint256 totalSize;
-        unchecked {
-            do {
-                bytes memory script = _fetchScript(requests[i]);
-                requests[i].scriptContent = script;
-
-                totalSize += script.length;
-            } while (++i < length);
-        }
-        return totalSize;
-    }
-
     /**
      * @notice Grabs requested script from storage
      * @param scriptRequest - Name given to the script. Eg: threejs.min.js_r148

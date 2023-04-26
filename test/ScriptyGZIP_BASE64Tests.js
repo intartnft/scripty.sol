@@ -1,7 +1,7 @@
 const path = require('path');
 const utilities = require("../utilities/utilities")
 
-describe.only("Scripty GZIP BASE64 Tests", function () {
+describe("Scripty GZIP BASE64 Tests", function () {
     async function deploy() {
         const contentStore = await (await ethers.getContractFactory("ContentStore")).deploy()
         await contentStore.deployed()
@@ -48,5 +48,6 @@ describe.only("Scripty GZIP BASE64 Tests", function () {
         )
         await nftContract.deployed()
         await nftContract.tokenURI_ForGasTest()
+        // TODO: add html assert
     });
 });

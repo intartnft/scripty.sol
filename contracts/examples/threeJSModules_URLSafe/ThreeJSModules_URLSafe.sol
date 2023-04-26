@@ -4,21 +4,19 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "solady/src/utils/Base64.sol";
 
-import {IScriptyBuilder, WrappedScriptRequest} from "../../scripty/IScriptyBuilder.sol";
+import {HTMLRequest, ScriptRequest} from "../../scripty/ScriptyCore.sol";
+import {IScriptyBuilderV2, HTMLRequest} from "../../scripty/IScriptyBuilderV2.sol";
 
 contract ThreeJSModules_URLSafe is ERC721 {
     address public immutable scriptyStorageAddress;
     address public immutable scriptyBuilderAddress;
-    uint256 public immutable bufferSize;
 
     constructor(
         address _scriptyStorageAddress,
-        address _scriptyBuilderAddress,
-        uint256 _bufferSize
+        address _scriptyBuilderAddress
     ) ERC721("example", "EXP") {
         scriptyStorageAddress = _scriptyStorageAddress;
         scriptyBuilderAddress = _scriptyBuilderAddress;
-        bufferSize = _bufferSize;
         mint();
     }
 
@@ -29,56 +27,61 @@ contract ThreeJSModules_URLSafe is ERC721 {
     function tokenURI(
         uint256 /*_tokenId*/
     ) public view virtual override returns (string memory) {
-        WrappedScriptRequest[] memory requests = new WrappedScriptRequest[](7);
+        ScriptRequest[] memory scriptRequests = new ScriptRequest[](7);
 
-        requests[0].name = "gunzipScripts-0.0.1.js";
-        requests[0].wrapType = 1; // <script src="data:text/javascript;base64,[script]"></script>
-        requests[0].contractAddress = scriptyStorageAddress;
+        scriptRequests[0].name = "gunzipScripts-0.0.1.js";
+        scriptRequests[0].wrapType = 1; // <script src="data:text/javascript;base64,[script]"></script>
+        scriptRequests[0].contractAddress = scriptyStorageAddress;
 
-        requests[1].name = "es-module-shims.js.gz";
-        requests[1].wrapType = 2; // <script type="text/javascript+gzip" src="data:text/javascript;base64,[script]"></script>
-        requests[1].contractAddress = scriptyStorageAddress;
+        scriptRequests[1].name = "es-module-shims.js.gz";
+        scriptRequests[1].wrapType = 2; // <script type="text/javascript+gzip" src="data:text/javascript;base64,[script]"></script>
+        scriptRequests[1].contractAddress = scriptyStorageAddress;
 
-        requests[2].name = "threejs.module.js.gz";
-        requests[2].wrapType = 4; // custom see wrapPrefix + wrapSuffix
+        scriptRequests[2].name = "threejs.module.js.gz";
+        scriptRequests[2].wrapType = 4; // custom see wrapPrefix + wrapSuffix
         // double encoded:
         // - <script>var t3 = "
         // - "</script>
-        requests[2].wrapPrefix = "%253Cscript%253Evar%2520t3%2520%253D%2520%2522";
-        requests[2].wrapSuffix = "%2522%253C%252Fscript%253E";
-        requests[2].contractAddress = scriptyStorageAddress;
+        scriptRequests[2]
+            .wrapPrefix = "%253Cscript%253Evar%2520t3%2520%253D%2520%2522";
+        scriptRequests[2].wrapSuffix = "%2522%253C%252Fscript%253E";
+        scriptRequests[2].contractAddress = scriptyStorageAddress;
 
-        requests[3].name = "OrbitControls.module.js.gz";
-        requests[3].wrapType = 4; // custom see wrapPrefix + wrapSuffix
+        scriptRequests[3].name = "OrbitControls.module.js.gz";
+        scriptRequests[3].wrapType = 4; // custom see wrapPrefix + wrapSuffix
         // double encoded:
         // - <script>var oc = "
         // - "</script>
-        requests[3].wrapPrefix = "%253Cscript%253Evar%2520oc%2520%253D%2520%2522";
-        requests[3].wrapSuffix = "%2522%253C%252Fscript%253E";
-        requests[3].contractAddress = scriptyStorageAddress;
+        scriptRequests[3]
+            .wrapPrefix = "%253Cscript%253Evar%2520oc%2520%253D%2520%2522";
+        scriptRequests[3].wrapSuffix = "%2522%253C%252Fscript%253E";
+        scriptRequests[3].contractAddress = scriptyStorageAddress;
 
-        requests[4].name = "importHandler";
-        requests[4].wrapType = 0; // <script>[script]</script>
-        requests[4].contractAddress = scriptyStorageAddress;
+        scriptRequests[4].name = "importHandler";
+        scriptRequests[4].wrapType = 0; // <script>[script]</script>
+        scriptRequests[4].contractAddress = scriptyStorageAddress;
 
-        requests[5].name = "";
-        requests[5].wrapType = 0; // <script>[script]</script>
-        requests[5].scriptContent = 'injectImportMap([["three",t3],["OrbitControls",oc]],gunzipScripts)';
+        scriptRequests[5].name = "";
+        scriptRequests[5].wrapType = 0; // <script>[script]</script>
+        scriptRequests[5]
+            .scriptContent = 'injectImportMap([["three",t3],["OrbitControls",oc]],gunzipScripts)';
 
-        requests[6].name = "torus";
-        requests[6].wrapType = 4; // <script>[script]</script>
+        scriptRequests[6].name = "torus";
+        scriptRequests[6].wrapType = 4; // <script>[script]</script>
         // double encoded:
         // - <script type="module" src="data:text/javascript;base64,
         // - "></script>
-        requests[6].wrapPrefix = "%253Cscript%2520type%253D%2522module%2522%2520src%253D%2522data%253Atext%252Fjavascript%253Bbase64%252C";
-        requests[6].wrapSuffix = "%2522%253E%253C%252Fscript%253E";
-        requests[6].contractAddress = scriptyStorageAddress;
+        scriptRequests[6]
+            .wrapPrefix = "%253Cscript%2520type%253D%2522module%2522%2520src%253D%2522data%253Atext%252Fjavascript%253Bbase64%252C";
+        scriptRequests[6].wrapSuffix = "%2522%253E%253C%252Fscript%253E";
+        scriptRequests[6].contractAddress = scriptyStorageAddress;
 
-        // For easier testing, bufferSize is injected in the constructor
-        // of this contract.
+        HTMLRequest memory htmlRequest;
+        htmlRequest.scriptRequests = scriptRequests;
 
-        bytes memory doubleURLEncodedHTMLDataURI = IScriptyBuilder(scriptyBuilderAddress)
-            .getHTMLWrappedURLSafe(requests, bufferSize);
+        bytes memory doubleURLEncodedHTMLDataURI = IScriptyBuilderV2(
+            scriptyBuilderAddress
+        ).getHTMLWrappedURLSafe(htmlRequest);
 
         return
             string(

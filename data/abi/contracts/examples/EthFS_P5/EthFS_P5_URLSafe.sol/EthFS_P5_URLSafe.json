@@ -15,11 +15,6 @@
         "internalType": "address",
         "name": "_scriptyBuilderAddress",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_bufferSize",
-        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -127,19 +122,6 @@
       }
     ],
     "name": "balanceOf",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "bufferSize",
     "outputs": [
       {
         "internalType": "uint256",

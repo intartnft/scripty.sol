@@ -47,7 +47,9 @@ contract ScriptyInlineHTML is ScriptyCore, IScriptyInlineHTML {
     function getHTMLInline(
         HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
-        uint256 scriptBufferSize = buildInlineScriptsAndGetSize(htmlRequest.scriptRequests);
+        uint256 scriptBufferSize = buildInlineScriptsAndGetSize(
+            htmlRequest.scriptRequests
+        );
 
         bytes memory htmlFile = DynamicBuffer.allocate(
             getHTMLInlineBufferSize(htmlRequest.headRequests, scriptBufferSize)
@@ -69,7 +71,12 @@ contract ScriptyInlineHTML is ScriptyCore, IScriptyInlineHTML {
         htmlFile.appendSafe(BODY_OPEN_RAW);
         htmlFile.appendSafe(SCRIPT_OPEN_RAW);
         if (htmlRequest.scriptRequests.length > 0) {
-            _appendScriptRequests(htmlFile, htmlRequest.scriptRequests, false, false);
+            _appendScriptRequests(
+                htmlFile,
+                htmlRequest.scriptRequests,
+                false,
+                false
+            );
         }
         htmlFile.appendSafe(SCRIPT_CLOSE_RAW);
         htmlFile.appendSafe(HTML_BODY_CLOSED_RAW);
@@ -78,6 +85,26 @@ contract ScriptyInlineHTML is ScriptyCore, IScriptyInlineHTML {
         // </html>
 
         return htmlFile;
+    }
+
+    function buildInlineScriptsAndGetSize(
+        ScriptRequest[] memory requests
+    ) public view returns (uint256) {
+        if (requests.length == 0) {
+            return 0;
+        }
+        uint256 i;
+        uint256 length = requests.length;
+        uint256 totalSize;
+        unchecked {
+            do {
+                bytes memory script = _fetchScript(requests[i]);
+                requests[i].scriptContent = script;
+
+                totalSize += script.length;
+            } while (++i < length);
+        }
+        return totalSize;
     }
 
     function getHTMLInlineBufferSize(

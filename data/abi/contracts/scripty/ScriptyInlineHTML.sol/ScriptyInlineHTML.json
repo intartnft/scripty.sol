@@ -403,62 +403,6 @@
       {
         "components": [
           {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "address",
-            "name": "contractAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "bytes",
-            "name": "contractData",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint8",
-            "name": "wrapType",
-            "type": "uint8"
-          },
-          {
-            "internalType": "bytes",
-            "name": "wrapPrefix",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "wrapSuffix",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "scriptContent",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct ScriptRequest[]",
-        "name": "requests",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "buildWrappedScriptsAndGetSize",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
             "internalType": "bytes",
             "name": "wrapPrefix",
             "type": "bytes"

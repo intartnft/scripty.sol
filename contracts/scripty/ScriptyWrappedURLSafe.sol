@@ -15,6 +15,8 @@ pragma solidity ^0.8.17;
 import "./ScriptyCore.sol";
 import "./interfaces/IScriptyWrappedURLSafe.sol";
 
+import "hardhat/console.sol";
+
 contract ScriptyWrappedURLSafe is ScriptyCore, IScriptyWrappedURLSafe {
     using DynamicBuffer for bytes;
 
@@ -52,12 +54,17 @@ contract ScriptyWrappedURLSafe is ScriptyCore, IScriptyWrappedURLSafe {
     function getHTMLWrappedURLSafe(
         HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
-        uint256 scriptBufferSize = buildWrappedScriptsAndGetSize(
+        uint256 scriptBufferSize = buildWrappedURLSafeScriptsAndGetSize(
             htmlRequest.scriptRequests
         );
 
+        console.log("buffer size", scriptBufferSize);
+
         bytes memory htmlFile = DynamicBuffer.allocate(
-            getHTMLWrappedURLSafeBufferSize(htmlRequest.headRequests, scriptBufferSize)
+            getHTMLWrappedURLSafeBufferSize(
+                htmlRequest.headRequests,
+                scriptBufferSize
+            )
         );
 
         // <html>
@@ -81,6 +88,44 @@ contract ScriptyWrappedURLSafe is ScriptyCore, IScriptyWrappedURLSafe {
         // </html>
 
         return htmlFile;
+    }
+
+    function buildWrappedURLSafeScriptsAndGetSize(
+        ScriptRequest[] memory requests
+    ) public view returns (uint256) {
+        if (requests.length == 0) {
+            return 0;
+        }
+        bytes memory wrapPrefix;
+        bytes memory wrapSuffix;
+
+        uint256 i;
+        uint256 length = requests.length;
+        uint256 totalSize;
+        unchecked {
+            do {
+                bytes memory script = _fetchScript(requests[i]);
+                requests[i].scriptContent = script;
+                uint256 scriptSize = script.length;
+
+                // When wrapType = 0, script will be base64 encoded.
+                // script size should account that change as well.
+                if (requests[i].wrapType == 0) {
+                    scriptSize = _sizeForBase64Encoding(scriptSize);
+                }
+
+                (wrapPrefix, wrapSuffix) = _wrapURLSafePrefixAndSuffixFor(
+                    requests[i]
+                );
+                requests[i].wrapPrefix = wrapPrefix;
+                requests[i].wrapSuffix = wrapSuffix;
+
+                totalSize += wrapPrefix.length;
+                totalSize += scriptSize;
+                totalSize += wrapSuffix.length;
+            } while (++i < length);
+        }
+        return totalSize;
     }
 
     function getHTMLWrappedURLSafeBufferSize(
@@ -126,18 +171,8 @@ contract ScriptyWrappedURLSafe is ScriptyCore, IScriptyWrappedURLSafe {
             do {
                 request = requests[i];
                 (request.wrapType == 0)
-                    ? _appendScriptRequest(
-                        htmlFile,
-                        request,
-                        true,
-                        true
-                    )
-                    : _appendScriptRequest(
-                        htmlFile,
-                        request,
-                        true,
-                        false
-                    );
+                    ? _appendScriptRequest(htmlFile, request, true, true)
+                    : _appendScriptRequest(htmlFile, request, true, false);
             } while (++i < requests.length);
         }
     }

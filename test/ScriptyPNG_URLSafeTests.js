@@ -11,17 +11,14 @@ describe("Scripty PNG URL Safe Tests", function () {
         )
         await scriptyStorageContract.deployed()
 
-        const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilder")).deploy()
+        const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
         await scriptyBuilderContract.deployed()
 
-        const scriptyTestContract = await (await ethers.getContractFactory("ScriptyBuilderGasTest")).deploy(scriptyBuilderContract.address)
-        await scriptyTestContract.deployed()
-
-        return { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract }
+        return { scriptyStorageContract, scriptyBuilderContract }
     }
 
     it("Store and read threejs.min.PNG", async function () {
-        const { scriptyStorageContract, scriptyBuilderContract, scriptyTestContract } = await deploy()
+        const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
 
         const script0 = utilities.readFile(path.join(__dirname, "../baseScripts/dist/scriptyBase.js"))
         await scriptyStorageContract.createScript("scriptyBase", utilities.stringToBytes("scriptyBase"))
@@ -45,55 +42,11 @@ describe("Scripty PNG URL Safe Tests", function () {
         await scriptyStorageContract.createScript("cube3D", utilities.stringToBytes("cube3D"))
         await scriptyStorageContract.addChunkToScript("cube3D", utilities.stringToBytes(script2))
 
-        const scriptRequests = [
-            {
-                name: "scriptyBase",
-                contractAddress: scriptyStorageContract.address,
-                contractData: 0,
-                wrapType: 0,
-                wrapPrefix: utilities.emptyBytes(),
-                wrapSuffix: utilities.emptyBytes(),
-                scriptContent: utilities.emptyBytes()
-            },
-            {
-                name: "threejs.min.js.png",
-                contractAddress: scriptyStorageContract.address,
-                contractData: 0,
-                wrapType: 2,
-                wrapPrefix: utilities.emptyBytes(),
-                wrapSuffix: utilities.emptyBytes(),
-                scriptContent: utilities.emptyBytes()
-            },
-            {
-                name: "injectPNGScripts-0.0.1",
-                contractAddress: scriptyStorageContract.address,
-                contractData: 0,
-                wrapType: 0,
-                wrapPrefix: utilities.emptyBytes(),
-                wrapSuffix: utilities.emptyBytes(),
-                scriptContent: utilities.emptyBytes()
-            },
-            {
-                name: "cube3D",
-                contractAddress: scriptyStorageContract.address,
-                contractData: 0,
-                wrapType: 0,
-                wrapPrefix: utilities.emptyBytes(),
-                wrapSuffix: utilities.emptyBytes(),
-                scriptContent: utilities.emptyBytes()
-            }
-        ]
-
-        const rawBufferSize = await scriptyBuilderContract.getBufferSizeForURLSafeHTMLWrapped(scriptRequests)
-
         const nftContract = await (await ethers.getContractFactory("Cube3D_PNG_URLSafe")).deploy(
             scriptyStorageContract.address,
-            scriptyBuilderContract.address,
-            rawBufferSize
+            scriptyBuilderContract.address
         )
         await nftContract.deployed()
-
         await nftContract.tokenURI_ForGasTest()
-        await scriptyTestContract.getHTMLWrappedURLSafe_PNG_URLSAFE(scriptRequests, rawBufferSize)
     });
 });

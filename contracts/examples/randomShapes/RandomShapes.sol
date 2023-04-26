@@ -5,21 +5,19 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "solady/src/utils/Base64.sol";
 import "solady/src/utils/LibString.sol";
 
-import {IScriptyBuilder, InlineScriptRequest} from "../../scripty/IScriptyBuilder.sol";
+import {HTMLRequest, ScriptRequest} from "../../scripty/ScriptyCore.sol";
+import {IScriptyBuilderV2, HTMLRequest} from "../../scripty/IScriptyBuilderV2.sol";
 
 contract RandomShapes is ERC721 {
     address public immutable scriptyStorageAddress;
     address public immutable scriptyBuilderAddress;
-    uint256 public immutable bufferSize;
 
     constructor(
         address _scriptyStorageAddress,
-        address _scriptyBuilderAddress,
-        uint256 _bufferSize
+        address _scriptyBuilderAddress
     ) ERC721("example", "EXP") {
         scriptyStorageAddress = _scriptyStorageAddress;
         scriptyBuilderAddress = _scriptyBuilderAddress;
-        bufferSize = _bufferSize;
         mint();
     }
 
@@ -30,18 +28,18 @@ contract RandomShapes is ERC721 {
     function tokenURI(
         uint256 /*_tokenId*/
     ) public view virtual override returns (string memory) {
-        InlineScriptRequest[] memory requests = new InlineScriptRequest[](5);
-        requests[0].name = "scriptyBase";
-        requests[0].contractAddress = scriptyStorageAddress;
+        ScriptRequest[] memory scriptRequests = new ScriptRequest[](5);
+        scriptRequests[0].name = "scriptyBase";
+        scriptRequests[0].contractAddress = scriptyStorageAddress;
 
-        requests[1].name = "drawCircles";
-        requests[1].contractAddress = scriptyStorageAddress;
+        scriptRequests[1].name = "drawCircles";
+        scriptRequests[1].contractAddress = scriptyStorageAddress;
 
-        requests[2].name = "drawRectangles";
-        requests[2].contractAddress = scriptyStorageAddress;
+        scriptRequests[2].name = "drawRectangles";
+        scriptRequests[2].contractAddress = scriptyStorageAddress;
 
-        requests[3].name = "drawShapes";
-        requests[3].contractAddress = scriptyStorageAddress;
+        scriptRequests[3].name = "drawShapes";
+        scriptRequests[3].contractAddress = scriptyStorageAddress;
 
         string memory numberOfCircles = LibString.toString(
             (block.timestamp % 300) + 50
@@ -57,19 +55,14 @@ contract RandomShapes is ERC721 {
             numberOfRectangles,
             ");"
         );
+        scriptRequests[4].scriptContent = controllerScript;
 
-        requests[4].scriptContent = controllerScript;
-        
-        // For easier testing, bufferSize for statically stored scripts 
-        // is injected in the constructor. Then controller script's length
-        // is added to that to find the final buffer size.
-        
-        uint256 finalBufferSize = bufferSize + controllerScript.length;
+        HTMLRequest memory htmlRequest;
+        htmlRequest.scriptRequests = scriptRequests;
 
-        bytes memory base64EncodedHTMLDataURI = IScriptyBuilder(scriptyBuilderAddress).getEncodedHTMLInline(
-            requests,
-            finalBufferSize
-        );
+        bytes memory base64EncodedHTMLDataURI = IScriptyBuilderV2(
+            scriptyBuilderAddress
+        ).getEncodedHTMLInline(htmlRequest);
 
         bytes memory metadata = abi.encodePacked(
             '{"name":"Random Shapes", "description":"Assembles two raw scripts that draw shapes on same <canvas></canvas> element.","animation_url":"',

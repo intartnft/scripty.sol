@@ -67,13 +67,47 @@ contract ScriptyWrappedHTML is ScriptyCore, IScriptyWrappedHTML {
         // <body>
         htmlFile.appendSafe(BODY_OPEN_RAW);
         if (htmlRequest.scriptRequests.length > 0) {
-            _appendScriptRequests(htmlFile, htmlRequest.scriptRequests, true, false);
+            _appendScriptRequests(
+                htmlFile,
+                htmlRequest.scriptRequests,
+                true,
+                false
+            );
         }
         htmlFile.appendSafe(HTML_BODY_CLOSED_RAW);
         // </body>
         // </html>
 
         return htmlFile;
+    }
+
+    function buildWrappedScriptsAndGetSize(
+        ScriptRequest[] memory requests
+    ) public view returns (uint256) {
+        if (requests.length == 0) {
+            return 0;
+        }
+        bytes memory wrapPrefix;
+        bytes memory wrapSuffix;
+
+        uint256 i;
+        uint256 length = requests.length;
+        uint256 totalSize;
+        unchecked {
+            do {
+                bytes memory script = _fetchScript(requests[i]);
+                requests[i].scriptContent = script;
+
+                (wrapPrefix, wrapSuffix) = _wrapPrefixAndSuffixFor(requests[i]);
+                requests[i].wrapPrefix = wrapPrefix;
+                requests[i].wrapSuffix = wrapSuffix;
+
+                totalSize += wrapPrefix.length;
+                totalSize += script.length;
+                totalSize += wrapSuffix.length;
+            } while (++i < length);
+        }
+        return totalSize;
     }
 
     function getHTMLWrapBufferSize(
