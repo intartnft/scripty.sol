@@ -1,6 +1,6 @@
 const utilities = require("../utilities/utilities")
 
-describe.only("ScriptyBuilder Gas Tests", function () {
+describe("ScriptyBuilder Gas Tests", function () {
 	const script = "var c = document.createElement('canvas'); var ctx = c.getContext('2d'); ctx.beginPath(); ctx.rect(20, 20, 150, 100); ctx.stroke(); document.body.appendChild(c);"
 
 	async function deploy() {
