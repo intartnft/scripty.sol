@@ -27,7 +27,7 @@ async function deployOrGetContracts(networkName) {
 		await scriptyStorageContract.deployed()
 		console.log("ScriptyStorage deployed");
 
-		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilder")).deploy()
+		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
 		await scriptyBuilderContract.deployed()
 		console.log("ScriptyBuilder deployed");
 
@@ -40,7 +40,7 @@ async function deployOrGetContracts(networkName) {
 		);
 		console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
 
-		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilder")
+		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
 		const scriptyBuilderContract = await ethers.getContractAt(
 			"ScriptyBuilder",
 			scriptyBuilderAddress
@@ -90,55 +90,13 @@ async function main() {
 	await storeScript(scriptyStorageContract, "threejs.min.js.png", "../commonScripts/threejs.min.js.png.txt");
 	await storeScript(scriptyStorageContract, "cube3D", "scripts/cube3D.js");
 
-	const scriptRequests = [
-        {
-            name: "scriptyBase",
-            contractAddress: scriptyStorageContract.address,
-            contractData: 0,
-            wrapType: 0,
-            wrapPrefix: utilities.emptyBytes(),
-            wrapSuffix: utilities.emptyBytes(),
-            scriptContent: utilities.emptyBytes()
-        },
-        {
-            name: "threejs.min.js.png",
-            contractAddress: scriptyStorageContract.address,
-            contractData: 0,
-            wrapType: 3,
-            wrapPrefix: utilities.emptyBytes(),
-            wrapSuffix: utilities.emptyBytes(),
-            scriptContent: utilities.emptyBytes()
-        },
-        {
-            name: "injectPNGScripts-0.0.1",
-            contractAddress: scriptyStorageContract.address,
-            contractData: 0,
-            wrapType: 0,
-            wrapPrefix: utilities.emptyBytes(),
-            wrapSuffix: utilities.emptyBytes(),
-            scriptContent: utilities.emptyBytes()
-        },
-        {
-            name: "cube3D",
-            contractAddress: scriptyStorageContract.address,
-            contractData: 0,
-            wrapType: 0,
-            wrapPrefix: utilities.emptyBytes(),
-            wrapSuffix: utilities.emptyBytes(),
-            scriptContent: utilities.emptyBytes()
-        }
-	]
-	const rawBufferSize = await scriptyBuilderContract.getBufferSizeForURLSafeHTMLWrapped(scriptRequests)
-	console.log("Buffer size:", rawBufferSize);
-
     const nftContract = await (await ethers.getContractFactory("Cube3D_PNG_URLSafe")).deploy(
 		scriptyStorageContract.address,
-		scriptyBuilderContract.address,
-		rawBufferSize
+		scriptyBuilderContract.address
 	)
 	await nftContract.deployed()
 	console.log("NFT Contract is deployed", nftContract.address);
-
+	
 	const tokenURI = await nftContract.tokenURI(0)
     const tokenURIDecoded = utilities.parseEscapedDataURI(tokenURI)
     const tokenURIJSONDecoded = JSON.parse(tokenURIDecoded)
@@ -157,8 +115,7 @@ async function main() {
 			address: nftContract.address,
 			constructorArguments: [
 				scriptyStorageContract.address,
-				scriptyBuilderContract.address,
-				rawBufferSize
+				scriptyBuilderContract.address
 			],
 		});
 	}

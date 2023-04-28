@@ -139,7 +139,7 @@ contract ScriptyInlineHTML is ScriptyCore, IScriptyInlineHTML {
             sizeForEncoding += HTML_BASE64_DATA_URI_BYTES;
 
             bytes memory htmlFile = DynamicBuffer.allocate(sizeForEncoding);
-            htmlFile.appendSafe("data:text/html;base64,");
+            htmlFile.appendSafe(DATA_HTML_BASE64_URI_RAW);
             htmlFile.appendSafeBase64(rawHTML, false, false);
 
             return htmlFile;

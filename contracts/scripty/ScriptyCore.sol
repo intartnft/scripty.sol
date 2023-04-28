@@ -20,39 +20,25 @@ pragma solidity ^0.8.17;
   Special thanks to @cxkoda, @frolic and @dhof
 */
 
-struct HTMLRequest {
-    HeadRequest[] headRequests;
-    ScriptRequest[] scriptRequests;
-}
-
-struct HeadRequest {
-    bytes wrapPrefix;
-    bytes wrapSuffix;
-    bytes scriptContent;
-}
-
-struct ScriptRequest {
-    string name;
-    address contractAddress;
-    bytes contractData;
-    uint8 wrapType;
-    bytes wrapPrefix;
-    bytes wrapSuffix;
-    bytes scriptContent;
-}
-
 import {DynamicBuffer} from "./utils/DynamicBuffer.sol";
+import {HeadRequest, ScriptRequest, HTMLRequest} from "./ScriptyRequests.sol";
 import {IScriptyStorage} from "./IScriptyStorage.sol";
 import {IContractScript} from "./IContractScript.sol";
 
 contract ScriptyCore {
     using DynamicBuffer for bytes;
 
-    error InvalidRequestsLength();
-
     // =============================================================
     //                        TAG CONSTANTS
     // =============================================================
+
+    // data:text/html;base64,,
+    // raw
+    // 22 bytes
+    bytes public constant DATA_HTML_BASE64_URI_RAW = "data:text/html;base64,";
+    // url encoded
+    // 21 bytes
+    bytes public constant DATA_HTML_URL_SAFE = "data%3Atext%2Fhtml%2C";
 
     // <html>,
     // raw
@@ -113,8 +99,8 @@ contract ScriptyCore {
     uint256 public constant URLS_RAW_BYTES = 39;
 
     // [URL_SAFE]
-    // HTML_OPEN + HEAD_OPEN + HEAD_CLOSE + BODY_OPEN + HTML_BODY_CLOSED
-    uint256 public constant URLS_SAFE_BYTES = 69;
+    // DATA_HTML_URL_SAFE + HTML_OPEN + HEAD_OPEN + HEAD_CLOSE + BODY_OPEN + HTML_BODY_CLOSED
+    uint256 public constant URLS_SAFE_BYTES = 90;
 
     // [RAW]
     // HTML_OPEN + HTML_CLOSE
@@ -264,7 +250,6 @@ contract ScriptyCore {
         if (scriptRequest.scriptContent.length > 0) {
             return scriptRequest.scriptContent;
         }
-
         return
             IContractScript(scriptRequest.contractAddress).getScript(
                 scriptRequest.name,
@@ -286,9 +271,9 @@ contract ScriptyCore {
         unchecked {
             do {
                 headRequest = headRequests[i];
-                htmlFile.appendSafe(headRequest.wrapPrefix);
-                htmlFile.appendSafe(headRequest.scriptContent);
-                htmlFile.appendSafe(headRequest.wrapSuffix);
+                htmlFile.appendSafe(headRequest.tagPrefix);
+                htmlFile.appendSafe(headRequest.tagContent);
+                htmlFile.appendSafe(headRequest.tagSuffix);
             } while (++i < headRequests.length);
         }
     }
@@ -351,36 +336,12 @@ contract ScriptyCore {
         unchecked {
             do {
                 headRequest = headRequests[i];
-                size += headRequest.scriptContent.length;
-                size += headRequest.wrapPrefix.length;
-                size += headRequest.wrapSuffix.length;
+                size += headRequest.tagPrefix.length;
+                size += headRequest.tagContent.length;
+                size += headRequest.tagSuffix.length;
             } while (++i < headRequests.length);
         }
     }
-
-
-    // Might be useful for offchain. It just calculates the 
-    // buffer size for scripts. If this sripts are not fetched/built
-    // then this method will return wrong buffer size. Should we 
-    // keep it?
-    function getBufferSizeForScriptRequests(
-        ScriptRequest[] calldata scriptRequests
-    ) public pure returns (uint256 size) {
-        if (scriptRequests.length == 0) {
-            return 0;
-        }
-        ScriptRequest memory scriptRequest;
-        uint256 i;
-        unchecked {
-            do {
-                scriptRequest = scriptRequests[i];
-                size += scriptRequest.scriptContent.length;
-                size += scriptRequest.wrapPrefix.length;
-                size += scriptRequest.wrapSuffix.length;
-            } while (++i < scriptRequests.length);
-        }
-    }
-
 
     /**
      * @notice Calculate the buffer size post base64 encoding

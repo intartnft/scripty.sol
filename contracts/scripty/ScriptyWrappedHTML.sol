@@ -50,7 +50,7 @@ contract ScriptyWrappedHTML is ScriptyCore, IScriptyWrappedHTML {
         );
 
         bytes memory htmlFile = DynamicBuffer.allocate(
-            getHTMLWrapBufferSize(htmlRequest.headRequests, scriptBufferSize)
+            getHTMLWrappedBufferSize(htmlRequest.headRequests, scriptBufferSize)
         );
 
         // <html>
@@ -110,7 +110,7 @@ contract ScriptyWrappedHTML is ScriptyCore, IScriptyWrappedHTML {
         return totalSize;
     }
 
-    function getHTMLWrapBufferSize(
+    function getHTMLWrappedBufferSize(
         HeadRequest[] memory headRequests,
         uint256 scriptSize
     ) public pure returns (uint256 size) {
@@ -141,7 +141,7 @@ contract ScriptyWrappedHTML is ScriptyCore, IScriptyWrappedHTML {
             sizeForEncoding += HTML_BASE64_DATA_URI_BYTES;
 
             bytes memory htmlFile = DynamicBuffer.allocate(sizeForEncoding);
-            htmlFile.appendSafe("data:text/html;base64,");
+            htmlFile.appendSafe(DATA_HTML_BASE64_URI_RAW);
             htmlFile.appendSafeBase64(rawHTML, false, false);
             return htmlFile;
         }

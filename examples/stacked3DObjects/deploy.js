@@ -27,7 +27,7 @@ async function deployOrGetContracts(networkName) {
 		await scriptyStorageContract.deployed()
 		console.log("ScriptyStorage deployed");
 
-		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilder")).deploy()
+		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
 		await scriptyBuilderContract.deployed()
 		console.log("ScriptyBuilder deployed");
 
@@ -40,7 +40,7 @@ async function deployOrGetContracts(networkName) {
 		);
 		console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
 
-		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilder")
+		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
 		const scriptyBuilderContract = await ethers.getContractAt(
 			"ScriptyBuilder",
 			scriptyBuilderAddress
@@ -100,75 +100,16 @@ async function main() {
 	await storeScript(scriptyStorageContract, "stacked3DObjects1", "scripts/stacked3DObjects1.js");
 	await storeScript(scriptyStorageContract, "stacked3DObjects2", "scripts/stacked3DObjects2.js");
 
-	let scriptRequests = [
-		{
-			name: "scriptyBase",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 0,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		},
-		{
-			name: "three.min.js.gz",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 2,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		},
-		{
-			name: "gunzipScripts-0.0.1",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 0,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		},
-		{
-			name: "stacked3DObjects1",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 0,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		}
-	]
-
-	const rawBufferSize1 = await scriptyBuilderContract.getBufferSizeForHTMLWrapped(scriptRequests)
-	console.log("Buffer size:", rawBufferSize1);
-
-	scriptRequests.push(
-		{
-			name: "stacked3DObjects2",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 0,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		}
-	)
-
-	const rawBufferSize2 = await scriptyBuilderContract.getBufferSizeForHTMLWrapped(scriptRequests)
-	console.log("Buffer size:", rawBufferSize2);
-
 	const nftContract1 = await (await ethers.getContractFactory("Stacked3DObjects_Cubes")).deploy(
 		scriptyStorageContract.address,
-		scriptyBuilderContract.address,
-		rawBufferSize1
+		scriptyBuilderContract.address
 	)
 	await nftContract1.deployed()
 	console.log("NFT Contract is deployed", nftContract1.address);
 
 	const nftContract2 = await (await ethers.getContractFactory("Stacked3DObjects_Spheres")).deploy(
 		scriptyStorageContract.address,
-		scriptyBuilderContract.address,
-		rawBufferSize2
+		scriptyBuilderContract.address
 	)
 	await nftContract1.deployed()
 	console.log("NFT Contract is deployed", nftContract2.address);
@@ -192,8 +133,7 @@ async function main() {
 			address: nftContract1.address,
 			constructorArguments: [
 				scriptyStorageContract.address,
-				scriptyBuilderContract.address,
-				rawBufferSize1
+				scriptyBuilderContract.address
 			],
 		});
 
@@ -201,8 +141,7 @@ async function main() {
 			address: nftContract2.address,
 			constructorArguments: [
 				scriptyStorageContract.address,
-				scriptyBuilderContract.address,
-				rawBufferSize2
+				scriptyBuilderContract.address
 			],
 		});
 	}

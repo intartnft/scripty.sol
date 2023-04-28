@@ -4,8 +4,12 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "solady/src/utils/Base64.sol";
 
-import {HTMLRequest, ScriptRequest} from "../../scripty/ScriptyCore.sol";
-import {IScriptyBuilderV2, HTMLRequest} from "../../scripty/IScriptyBuilderV2.sol";
+import {
+    IScriptyBuilderV2, 
+    HTMLRequest, 
+    HeadRequest, 
+    ScriptRequest
+} from "../../scripty/IScriptyBuilderV2.sol";
 
 contract Cube3D_GZIP_BASE64 is ERC721 {
     address public immutable scriptyStorageAddress;
@@ -44,14 +48,18 @@ contract Cube3D_GZIP_BASE64 is ERC721 {
         scriptRequests[3].wrapType = 0; // <script>[script]</script>
         scriptRequests[3].contractAddress = scriptyStorageAddress;
 
+        HeadRequest[] memory headRequests = new HeadRequest[](1);
+        headRequests[0].tagPrefix = "<style>";
+        headRequests[0].tagContent = "html{height:100%}body{min-height:100%;margin:0;padding:0}canvas{padding:0;margin:auto;display:block;position:absolute;top:0;bottom:0;left:0;right:0}";
+        headRequests[0].tagSuffix = "</style>";
+
         HTMLRequest memory htmlRequest;
+        htmlRequest.headRequests = headRequests;
         htmlRequest.scriptRequests = scriptRequests;
 
-        // For easier testing, bufferSize is injected in the constructor
-        // of this contract.
-
-        bytes memory base64EncodedHTMLDataURI = IScriptyBuilderV2(scriptyBuilderAddress)
-            .getEncodedHTMLWrapped(htmlRequest);
+        bytes memory base64EncodedHTMLDataURI = IScriptyBuilderV2(
+            scriptyBuilderAddress
+        ).getEncodedHTMLWrapped(htmlRequest);
 
         bytes memory metadata = abi.encodePacked(
             '{"name":"Cube 3D - GZIP - Base64", "description":"Assembles GZIP compressed base64 encoded three.js with a demo scene. Metadata and animation URL are both base64 encoded.","animation_url":"',
@@ -66,11 +74,5 @@ contract Cube3D_GZIP_BASE64 is ERC721 {
                     Base64.encode(metadata)
                 )
             );
-    }
-
-    // Just for testing
-    // solc-ignore-next-line func-mutability
-    function tokenURI_ForGasTest() public {
-        tokenURI(0);
     }
 }

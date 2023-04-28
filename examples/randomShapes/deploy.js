@@ -27,7 +27,7 @@ async function deployOrGetContracts(networkName) {
 		await scriptyStorageContract.deployed()
 		console.log("ScriptyStorage deployed");
 
-		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilder")).deploy()
+		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
 		await scriptyBuilderContract.deployed()
 		console.log("ScriptyBuilder deployed");
 
@@ -40,7 +40,7 @@ async function deployOrGetContracts(networkName) {
 		);
 		console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
 
-		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilder")
+		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
 		const scriptyBuilderContract = await ethers.getContractAt(
 			"ScriptyBuilder",
 			scriptyBuilderAddress
@@ -92,23 +92,11 @@ async function main() {
 	await storeScript(scriptyStorageContract, "drawRectangles", "scripts/drawRectangles.js");
 	await storeScript(scriptyStorageContract, "drawShapes", "scripts/drawShapes.js");
 
-	// Build script requests and calculate buffer size
-	const scriptRequests = [
-		["scriptyBase", scriptyStorageContract.address, 0, utilities.emptyBytes()],
-		["drawCircles", scriptyStorageContract.address, 0, utilities.emptyBytes()],
-		["drawRectangles", scriptyStorageContract.address, 0, utilities.emptyBytes()],
-		["drawShapes", scriptyStorageContract.address, 0, utilities.emptyBytes()],
-	]
-
-	const rawBufferSize = await scriptyBuilderContract.getBufferSizeForHTMLInline(scriptRequests)
-	console.log("Buffer size:", rawBufferSize);
-
 	// Deploy main NFT contract
 	console.log("Deploying NFT contract");
 	const nftContract = await (await ethers.getContractFactory("RandomShapes")).deploy(
 		scriptyStorageContract.address,
-		scriptyBuilderContract.address,
-		rawBufferSize
+		scriptyBuilderContract.address
 	)
 	await nftContract.deployed()
 	console.log("NFT Contract is deployed", nftContract.address);
@@ -133,8 +121,7 @@ async function main() {
 			address: nftContract.address,
 			constructorArguments: [
 				scriptyStorageContract.address,
-				scriptyBuilderContract.address,
-				rawBufferSize
+				scriptyBuilderContract.address
 			],
 		});
 	}

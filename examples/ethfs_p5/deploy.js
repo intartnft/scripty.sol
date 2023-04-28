@@ -36,7 +36,7 @@ async function deployOrGetContracts(networkName) {
         await scriptyStorageContract.deployed()
         console.log("ScriptyStorage deployed");
 
-        const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilder")).deploy()
+        const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
         await scriptyBuilderContract.deployed()
         console.log("ScriptyBuilder deployed");
 
@@ -56,7 +56,7 @@ async function deployOrGetContracts(networkName) {
         );
         console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
 
-        const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilder")
+        const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
         const scriptyBuilderContract = await ethers.getContractAt(
             "ScriptyBuilder",
             scriptyBuilderAddress
@@ -115,53 +115,10 @@ async function main() {
 	await storeScript(scriptyStorageContract, "scriptyBase", "../../baseScripts/dist/scriptyBase.js");
     await storeScript(scriptyStorageContract, "pointsAndLines", "scripts/pointsAndLines.js");
 
-	const scriptRequests = [
-		{
-			name: "scriptyBase",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 0,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		},
-		{
-			name: "p5-v1.5.0.min.js.gz",
-			contractAddress: ethfsFileStorageContract.address,
-			contractData: 0,
-			wrapType: 2,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		},
-		{
-			name: "gunzipScripts-0.0.1.js",
-			contractAddress: ethfsFileStorageContract.address,
-			contractData: 0,
-			wrapType: 1,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		},
-		{
-			name: "pointsAndLines",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 0,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		}
-	]
-
-	const rawBufferSize = await scriptyBuilderContract.getBufferSizeForHTMLWrapped(scriptRequests)
-	console.log("Buffer size:", rawBufferSize);
-
 	const nftContract = await (await ethers.getContractFactory("EthFS_P5")).deploy(
 		ethfsFileStorageContract.address,
 		scriptyStorageContract.address,
-		scriptyBuilderContract.address,
-		rawBufferSize
+		scriptyBuilderContract.address
 	)
 	await nftContract.deployed()
 	console.log("NFT Contract is deployed", nftContract.address);
@@ -185,8 +142,7 @@ async function main() {
 			constructorArguments: [
 				ethfsFileStorageContract.address,
 				scriptyStorageContract.address,
-				scriptyBuilderContract.address,
-				rawBufferSize
+				scriptyBuilderContract.address
 			],
 		});
 	}

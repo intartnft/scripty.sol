@@ -4,8 +4,12 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "solady/src/utils/Base64.sol";
 
-import {HTMLRequest, ScriptRequest} from "../../scripty/ScriptyCore.sol";
-import {IScriptyBuilderV2, HTMLRequest} from "../../scripty/IScriptyBuilderV2.sol";
+import {
+    IScriptyBuilderV2, 
+    HTMLRequest, 
+    HeadRequest, 
+    ScriptRequest
+} from "../../scripty/IScriptyBuilderV2.sol";
 
 contract Cube3D_GZIP_URLSafe is ERC721 {
     address public immutable scriptyStorageAddress;
@@ -44,11 +48,22 @@ contract Cube3D_GZIP_URLSafe is ERC721 {
         scriptRequests[3].wrapType = 0; // <script>[script]</script>
         scriptRequests[3].contractAddress = scriptyStorageAddress;
 
+        // double encoded:
+        // <script>
+        //     html{height:100%}body{min-height:100%;margin:0;padding:0}canvas{padding:0;margin:auto;display:block;position:absolute;top:0;bottom:0;left:0;right:0}
+        // </script>
+        HeadRequest[] memory headRequests = new HeadRequest[](1);
+        headRequests[0].tagPrefix = "%253Cstyle%253E";
+        headRequests[0].tagContent = "html%257Bheight%253A100%2525%257Dbody%257Bmin-height%253A100%2525%253Bmargin%253A0%253Bpadding%253A0%257Dcanvas%257Bpadding%253A0%253Bmargin%253Aauto%253Bdisplay%253Ablock%253Bposition%253Aabsolute%253Btop%253A0%253Bbottom%253A0%253Bleft%253A0%253Bright%253A0%257D";
+        headRequests[0].tagSuffix = "%253C%252Fstyle%253E";
+
         HTMLRequest memory htmlRequest;
+        htmlRequest.headRequests = headRequests;
         htmlRequest.scriptRequests = scriptRequests;
 
-        bytes memory doubleURLEncodedHTMLDataURI = IScriptyBuilderV2(scriptyBuilderAddress)
-            .getHTMLWrappedURLSafe(htmlRequest);
+        bytes memory doubleURLEncodedHTMLDataURI = IScriptyBuilderV2(
+            scriptyBuilderAddress
+        ).getHTMLWrappedURLSafe(htmlRequest);
 
         return
             string(
@@ -63,11 +78,5 @@ contract Cube3D_GZIP_URLSafe is ERC721 {
                     "%22%7D"
                 )
             );
-    }
-
-    // Just for testing
-    // solc-ignore-next-line func-mutability
-    function tokenURI_ForGasTest() public {
-        tokenURI(0);
     }
 }

@@ -27,7 +27,7 @@ async function deployOrGetContracts(networkName) {
 		await scriptyStorageContract.deployed()
 		console.log("ScriptyStorage deployed");
 
-		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilder")).deploy()
+		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
 		await scriptyBuilderContract.deployed()
 		console.log("ScriptyBuilder deployed");
 
@@ -40,7 +40,7 @@ async function deployOrGetContracts(networkName) {
 		);
 		console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
 
-		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilder")
+		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
 		const scriptyBuilderContract = await ethers.getContractAt(
 			"ScriptyBuilder",
 			scriptyBuilderAddress
@@ -92,93 +92,9 @@ async function main() {
 	await storeScript(scriptyStorageContract, "importHandler", "scripts/importHandler.js");
 	await storeScript(scriptyStorageContract, "torus", "scripts/torus.min.js.txt");
 
-	const scriptRequests = [
-		{
-			name: "gunzipScripts-0.0.1.js",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 1,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.emptyBytes()
-		},
-
-        {
-            name: "es-module-shims.js.gz",
-            contractAddress: scriptyStorageContract.address,
-            contractData: 0,
-            wrapType: 2,
-            wrapPrefix: utilities.emptyBytes(),
-            wrapSuffix: utilities.emptyBytes(),
-            scriptContent: utilities.emptyBytes()
-        },
-
-        {
-            name: "threejs.module.js.gz",
-            contractAddress: scriptyStorageContract.address,
-            contractData: 0,
-            wrapType: 4,
-            // double encoded:
-            // - <script>var t3 = "
-            // - "</script>
-            wrapPrefix: utilities.stringToBytes("%253Cscript%253Evar%2520t3%2520%253D%2520%2522"),
-            wrapSuffix: utilities.stringToBytes("%2522%253C%252Fscript%253E"),
-            scriptContent: utilities.emptyBytes()
-        },
-
-        {
-            name: "OrbitControls.module.js.gz",
-            contractAddress: scriptyStorageContract.address,
-            contractData: 0,
-			wrapType: 4,
-			// double encoded:
-			// - <script>var oc = "
-			// - "</script>
-			wrapPrefix: utilities.stringToBytes("%253Cscript%253Evar%2520oc%2520%253D%2520%2522"),
-			wrapSuffix: utilities.stringToBytes("%2522%253C%252Fscript%253E"),
-			scriptContent: utilities.emptyBytes()
-        },
-
-        {
-            name: "importHandler",
-            contractAddress: scriptyStorageContract.address,
-            contractData: 0,
-            wrapType: 0,
-            wrapPrefix: utilities.emptyBytes(),
-            wrapSuffix: utilities.emptyBytes(),
-            scriptContent: utilities.emptyBytes()
-        },
-
-		{
-			name: "",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 0,
-			wrapPrefix: utilities.emptyBytes(),
-			wrapSuffix: utilities.emptyBytes(),
-			scriptContent: utilities.stringToBytes('injectImportMap([["three",t3],["OrbitControls",oc]],gunzipScripts)')
-		},
-
-		{
-			name: "torus",
-			contractAddress: scriptyStorageContract.address,
-			contractData: 0,
-			wrapType: 4,
-			// double encoded:
-			// - <script type="module" src="data:text/javascript;base64,
-			// - "></script>
-			wrapPrefix: utilities.stringToBytes("%253Cscript%2520type%253D%2522module%2522%2520src%253D%2522data%253Atext%252Fjavascript%253Bbase64%252C"),
-			wrapSuffix: utilities.stringToBytes("%2522%253E%253C%252Fscript%253E"),
-			scriptContent: utilities.emptyBytes()
-		}
-	]
-	const rawBufferSize = await scriptyBuilderContract.getBufferSizeForURLSafeHTMLWrapped(scriptRequests)
-	console.log("Buffer size:", rawBufferSize);
-
 	const nftContract = await (await ethers.getContractFactory("ThreeJSModules_URLSafe")).deploy(
 		scriptyStorageContract.address,
-		scriptyBuilderContract.address,
-		rawBufferSize
+		scriptyBuilderContract.address
 	)
 	await nftContract.deployed()
 	console.log("NFT Contract is deployed", nftContract.address);
@@ -201,8 +117,7 @@ async function main() {
 			address: nftContract.address,
 			constructorArguments: [
 				scriptyStorageContract.address,
-				scriptyBuilderContract.address,
-				rawBufferSize
+				scriptyBuilderContract.address
 			],
 		});
 	}

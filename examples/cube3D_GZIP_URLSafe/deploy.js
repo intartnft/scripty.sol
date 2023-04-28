@@ -101,7 +101,6 @@ async function main() {
 	const tokenURI = await nftContract.tokenURI(0)
 	const tokenURIDecoded = utilities.parseEscapedDataURI(tokenURI)
 	const tokenURIJSONDecoded = JSON.parse(tokenURIDecoded)
-	console.log(tokenURIJSONDecoded);
 	const animationURL = utilities.parseEscapedDataURI(tokenURIJSONDecoded.animation_url)
 	
 	utilities.writeFile(path.join(__dirname, "tokenURI.txt"), tokenURI)

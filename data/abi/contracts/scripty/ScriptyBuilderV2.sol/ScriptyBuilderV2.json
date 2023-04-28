@@ -1,11 +1,6 @@
 [
   {
     "inputs": [],
-    "name": "InvalidRequestsLength",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "BODY_OPEN_RAW",
     "outputs": [
       {
@@ -51,6 +46,32 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "DATA_HTML_BASE64_URI_RAW",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "DATA_HTML_URL_SAFE",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
       }
     ],
     "stateMutability": "view",
@@ -516,17 +537,17 @@
         "components": [
           {
             "internalType": "bytes",
-            "name": "wrapPrefix",
+            "name": "tagPrefix",
             "type": "bytes"
           },
           {
             "internalType": "bytes",
-            "name": "wrapSuffix",
+            "name": "tagSuffix",
             "type": "bytes"
           },
           {
             "internalType": "bytes",
-            "name": "scriptContent",
+            "name": "tagContent",
             "type": "bytes"
           }
         ],
@@ -551,76 +572,20 @@
       {
         "components": [
           {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "address",
-            "name": "contractAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "bytes",
-            "name": "contractData",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint8",
-            "name": "wrapType",
-            "type": "uint8"
-          },
-          {
-            "internalType": "bytes",
-            "name": "wrapPrefix",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "wrapSuffix",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "scriptContent",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct ScriptRequest[]",
-        "name": "scriptRequests",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "getBufferSizeForScriptRequests",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "size",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -695,17 +660,17 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -780,17 +745,17 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -865,17 +830,17 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -950,17 +915,17 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -1033,17 +998,17 @@
         "components": [
           {
             "internalType": "bytes",
-            "name": "wrapPrefix",
+            "name": "tagPrefix",
             "type": "bytes"
           },
           {
             "internalType": "bytes",
-            "name": "wrapSuffix",
+            "name": "tagSuffix",
             "type": "bytes"
           },
           {
             "internalType": "bytes",
-            "name": "scriptContent",
+            "name": "tagContent",
             "type": "bytes"
           }
         ],
@@ -1076,17 +1041,17 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -1158,61 +1123,20 @@
       {
         "components": [
           {
-            "internalType": "bytes",
-            "name": "wrapPrefix",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "wrapSuffix",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "scriptContent",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct HeadRequest[]",
-        "name": "headRequests",
-        "type": "tuple[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "scriptSize",
-        "type": "uint256"
-      }
-    ],
-    "name": "getHTMLWrapBufferSize",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "size",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -1284,20 +1208,61 @@
       {
         "components": [
           {
+            "internalType": "bytes",
+            "name": "tagPrefix",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "tagSuffix",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "tagContent",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct HeadRequest[]",
+        "name": "headRequests",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "scriptSize",
+        "type": "uint256"
+      }
+    ],
+    "name": "getHTMLWrappedBufferSize",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "size",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -1372,17 +1337,17 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -1455,17 +1420,17 @@
         "components": [
           {
             "internalType": "bytes",
-            "name": "wrapPrefix",
+            "name": "tagPrefix",
             "type": "bytes"
           },
           {
             "internalType": "bytes",
-            "name": "wrapSuffix",
+            "name": "tagSuffix",
             "type": "bytes"
           },
           {
             "internalType": "bytes",
-            "name": "scriptContent",
+            "name": "tagContent",
             "type": "bytes"
           }
         ],
@@ -1498,17 +1463,17 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],

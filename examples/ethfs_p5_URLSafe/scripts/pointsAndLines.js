@@ -1,3 +1,6 @@
+var w = window.innerWidth;
+var h = window.innerHeight;
+
 function setup() {
 	let d = 70;
 	let p1 = d;
@@ -6,7 +9,7 @@ function setup() {
 	let p4 = p3 + d;
 
 	// Sets the screen to be 720 pixels wide and 400 pixels high
-	createCanvas(720, 400);
+	canvas = createCanvas(w, h);
 	background(0);
 	noSmooth();
 
@@ -28,3 +31,10 @@ function setup() {
 	point(p4, p2);
 	point(p4, p4);
 };
+
+window.onresize = function () {
+	// assigns new values for width and height variables
+	w = window.innerWidth;
+	h = window.innerHeight;
+	canvas.size(w, h);
+}

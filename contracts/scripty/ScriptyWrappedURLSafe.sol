@@ -15,8 +15,6 @@ pragma solidity ^0.8.17;
 import "./ScriptyCore.sol";
 import "./interfaces/IScriptyWrappedURLSafe.sol";
 
-import "hardhat/console.sol";
-
 contract ScriptyWrappedURLSafe is ScriptyCore, IScriptyWrappedURLSafe {
     using DynamicBuffer for bytes;
 
@@ -58,14 +56,15 @@ contract ScriptyWrappedURLSafe is ScriptyCore, IScriptyWrappedURLSafe {
             htmlRequest.scriptRequests
         );
 
-        console.log("buffer size", scriptBufferSize);
-
         bytes memory htmlFile = DynamicBuffer.allocate(
             getHTMLWrappedURLSafeBufferSize(
                 htmlRequest.headRequests,
                 scriptBufferSize
             )
         );
+
+        // data:text/html,
+        htmlFile.appendSafe(DATA_HTML_URL_SAFE);
 
         // <html>
         htmlFile.appendSafe(HTML_OPEN_URL_SAFE);

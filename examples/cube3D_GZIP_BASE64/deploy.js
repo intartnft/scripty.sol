@@ -95,7 +95,6 @@ async function main() {
 		scriptyBuilderContract.address
 	)
 	await nftContract.deployed()
-	console.log("NFT Contract is deployed", nftContract.address);
 
     const tokenURI = await nftContract.tokenURI(0)
 	const tokenURIDecoded = utilities.parseBase64DataURI(tokenURI)

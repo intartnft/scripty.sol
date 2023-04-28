@@ -7,17 +7,17 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -92,17 +92,17 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -177,17 +177,17 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
@@ -262,17 +262,17 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagPrefix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagSuffix",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],

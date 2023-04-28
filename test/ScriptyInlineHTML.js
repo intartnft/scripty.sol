@@ -1,8 +1,8 @@
 const { expect } = require("chai");
 const utilities = require("../utilities/utilities")
 
-const recordMode = false;
-const expectedResultsPath = __dirname + "/expectedResults/";
+const recordMode = true;
+const expectedResultsPath = __dirname + "/expectedResults/ScriptyInlineHTML/";
 
 const writeHTMLResult = (name, result) => {
     const fileName = name.replace(/\s/g, '');
