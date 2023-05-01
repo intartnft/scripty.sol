@@ -91,6 +91,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
      * Emits an {ChunkStored} event.
      */
     function addChunkToScript(string calldata name, bytes calldata chunk)
+
         public
         isFrozen(name)
         scriptOwner(name)
