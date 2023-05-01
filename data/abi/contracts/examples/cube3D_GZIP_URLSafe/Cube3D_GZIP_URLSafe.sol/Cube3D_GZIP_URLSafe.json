@@ -349,6 +349,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "tokenURI_ForGasTest",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",

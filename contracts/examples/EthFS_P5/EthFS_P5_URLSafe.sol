@@ -9,7 +9,7 @@ import {
     HTMLRequest, 
     HeadRequest, 
     ScriptRequest
-} from "../../scripty/IScriptyBuilderV2.sol";
+} from "../../scripty/interfaces/IScriptyBuilderV2.sol";
 
 contract EthFS_P5_URLSafe is ERC721 {
     address public immutable ethfsFileStorageAddress;

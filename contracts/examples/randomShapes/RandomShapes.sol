@@ -10,7 +10,7 @@ import {
     HTMLRequest, 
     HeadRequest, 
     ScriptRequest
-} from "../../scripty/IScriptyBuilderV2.sol";
+} from "../../scripty/interfaces/IScriptyBuilderV2.sol";
 
 contract RandomShapes is ERC721 {
     address public immutable scriptyStorageAddress;

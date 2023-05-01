@@ -52,7 +52,7 @@ contract ScriptyWrappedURLSafe is ScriptyCore, IScriptyWrappedURLSafe {
     function getHTMLWrappedURLSafe(
         HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
-        uint256 scriptBufferSize = buildWrappedURLSafeScriptsAndGetSize(
+        (, uint256 scriptBufferSize) = buildWrappedURLSafeScriptsAndGetSize(
             htmlRequest.scriptRequests
         );
 
@@ -87,44 +87,6 @@ contract ScriptyWrappedURLSafe is ScriptyCore, IScriptyWrappedURLSafe {
         // </html>
 
         return htmlFile;
-    }
-
-    function buildWrappedURLSafeScriptsAndGetSize(
-        ScriptRequest[] memory requests
-    ) public view returns (uint256) {
-        if (requests.length == 0) {
-            return 0;
-        }
-        bytes memory wrapPrefix;
-        bytes memory wrapSuffix;
-
-        uint256 i;
-        uint256 length = requests.length;
-        uint256 totalSize;
-        unchecked {
-            do {
-                bytes memory script = _fetchScript(requests[i]);
-                requests[i].scriptContent = script;
-                uint256 scriptSize = script.length;
-
-                // When wrapType = 0, script will be base64 encoded.
-                // script size should account that change as well.
-                if (requests[i].wrapType == 0) {
-                    scriptSize = _sizeForBase64Encoding(scriptSize);
-                }
-
-                (wrapPrefix, wrapSuffix) = _wrapURLSafePrefixAndSuffixFor(
-                    requests[i]
-                );
-                requests[i].wrapPrefix = wrapPrefix;
-                requests[i].wrapSuffix = wrapSuffix;
-
-                totalSize += wrapPrefix.length;
-                totalSize += scriptSize;
-                totalSize += wrapSuffix.length;
-            } while (++i < length);
-        }
-        return totalSize;
     }
 
     function getHTMLWrappedURLSafeBufferSize(

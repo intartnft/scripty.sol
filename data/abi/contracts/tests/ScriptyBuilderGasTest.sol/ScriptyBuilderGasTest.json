@@ -3,12 +3,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_scriptyWrappedHTMLAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_scriptyInlineHTMLAddress",
+        "name": "_scriptyBuilderAddress",
         "type": "address"
       }
     ],
@@ -648,21 +643,166 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "scriptyInlineHTMLAddress",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "tagPrefix",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagSuffix",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct HeadRequest[]",
+            "name": "headRequests",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "contractAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "contractData",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint8",
+                "name": "wrapType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes",
+                "name": "wrapPrefix",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "wrapSuffix",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "scriptContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ScriptRequest[]",
+            "name": "scriptRequests",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct HTMLRequest",
+        "name": "htmlRequest",
+        "type": "tuple"
       }
     ],
-    "stateMutability": "view",
+    "name": "getHTMLURLSafe_Few",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "tagPrefix",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagSuffix",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct HeadRequest[]",
+            "name": "headRequests",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "contractAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "contractData",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint8",
+                "name": "wrapType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes",
+                "name": "wrapPrefix",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "wrapSuffix",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "scriptContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ScriptRequest[]",
+            "name": "scriptRequests",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct HTMLRequest",
+        "name": "htmlRequest",
+        "type": "tuple"
+      }
+    ],
+    "name": "getHTMLURLSafe_Many",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "scriptyWrappedHTMLAddress",
+    "name": "scriptyBuilderAddress",
     "outputs": [
       {
         "internalType": "address",

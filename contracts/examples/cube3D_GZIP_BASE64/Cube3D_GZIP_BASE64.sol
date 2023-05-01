@@ -4,12 +4,7 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "solady/src/utils/Base64.sol";
 
-import {
-    IScriptyBuilderV2, 
-    HTMLRequest, 
-    HeadRequest, 
-    ScriptRequest
-} from "../../scripty/IScriptyBuilderV2.sol";
+import {IScriptyBuilderV2, HTMLRequest, HeadRequest, ScriptRequest} from "../../scripty/interfaces/IScriptyBuilderV2.sol";
 
 contract Cube3D_GZIP_BASE64 is ERC721 {
     address public immutable scriptyStorageAddress;
@@ -74,5 +69,11 @@ contract Cube3D_GZIP_BASE64 is ERC721 {
                     Base64.encode(metadata)
                 )
             );
+    }
+
+    // for testing only
+    // solc-ignore-next-line func-mutability
+    function tokenURI_ForGasTest() public returns (string memory) {
+        return tokenURI(0);
     }
 }

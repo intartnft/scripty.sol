@@ -22,8 +22,8 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IContentStore} from "./dependencies/ethfs/IContentStore.sol";
 import {AddressChunks} from "./utils/AddressChunks.sol";
 
-import {IScriptyStorage} from "./IScriptyStorage.sol";
-import {IContractScript} from "./IContractScript.sol";
+import {IScriptyStorage} from "./interfaces/IScriptyStorage.sol";
+import {IContractScript} from "./interfaces/IContractScript.sol";
 
 contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
     IContentStore public immutable contentStore;
@@ -110,7 +110,6 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
      */
     function updateDetails(string calldata name, bytes calldata details)
         public
-        isFrozen(name)
         scriptOwner(name)
     {
         scripts[name].details = details;
@@ -127,7 +126,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
     function updateScriptVerification(string calldata name, bool isVerified)
         public
         isFrozen(name)
-        scriptOwner(name)
+        onlyOwner
     {
         scripts[name].isVerified = isVerified;
         emit ScriptVerificationUpdated(name, isVerified);

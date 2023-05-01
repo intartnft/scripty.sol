@@ -9,7 +9,7 @@ import {
     HTMLRequest, 
     HeadRequest, 
     ScriptRequest
-} from "../../scripty/IScriptyBuilderV2.sol";
+} from "../../scripty/interfaces/IScriptyBuilderV2.sol";
 
 contract Cube3D_PNG_URLSafe is ERC721 {
     address public immutable scriptyStorageAddress;
@@ -78,5 +78,11 @@ contract Cube3D_PNG_URLSafe is ERC721 {
                     "%22%7D"
                 )
             );
+    }
+
+    // for testing only
+    // solc-ignore-next-line func-mutability
+    function tokenURI_ForGasTest() public returns (string memory) {
+        return tokenURI(0);
     }
 }

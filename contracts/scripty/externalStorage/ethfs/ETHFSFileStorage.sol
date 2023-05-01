@@ -11,7 +11,7 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 
 import {IFileStore} from "./../../dependencies/ethfs/IFileStore.sol";
-import {IContractScript} from "./../../IContractScript.sol";
+import {IContractScript} from "./../../interfaces/IContractScript.sol";
 
 contract ETHFSFileStorage is IContractScript {
     IFileStore public immutable fileStore;

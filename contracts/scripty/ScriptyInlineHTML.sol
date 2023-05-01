@@ -47,7 +47,7 @@ contract ScriptyInlineHTML is ScriptyCore, IScriptyInlineHTML {
     function getHTMLInline(
         HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
-        uint256 scriptBufferSize = buildInlineScriptsAndGetSize(
+        (, uint256 scriptBufferSize) = buildInlineScriptsAndGetSize(
             htmlRequest.scriptRequests
         );
 
@@ -87,26 +87,6 @@ contract ScriptyInlineHTML is ScriptyCore, IScriptyInlineHTML {
         return htmlFile;
     }
 
-    function buildInlineScriptsAndGetSize(
-        ScriptRequest[] memory requests
-    ) public view returns (uint256) {
-        if (requests.length == 0) {
-            return 0;
-        }
-        uint256 i;
-        uint256 length = requests.length;
-        uint256 totalSize;
-        unchecked {
-            do {
-                bytes memory script = _fetchScript(requests[i]);
-                requests[i].scriptContent = script;
-
-                totalSize += script.length;
-            } while (++i < length);
-        }
-        return totalSize;
-    }
-
     function getHTMLInlineBufferSize(
         HeadRequest[] memory headRequests,
         uint256 scriptSize
@@ -135,7 +115,7 @@ contract ScriptyInlineHTML is ScriptyCore, IScriptyInlineHTML {
         unchecked {
             bytes memory rawHTML = getHTMLInline(htmlRequest);
 
-            uint256 sizeForEncoding = _sizeForBase64Encoding(rawHTML.length);
+            uint256 sizeForEncoding = sizeForBase64Encoding(rawHTML.length);
             sizeForEncoding += HTML_BASE64_DATA_URI_BYTES;
 
             bytes memory htmlFile = DynamicBuffer.allocate(sizeForEncoding);

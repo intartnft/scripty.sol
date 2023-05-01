@@ -22,8 +22,8 @@ pragma solidity ^0.8.17;
 
 import {DynamicBuffer} from "./utils/DynamicBuffer.sol";
 import {HeadRequest, ScriptRequest, HTMLRequest} from "./ScriptyRequests.sol";
-import {IScriptyStorage} from "./IScriptyStorage.sol";
-import {IContractScript} from "./IContractScript.sol";
+import {IScriptyStorage} from "./interfaces/IScriptyStorage.sol";
+import {IContractScript} from "./interfaces/IContractScript.sol";
 
 contract ScriptyCore {
     using DynamicBuffer for bytes;
@@ -141,8 +141,9 @@ contract ScriptyCore {
     // data:text/html;base64,
     uint256 public constant HTML_BASE64_DATA_URI_BYTES = 22;
 
+
     // =============================================================
-    //                           INTERNAL
+    //                        SCRIPT TAG TYPES
     // =============================================================
 
     /**
@@ -169,9 +170,9 @@ contract ScriptyCore {
      * @param request - WrappedScriptRequest data for code
      * @return (prefix, suffix) - Type specific prefix and suffix as a tuple
      */
-    function _wrapPrefixAndSuffixFor(
+    function wrapPrefixAndSuffixFor(
         ScriptRequest memory request
-    ) internal pure returns (bytes memory, bytes memory) {
+    ) public pure returns (bytes memory, bytes memory) {
         if (request.wrapType == 0) {
             return ("<script>", "</script>");
         } else if (request.wrapType == 1) {
@@ -212,9 +213,9 @@ contract ScriptyCore {
      * @param request - WrappedScriptRequest data for code
      * @return (prefix, suffix) - Type specific prefix and suffix as a tuple
      */
-    function _wrapURLSafePrefixAndSuffixFor(
+    function wrapURLSafePrefixAndSuffixFor(
         ScriptRequest memory request
-    ) internal pure returns (bytes memory, bytes memory) {
+    ) public pure returns (bytes memory, bytes memory) {
         if (request.wrapType <= 1) {
             // <script src="data:text/javascript;base64,
             // "></script>
@@ -240,13 +241,45 @@ contract ScriptyCore {
         return (request.wrapPrefix, request.wrapSuffix);
     }
 
+
+    // =============================================================
+    //                     HEAD SIZE OPERATIONS
+    // =============================================================
+
+    /**
+     * @notice Get the total buffer size for the head tags
+     * @param headRequests - Request being added to buffer
+     * @return size - buffer size for head tags
+     */
+    function getBufferSizeForHeadTags(
+        HeadRequest[] memory headRequests
+    ) public pure returns (uint256 size) {
+        if (headRequests.length == 0) {
+            return 0;
+        }
+        HeadRequest memory headRequest;
+        uint256 i;
+        unchecked {
+            do {
+                headRequest = headRequests[i];
+                size += headRequest.tagPrefix.length;
+                size += headRequest.tagContent.length;
+                size += headRequest.tagSuffix.length;
+            } while (++i < headRequests.length);
+        }
+    }
+
+    // =============================================================
+    //                    SCRIPT SIZE OPERATIONS
+    // =============================================================
+
     /**
      * @notice Grabs requested script from storage
      * @param scriptRequest - Name given to the script. Eg: threejs.min.js_r148
      */
-    function _fetchScript(
+    function fetchScript(
         ScriptRequest memory scriptRequest
-    ) internal view returns (bytes memory) {
+    ) public view returns (bytes memory) {
         if (scriptRequest.scriptContent.length > 0) {
             return scriptRequest.scriptContent;
         }
@@ -256,6 +289,115 @@ contract ScriptyCore {
                 scriptRequest.contractData
             );
     }
+
+    function buildInlineScriptsAndGetSize(
+        ScriptRequest[] memory requests
+    ) public view returns (ScriptRequest[] memory, uint256) {
+        if (requests.length == 0) {
+            return (requests, 0);
+        }
+        uint256 i;
+        uint256 length = requests.length;
+        uint256 totalSize;
+        unchecked {
+            do {
+                bytes memory script = fetchScript(requests[i]);
+                requests[i].scriptContent = script;
+
+                totalSize += script.length;
+            } while (++i < length);
+        }
+        return (requests, totalSize);
+    }
+
+    function buildWrappedScriptsAndGetSize(
+        ScriptRequest[] memory requests
+    ) public view returns (ScriptRequest[] memory, uint256) {
+        if (requests.length == 0) {
+            return (requests, 0);
+        }
+        bytes memory wrapPrefix;
+        bytes memory wrapSuffix;
+
+        uint256 i;
+        uint256 length = requests.length;
+        uint256 totalSize;
+        unchecked {
+            do {
+                bytes memory script = fetchScript(requests[i]);
+                requests[i].scriptContent = script;
+
+                (wrapPrefix, wrapSuffix) = wrapPrefixAndSuffixFor(requests[i]);
+                requests[i].wrapPrefix = wrapPrefix;
+                requests[i].wrapSuffix = wrapSuffix;
+
+                totalSize += wrapPrefix.length;
+                totalSize += script.length;
+                totalSize += wrapSuffix.length;
+            } while (++i < length);
+        }
+        return (requests, totalSize);
+    }
+
+    function buildWrappedURLSafeScriptsAndGetSize(
+        ScriptRequest[] memory requests
+    ) public view returns (ScriptRequest[] memory, uint256) {
+        if (requests.length == 0) {
+            return (requests, 0);
+        }
+        bytes memory wrapPrefix;
+        bytes memory wrapSuffix;
+
+        uint256 i;
+        uint256 length = requests.length;
+        uint256 totalSize;
+        unchecked {
+            do {
+                bytes memory script = fetchScript(requests[i]);
+                requests[i].scriptContent = script;
+                uint256 scriptSize = script.length;
+
+                // When wrapType = 0, script will be base64 encoded.
+                // script size should account that change as well.
+                if (requests[i].wrapType == 0) {
+                    scriptSize = sizeForBase64Encoding(scriptSize);
+                }
+
+                (wrapPrefix, wrapSuffix) = wrapURLSafePrefixAndSuffixFor(
+                    requests[i]
+                );
+                requests[i].wrapPrefix = wrapPrefix;
+                requests[i].wrapSuffix = wrapSuffix;
+
+                totalSize += wrapPrefix.length;
+                totalSize += scriptSize;
+                totalSize += wrapSuffix.length;
+            } while (++i < length);
+        }
+        return (requests, totalSize);
+    }
+
+
+    // =============================================================
+    //                   BASE64 SIZE OPERATIONS
+    // =============================================================
+
+    /**
+     * @notice Calculate the buffer size post base64 encoding
+     * @param value - Starting buffer size
+     * @return Final buffer size as uint256
+     */
+    function sizeForBase64Encoding(
+        uint256 value
+    ) public pure returns (uint256) {
+        unchecked {
+            return 4 * ((value + 2) / 3);
+        }
+    }
+
+    // =============================================================
+    //                     HTML CONCATENATION 
+    // =============================================================
 
     /**
      * @notice Append requests to the html buffer for head tags
@@ -302,7 +444,7 @@ contract ScriptyCore {
         ScriptRequest memory scriptRequest,
         bool includeTags,
         bool encodeScripts
-    ) internal pure {        
+    ) internal pure {
         if (includeTags) {
             htmlFile.appendSafe(scriptRequest.wrapPrefix);
         }
@@ -317,42 +459,6 @@ contract ScriptyCore {
         }
         if (includeTags) {
             htmlFile.appendSafe(scriptRequest.wrapSuffix);
-        }
-    }
-
-    /**
-     * @notice Get the total buffer size for the head tags
-     * @param headRequests - Request being added to buffer
-     * @return size - buffer size for head tags
-     */
-    function getBufferSizeForHeadTags(
-        HeadRequest[] memory headRequests
-    ) public pure returns (uint256 size) {
-        if (headRequests.length == 0) {
-            return 0;
-        }
-        HeadRequest memory headRequest;
-        uint256 i;
-        unchecked {
-            do {
-                headRequest = headRequests[i];
-                size += headRequest.tagPrefix.length;
-                size += headRequest.tagContent.length;
-                size += headRequest.tagSuffix.length;
-            } while (++i < headRequests.length);
-        }
-    }
-
-    /**
-     * @notice Calculate the buffer size post base64 encoding
-     * @param value - Starting buffer size
-     * @return Final buffer size as uint256
-     */
-    function _sizeForBase64Encoding(
-        uint256 value
-    ) internal pure returns (uint256) {
-        unchecked {
-            return 4 * ((value + 2) / 3);
         }
     }
 }

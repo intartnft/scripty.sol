@@ -9,7 +9,7 @@ import {
     HTMLRequest, 
     HeadRequest, 
     ScriptRequest
-} from "../../scripty/IScriptyBuilderV2.sol";
+} from "../../scripty/interfaces/IScriptyBuilderV2.sol";
 
 contract Cube3D_PNG_URLSafe_CustomWrap is ERC721 {
     address public immutable scriptyStorageAddress;
