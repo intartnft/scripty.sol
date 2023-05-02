@@ -98,7 +98,7 @@ contract ScriptyBuilderGasTest {
     function getHTMLURLSafe_Many(
         HTMLRequest memory htmlRequest
     ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLWrapped(
+        IScriptyBuilderV2(scriptyBuilderAddress).getHTMLWrappedURLSafe(
             htmlRequest
         );
     }
