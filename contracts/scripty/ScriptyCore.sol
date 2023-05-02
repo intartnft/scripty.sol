@@ -257,8 +257,10 @@ contract ScriptyCore {
         if (headRequests.length == 0) {
             return 0;
         }
+
         HeadRequest memory headRequest;
         uint256 i;
+
         unchecked {
             do {
                 headRequest = headRequests[i];
@@ -296,12 +298,16 @@ contract ScriptyCore {
         if (requests.length == 0) {
             return (requests, 0);
         }
-        uint256 i;
-        uint256 length = requests.length;
+
+        bytes memory script;
+
         uint256 totalSize;
+        uint256 length = requests.length;
+        uint256 i;
+
         unchecked {
             do {
-                bytes memory script = fetchScript(requests[i]);
+                script = fetchScript(requests[i]);
                 requests[i].scriptContent = script;
 
                 totalSize += script.length;
@@ -316,15 +322,18 @@ contract ScriptyCore {
         if (requests.length == 0) {
             return (requests, 0);
         }
+
         bytes memory wrapPrefix;
         bytes memory wrapSuffix;
+        bytes memory script;
 
-        uint256 i;
-        uint256 length = requests.length;
         uint256 totalSize;
+        uint256 length = requests.length;
+        uint256 i;
+
         unchecked {
             do {
-                bytes memory script = fetchScript(requests[i]);
+                script = fetchScript(requests[i]);
                 requests[i].scriptContent = script;
 
                 (wrapPrefix, wrapSuffix) = wrapPrefixAndSuffixFor(requests[i]);
@@ -345,17 +354,21 @@ contract ScriptyCore {
         if (requests.length == 0) {
             return (requests, 0);
         }
+
         bytes memory wrapPrefix;
         bytes memory wrapSuffix;
+        bytes memory script;
 
-        uint256 i;
-        uint256 length = requests.length;
+        uint256 scriptSize;
         uint256 totalSize;
+        uint256 length = requests.length;
+        uint256 i;
+
         unchecked {
             do {
-                bytes memory script = fetchScript(requests[i]);
+                script = fetchScript(requests[i]);
                 requests[i].scriptContent = script;
-                uint256 scriptSize = script.length;
+                scriptSize = script.length;
 
                 // When wrapType = 0, script will be base64 encoded.
                 // script size should account that change as well.
@@ -396,7 +409,7 @@ contract ScriptyCore {
     }
 
     // =============================================================
-    //                     HTML CONCATENATION 
+    //                     HTML CONCATENATION
     // =============================================================
 
     /**
