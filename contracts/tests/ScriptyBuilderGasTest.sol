@@ -14,7 +14,7 @@ contract ScriptyBuilderGasTest {
     }
 
     // solc-ignore-next-line func-mutability
-    function getEncodedHTMLInline_Few(
+    function getEncodedHTMLSingleScriptTag_Few(
         HTMLRequest memory htmlRequest
     ) external {
         IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLSingleScriptTag(
@@ -23,7 +23,7 @@ contract ScriptyBuilderGasTest {
     }
 
     // solc-ignore-next-line func-mutability
-    function getEncodedHTMLInline_Many(
+    function getEncodedHTMLSingleScriptTag_Many(
         HTMLRequest memory htmlRequest
     ) external {
         IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLSingleScriptTag(
@@ -32,7 +32,7 @@ contract ScriptyBuilderGasTest {
     }
 
     // solc-ignore-next-line func-mutability
-    function getEncodedHTMLWrapped_WrapType_0_Few(
+    function getEncodedHTML_TagType_0_Few(
         HTMLRequest memory htmlRequest
     ) external {
         IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(
@@ -41,7 +41,7 @@ contract ScriptyBuilderGasTest {
     }
 
     // solc-ignore-next-line func-mutability
-    function getEncodedHTMLWrapped_WrapType_1_Few(
+    function getEncodedHTML_TagType_1_Few(
         HTMLRequest memory htmlRequest
     ) external {
         IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(
@@ -50,7 +50,7 @@ contract ScriptyBuilderGasTest {
     }
 
     // solc-ignore-next-line func-mutability
-    function getEncodedHTMLWrapped_WrapType_2_Few(
+    function getEncodedHTML_TagType_2_Few(
         HTMLRequest memory htmlRequest
     ) external {
         IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(
@@ -59,7 +59,7 @@ contract ScriptyBuilderGasTest {
     }
 
     // solc-ignore-next-line func-mutability
-    function getEncodedHTMLWrapped_WrapType_0_Many(
+    function getEncodedHTML_TagType_0_Many(
         HTMLRequest memory htmlRequest
     ) external {
         IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(
@@ -68,7 +68,7 @@ contract ScriptyBuilderGasTest {
     }
 
     // solc-ignore-next-line func-mutability
-    function getEncodedHTMLWrapped_WrapType_1_Many(
+    function getEncodedHTML_TagType_1_Many(
         HTMLRequest memory htmlRequest
     ) external {
         IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(
@@ -77,7 +77,7 @@ contract ScriptyBuilderGasTest {
     }
 
     // solc-ignore-next-line func-mutability
-    function getEncodedHTMLWrapped_WrapType_2_Many(
+    function getEncodedHTML_TagType_2_Many(
         HTMLRequest memory htmlRequest
     ) external {
         IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(

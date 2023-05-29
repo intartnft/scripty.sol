@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const utilities = require("../utilities/utilities")
 
-const recordMode = true;
+const recordMode = false;
 const expectedResultsPath = __dirname + "/expectedResults/ScriptyHTML/";
 
 const writeHTMLResult = (name, result) => {

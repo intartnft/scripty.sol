@@ -84,7 +84,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getEncodedHTMLInline_Few",
+    "name": "getEncodedHTMLSingleScriptTag_Few",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -163,7 +163,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getEncodedHTMLInline_Many",
+    "name": "getEncodedHTMLSingleScriptTag_Many",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -242,7 +242,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getEncodedHTMLWrapped_WrapType_0_Few",
+    "name": "getEncodedHTML_TagType_0_Few",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -321,7 +321,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getEncodedHTMLWrapped_WrapType_0_Many",
+    "name": "getEncodedHTML_TagType_0_Many",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -400,7 +400,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getEncodedHTMLWrapped_WrapType_1_Few",
+    "name": "getEncodedHTML_TagType_1_Few",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -479,7 +479,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getEncodedHTMLWrapped_WrapType_1_Many",
+    "name": "getEncodedHTML_TagType_1_Many",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -558,7 +558,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getEncodedHTMLWrapped_WrapType_2_Few",
+    "name": "getEncodedHTML_TagType_2_Few",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -637,7 +637,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getEncodedHTMLWrapped_WrapType_2_Many",
+    "name": "getEncodedHTML_TagType_2_Many",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
