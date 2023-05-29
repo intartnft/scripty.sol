@@ -17,7 +17,7 @@ contract ScriptyBuilderGasTest {
     function getEncodedHTMLInline_Few(
         HTMLRequest memory htmlRequest
     ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLInline(
+        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLSingleScriptTag(
             htmlRequest
         );
     }
@@ -26,7 +26,7 @@ contract ScriptyBuilderGasTest {
     function getEncodedHTMLInline_Many(
         HTMLRequest memory htmlRequest
     ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLInline(
+        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLSingleScriptTag(
             htmlRequest
         );
     }
@@ -35,7 +35,7 @@ contract ScriptyBuilderGasTest {
     function getEncodedHTMLWrapped_WrapType_0_Few(
         HTMLRequest memory htmlRequest
     ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLWrapped(
+        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(
             htmlRequest
         );
     }
@@ -44,7 +44,7 @@ contract ScriptyBuilderGasTest {
     function getEncodedHTMLWrapped_WrapType_1_Few(
         HTMLRequest memory htmlRequest
     ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLWrapped(
+        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(
             htmlRequest
         );
     }
@@ -53,7 +53,7 @@ contract ScriptyBuilderGasTest {
     function getEncodedHTMLWrapped_WrapType_2_Few(
         HTMLRequest memory htmlRequest
     ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLWrapped(
+        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(
             htmlRequest
         );
     }
@@ -62,7 +62,7 @@ contract ScriptyBuilderGasTest {
     function getEncodedHTMLWrapped_WrapType_0_Many(
         HTMLRequest memory htmlRequest
     ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLWrapped(
+        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(
             htmlRequest
         );
     }
@@ -71,7 +71,7 @@ contract ScriptyBuilderGasTest {
     function getEncodedHTMLWrapped_WrapType_1_Many(
         HTMLRequest memory htmlRequest
     ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLWrapped(
+        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(
             htmlRequest
         );
     }
@@ -80,7 +80,7 @@ contract ScriptyBuilderGasTest {
     function getEncodedHTMLWrapped_WrapType_2_Many(
         HTMLRequest memory htmlRequest
     ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLWrapped(
+        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTML(
             htmlRequest
         );
     }
@@ -89,7 +89,7 @@ contract ScriptyBuilderGasTest {
     function getHTMLURLSafe_Few(
         HTMLRequest memory htmlRequest
     ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getHTMLWrappedURLSafe(
+        IScriptyBuilderV2(scriptyBuilderAddress).getHTMLURLSafe(
             htmlRequest
         );
     }
@@ -98,7 +98,7 @@ contract ScriptyBuilderGasTest {
     function getHTMLURLSafe_Many(
         HTMLRequest memory htmlRequest
     ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getHTMLWrappedURLSafe(
+        IScriptyBuilderV2(scriptyBuilderAddress).getHTMLURLSafe(
             htmlRequest
         );
     }

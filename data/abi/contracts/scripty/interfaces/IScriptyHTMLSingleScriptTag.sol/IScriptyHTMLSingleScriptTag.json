@@ -1,0 +1,342 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct HeadRequest[]",
+            "name": "headRequests",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "contractAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "contractData",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint8",
+                "name": "tagType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "scriptContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ScriptRequest[]",
+            "name": "scriptRequests",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct HTMLRequest",
+        "name": "htmlRequest",
+        "type": "tuple"
+      }
+    ],
+    "name": "getEncodedHTMLSingleScriptTag",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct HeadRequest[]",
+            "name": "headRequests",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "contractAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "contractData",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint8",
+                "name": "tagType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "scriptContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ScriptRequest[]",
+            "name": "scriptRequests",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct HTMLRequest",
+        "name": "htmlRequest",
+        "type": "tuple"
+      }
+    ],
+    "name": "getEncodedHTMLSingleScriptTagString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct HeadRequest[]",
+            "name": "headRequests",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "contractAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "contractData",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint8",
+                "name": "tagType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "scriptContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ScriptRequest[]",
+            "name": "scriptRequests",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct HTMLRequest",
+        "name": "htmlRequest",
+        "type": "tuple"
+      }
+    ],
+    "name": "getHTMLSingleScriptTag",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct HeadRequest[]",
+            "name": "headRequests",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "contractAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "contractData",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint8",
+                "name": "tagType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "scriptContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ScriptRequest[]",
+            "name": "scriptRequests",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct HTMLRequest",
+        "name": "htmlRequest",
+        "type": "tuple"
+      }
+    ],
+    "name": "getHTMLSingleScriptTagString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

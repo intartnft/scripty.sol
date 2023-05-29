@@ -170,25 +170,25 @@ contract ScriptyCore {
      * @param request - WrappedScriptRequest data for code
      * @return (prefix, suffix) - Type specific prefix and suffix as a tuple
      */
-    function wrapPrefixAndSuffixFor(
+    function scriptTagOpenAndCloseFor(
         ScriptRequest memory request
     ) public pure returns (bytes memory, bytes memory) {
-        if (request.wrapType == 0) {
+        if (request.tagType == 0) {
             return ("<script>", "</script>");
-        } else if (request.wrapType == 1) {
+        } else if (request.tagType == 1) {
             return ('<script src="data:text/javascript;base64,', '"></script>');
-        } else if (request.wrapType == 2) {
+        } else if (request.tagType == 2) {
             return (
                 '<script type="text/javascript+gzip" src="data:text/javascript;base64,',
                 '"></script>'
             );
-        } else if (request.wrapType == 3) {
+        } else if (request.tagType == 3) {
             return (
                 '<script type="text/javascript+png" src="data:text/javascript;base64,',
                 '"></script>'
             );
         }
-        return (request.wrapPrefix, request.wrapSuffix);
+        return (request.tagOpen, request.tagClose);
     }
 
     /**
@@ -213,24 +213,24 @@ contract ScriptyCore {
      * @param request - WrappedScriptRequest data for code
      * @return (prefix, suffix) - Type specific prefix and suffix as a tuple
      */
-    function wrapURLSafePrefixAndSuffixFor(
+    function urlSafeScriptTagOpenAndCloseFor(
         ScriptRequest memory request
     ) public pure returns (bytes memory, bytes memory) {
-        if (request.wrapType <= 1) {
+        if (request.tagType <= 1) {
             // <script src="data:text/javascript;base64,
             // "></script>
             return (
                 "%253Cscript%2520src%253D%2522data%253Atext%252Fjavascript%253Bbase64%252C",
                 "%2522%253E%253C%252Fscript%253E"
             );
-        } else if (request.wrapType == 2) {
+        } else if (request.tagType == 2) {
             // <script type="text/javascript+gzip" src="data:text/javascript;base64,
             // "></script>
             return (
                 "%253Cscript%2520type%253D%2522text%252Fjavascript%252Bgzip%2522%2520src%253D%2522data%253Atext%252Fjavascript%253Bbase64%252C",
                 "%2522%253E%253C%252Fscript%253E"
             );
-        } else if (request.wrapType == 3) {
+        } else if (request.tagType == 3) {
             // <script type="text/javascript+png" src="data:text/javascript;base64,
             // "></script>
             return (
@@ -238,7 +238,7 @@ contract ScriptyCore {
                 "%2522%253E%253C%252Fscript%253E"
             );
         }
-        return (request.wrapPrefix, request.wrapSuffix);
+        return (request.tagOpen, request.tagClose);
     }
 
 
@@ -251,9 +251,9 @@ contract ScriptyCore {
      * @param headRequests - Request being added to buffer
      * @return size - buffer size for head tags
      */
-    function getBufferSizeForHeadTags(
+    function _getBufferSizeForHeadTags(
         HeadRequest[] memory headRequests
-    ) public pure returns (uint256 size) {
+    ) internal pure returns (uint256 size) {
         if (headRequests.length == 0) {
             return 0;
         }
@@ -264,9 +264,9 @@ contract ScriptyCore {
         unchecked {
             do {
                 headRequest = headRequests[i];
-                size += headRequest.tagPrefix.length;
+                size += headRequest.tagOpen.length;
                 size += headRequest.tagContent.length;
-                size += headRequest.tagSuffix.length;
+                size += headRequest.tagClose.length;
             } while (++i < headRequests.length);
         }
     }
@@ -290,104 +290,6 @@ contract ScriptyCore {
                 scriptRequest.name,
                 scriptRequest.contractData
             );
-    }
-
-    function buildInlineScriptsAndGetSize(
-        ScriptRequest[] memory requests
-    ) public view returns (ScriptRequest[] memory, uint256) {
-        if (requests.length == 0) {
-            return (requests, 0);
-        }
-
-        bytes memory script;
-
-        uint256 totalSize;
-        uint256 length = requests.length;
-        uint256 i;
-
-        unchecked {
-            do {
-                script = fetchScript(requests[i]);
-                requests[i].scriptContent = script;
-
-                totalSize += script.length;
-            } while (++i < length);
-        }
-        return (requests, totalSize);
-    }
-
-    function buildWrappedScriptsAndGetSize(
-        ScriptRequest[] memory requests
-    ) public view returns (ScriptRequest[] memory, uint256) {
-        if (requests.length == 0) {
-            return (requests, 0);
-        }
-
-        bytes memory wrapPrefix;
-        bytes memory wrapSuffix;
-        bytes memory script;
-
-        uint256 totalSize;
-        uint256 length = requests.length;
-        uint256 i;
-
-        unchecked {
-            do {
-                script = fetchScript(requests[i]);
-                requests[i].scriptContent = script;
-
-                (wrapPrefix, wrapSuffix) = wrapPrefixAndSuffixFor(requests[i]);
-                requests[i].wrapPrefix = wrapPrefix;
-                requests[i].wrapSuffix = wrapSuffix;
-
-                totalSize += wrapPrefix.length;
-                totalSize += script.length;
-                totalSize += wrapSuffix.length;
-            } while (++i < length);
-        }
-        return (requests, totalSize);
-    }
-
-    function buildWrappedURLSafeScriptsAndGetSize(
-        ScriptRequest[] memory requests
-    ) public view returns (ScriptRequest[] memory, uint256) {
-        if (requests.length == 0) {
-            return (requests, 0);
-        }
-
-        bytes memory wrapPrefix;
-        bytes memory wrapSuffix;
-        bytes memory script;
-
-        uint256 scriptSize;
-        uint256 totalSize;
-        uint256 length = requests.length;
-        uint256 i;
-
-        unchecked {
-            do {
-                script = fetchScript(requests[i]);
-                requests[i].scriptContent = script;
-                scriptSize = script.length;
-
-                // When wrapType = 0, script will be base64 encoded.
-                // script size should account that change as well.
-                if (requests[i].wrapType == 0) {
-                    scriptSize = sizeForBase64Encoding(scriptSize);
-                }
-
-                (wrapPrefix, wrapSuffix) = wrapURLSafePrefixAndSuffixFor(
-                    requests[i]
-                );
-                requests[i].wrapPrefix = wrapPrefix;
-                requests[i].wrapSuffix = wrapSuffix;
-
-                totalSize += wrapPrefix.length;
-                totalSize += scriptSize;
-                totalSize += wrapSuffix.length;
-            } while (++i < length);
-        }
-        return (requests, totalSize);
     }
 
 
@@ -417,7 +319,7 @@ contract ScriptyCore {
      * @param htmlFile - bytes buffer
      * @param headRequests - Request being added to buffer
      */
-    function _appendHeadRequests(
+    function _appendHeadTags(
         bytes memory htmlFile,
         HeadRequest[] memory headRequests
     ) internal pure {
@@ -426,14 +328,14 @@ contract ScriptyCore {
         unchecked {
             do {
                 headRequest = headRequests[i];
-                htmlFile.appendSafe(headRequest.tagPrefix);
+                htmlFile.appendSafe(headRequest.tagOpen);
                 htmlFile.appendSafe(headRequest.tagContent);
-                htmlFile.appendSafe(headRequest.tagSuffix);
+                htmlFile.appendSafe(headRequest.tagClose);
             } while (++i < headRequests.length);
         }
     }
 
-    function _appendScriptRequests(
+    function _appendScriptTags(
         bytes memory htmlFile,
         ScriptRequest[] memory scriptRequests,
         bool includeTags,
@@ -442,7 +344,7 @@ contract ScriptyCore {
         uint256 i;
         unchecked {
             do {
-                _appendScriptRequest(
+                _appendScriptTag(
                     htmlFile,
                     scriptRequests[i],
                     includeTags,
@@ -452,14 +354,14 @@ contract ScriptyCore {
         }
     }
 
-    function _appendScriptRequest(
+    function _appendScriptTag(
         bytes memory htmlFile,
         ScriptRequest memory scriptRequest,
         bool includeTags,
         bool encodeScripts
     ) internal pure {
         if (includeTags) {
-            htmlFile.appendSafe(scriptRequest.wrapPrefix);
+            htmlFile.appendSafe(scriptRequest.tagOpen);
         }
         if (encodeScripts) {
             htmlFile.appendSafeBase64(
@@ -471,7 +373,7 @@ contract ScriptyCore {
             htmlFile.appendSafe(scriptRequest.scriptContent);
         }
         if (includeTags) {
-            htmlFile.appendSafe(scriptRequest.wrapSuffix);
+            htmlFile.appendSafe(scriptRequest.tagClose);
         }
     }
 }

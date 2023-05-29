@@ -18,8 +18,8 @@ struct HTMLRequest {
 }
 
 struct HeadRequest {
-    bytes tagPrefix;
-    bytes tagSuffix;
+    bytes tagOpen;
+    bytes tagClose;
     bytes tagContent;
 }
 
@@ -27,8 +27,8 @@ struct ScriptRequest {
     string name;
     address contractAddress;
     bytes contractData;
-    uint8 wrapType;
-    bytes wrapPrefix;
-    bytes wrapSuffix;
+    uint8 tagType;
+    bytes tagOpen;
+    bytes tagClose;
     bytes scriptContent;
 }

@@ -18,12 +18,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -55,17 +55,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -97,12 +97,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -134,17 +134,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -176,12 +176,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -213,17 +213,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -255,12 +255,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -292,17 +292,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -334,12 +334,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -371,17 +371,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -413,12 +413,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -450,17 +450,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -492,12 +492,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -529,17 +529,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -571,12 +571,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -608,17 +608,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -650,12 +650,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -687,17 +687,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -729,12 +729,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -766,17 +766,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {

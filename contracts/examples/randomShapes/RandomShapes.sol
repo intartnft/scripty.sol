@@ -62,9 +62,9 @@ contract RandomShapes is ERC721 {
         scriptRequests[4].scriptContent = controllerScript;
 
         HeadRequest[] memory headRequests = new HeadRequest[](1);
-        headRequests[0].tagPrefix = "<style>";
+        headRequests[0].tagOpen = "<style>";
         headRequests[0].tagContent = "html{height:100%}body{min-height:100%;margin:0;padding:0}canvas{padding:0;margin:auto;display:block;position:absolute;top:0;bottom:0;left:0;right:0}";
-        headRequests[0].tagSuffix = "</style>";
+        headRequests[0].tagClose = "</style>";
 
         HTMLRequest memory htmlRequest;
         htmlRequest.headRequests = headRequests;
@@ -72,7 +72,7 @@ contract RandomShapes is ERC721 {
 
         bytes memory base64EncodedHTMLDataURI = IScriptyBuilderV2(
             scriptyBuilderAddress
-        ).getEncodedHTMLInline(htmlRequest);
+        ).getEncodedHTMLSingleScriptTag(htmlRequest);
 
         bytes memory metadata = abi.encodePacked(
             '{"name":"Random Shapes", "description":"Assembles two raw scripts that draw shapes on same <canvas></canvas> element.","animation_url":"',

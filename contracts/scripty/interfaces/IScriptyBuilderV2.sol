@@ -18,8 +18,8 @@ pragma solidity ^0.8.17;
   Special thanks to @cxkoda and @frolic
 */
 
-import "./IScriptyInlineHTML.sol";
-import "./IScriptyWrappedHTML.sol";
-import "./IScriptyWrappedURLSafe.sol";
+import "./IScriptyHTML.sol";
+import "./IScriptyHTMLSingleScriptTag.sol";
+import "./IScriptyHTMLURLSafe.sol";
 
-interface IScriptyBuilderV2 is IScriptyInlineHTML, IScriptyWrappedHTML, IScriptyWrappedURLSafe {}
+interface IScriptyBuilderV2 is IScriptyHTML, IScriptyHTMLSingleScriptTag, IScriptyHTMLURLSafe {}

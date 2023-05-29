@@ -7,12 +7,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -44,17 +44,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -73,7 +73,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getEncodedHTMLInline",
+    "name": "getEncodedHTML",
     "outputs": [
       {
         "internalType": "bytes",
@@ -92,12 +92,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -129,17 +129,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -158,7 +158,92 @@
         "type": "tuple"
       }
     ],
-    "name": "getEncodedHTMLInlineString",
+    "name": "getEncodedHTMLSingleScriptTag",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct HeadRequest[]",
+            "name": "headRequests",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "contractAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "contractData",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint8",
+                "name": "tagType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "scriptContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ScriptRequest[]",
+            "name": "scriptRequests",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct HTMLRequest",
+        "name": "htmlRequest",
+        "type": "tuple"
+      }
+    ],
+    "name": "getEncodedHTMLSingleScriptTagString",
     "outputs": [
       {
         "internalType": "string",
@@ -177,97 +262,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
-                "type": "bytes"
-              },
-              {
-                "internalType": "bytes",
-                "name": "tagContent",
-                "type": "bytes"
-              }
-            ],
-            "internalType": "struct HeadRequest[]",
-            "name": "headRequests",
-            "type": "tuple[]"
-          },
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "internalType": "address",
-                "name": "contractAddress",
-                "type": "address"
-              },
-              {
-                "internalType": "bytes",
-                "name": "contractData",
-                "type": "bytes"
-              },
-              {
-                "internalType": "uint8",
-                "name": "wrapType",
-                "type": "uint8"
-              },
-              {
-                "internalType": "bytes",
-                "name": "wrapPrefix",
-                "type": "bytes"
-              },
-              {
-                "internalType": "bytes",
-                "name": "wrapSuffix",
-                "type": "bytes"
-              },
-              {
-                "internalType": "bytes",
-                "name": "scriptContent",
-                "type": "bytes"
-              }
-            ],
-            "internalType": "struct ScriptRequest[]",
-            "name": "scriptRequests",
-            "type": "tuple[]"
-          }
-        ],
-        "internalType": "struct HTMLRequest",
-        "name": "htmlRequest",
-        "type": "tuple"
-      }
-    ],
-    "name": "getEncodedHTMLWrapped",
-    "outputs": [
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "components": [
-              {
-                "internalType": "bytes",
-                "name": "tagPrefix",
-                "type": "bytes"
-              },
-              {
-                "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -299,17 +299,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -328,7 +328,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getEncodedHTMLWrappedString",
+    "name": "getEncodedHTMLString",
     "outputs": [
       {
         "internalType": "string",
@@ -347,12 +347,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -384,17 +384,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -413,7 +413,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getHTMLInline",
+    "name": "getHTML",
     "outputs": [
       {
         "internalType": "bytes",
@@ -432,12 +432,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -469,17 +469,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -498,7 +498,92 @@
         "type": "tuple"
       }
     ],
-    "name": "getHTMLInlineString",
+    "name": "getHTMLSingleScriptTag",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct HeadRequest[]",
+            "name": "headRequests",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "contractAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "contractData",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint8",
+                "name": "tagType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagOpen",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "tagClose",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes",
+                "name": "scriptContent",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ScriptRequest[]",
+            "name": "scriptRequests",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct HTMLRequest",
+        "name": "htmlRequest",
+        "type": "tuple"
+      }
+    ],
+    "name": "getHTMLSingleScriptTagString",
     "outputs": [
       {
         "internalType": "string",
@@ -517,97 +602,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
-                "type": "bytes"
-              },
-              {
-                "internalType": "bytes",
-                "name": "tagContent",
-                "type": "bytes"
-              }
-            ],
-            "internalType": "struct HeadRequest[]",
-            "name": "headRequests",
-            "type": "tuple[]"
-          },
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "internalType": "address",
-                "name": "contractAddress",
-                "type": "address"
-              },
-              {
-                "internalType": "bytes",
-                "name": "contractData",
-                "type": "bytes"
-              },
-              {
-                "internalType": "uint8",
-                "name": "wrapType",
-                "type": "uint8"
-              },
-              {
-                "internalType": "bytes",
-                "name": "wrapPrefix",
-                "type": "bytes"
-              },
-              {
-                "internalType": "bytes",
-                "name": "wrapSuffix",
-                "type": "bytes"
-              },
-              {
-                "internalType": "bytes",
-                "name": "scriptContent",
-                "type": "bytes"
-              }
-            ],
-            "internalType": "struct ScriptRequest[]",
-            "name": "scriptRequests",
-            "type": "tuple[]"
-          }
-        ],
-        "internalType": "struct HTMLRequest",
-        "name": "htmlRequest",
-        "type": "tuple"
-      }
-    ],
-    "name": "getHTMLWrapped",
-    "outputs": [
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "components": [
-              {
-                "internalType": "bytes",
-                "name": "tagPrefix",
-                "type": "bytes"
-              },
-              {
-                "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -639,17 +639,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -668,7 +668,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getHTMLWrappedString",
+    "name": "getHTMLString",
     "outputs": [
       {
         "internalType": "string",
@@ -687,12 +687,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -724,17 +724,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -753,7 +753,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getHTMLWrappedURLSafe",
+    "name": "getHTMLURLSafe",
     "outputs": [
       {
         "internalType": "bytes",
@@ -772,12 +772,12 @@
             "components": [
               {
                 "internalType": "bytes",
-                "name": "tagPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "tagSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -809,17 +809,17 @@
               },
               {
                 "internalType": "uint8",
-                "name": "wrapType",
+                "name": "tagType",
                 "type": "uint8"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapPrefix",
+                "name": "tagOpen",
                 "type": "bytes"
               },
               {
                 "internalType": "bytes",
-                "name": "wrapSuffix",
+                "name": "tagClose",
                 "type": "bytes"
               },
               {
@@ -838,7 +838,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getHTMLWrappedURLSafeString",
+    "name": "getHTMLURLSafeString",
     "outputs": [
       {
         "internalType": "string",
