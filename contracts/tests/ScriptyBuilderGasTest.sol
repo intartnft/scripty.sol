@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.17;
 
-import {HTMLRequest, HeadRequest, ScriptRequest} from "../scripty/ScriptyCore.sol";
+import {HTMLRequest, HeadRequest, ScriptRequest} from "../scripty/core/ScriptyCore.sol";
 import {IScriptyBuilderV2} from "../scripty/interfaces/IScriptyBuilderV2.sol";
 
 contract ScriptyBuilderGasTest {

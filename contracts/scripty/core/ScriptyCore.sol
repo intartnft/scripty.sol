@@ -20,10 +20,10 @@ pragma solidity ^0.8.17;
   Special thanks to @cxkoda, @frolic and @dhof
 */
 
-import {DynamicBuffer} from "./utils/DynamicBuffer.sol";
 import {HeadRequest, ScriptRequest, HTMLRequest} from "./ScriptyRequests.sol";
-import {IScriptyStorage} from "./interfaces/IScriptyStorage.sol";
-import {IContractScript} from "./interfaces/IContractScript.sol";
+import {DynamicBuffer} from "./../utils/DynamicBuffer.sol";
+import {IScriptyStorage} from "./../interfaces/IScriptyStorage.sol";
+import {IContractScript} from "./../interfaces/IContractScript.sol";
 
 contract ScriptyCore {
     using DynamicBuffer for bytes;

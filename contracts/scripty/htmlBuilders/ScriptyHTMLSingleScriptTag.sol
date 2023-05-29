@@ -12,8 +12,8 @@ pragma solidity ^0.8.17;
 //░░░░░░░░░░░░░░░░░░    INLINE HTML    ░░░░░░░░░░░░░░░░░░//
 ///////////////////////////////////////////////////////////
 
-import "./ScriptyCore.sol";
-import "./interfaces/IScriptyHTMLSingleScriptTag.sol";
+import "./../core/ScriptyCore.sol";
+import "./../interfaces/IScriptyHTMLSingleScriptTag.sol";
 
 contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag {
     using DynamicBuffer for bytes;

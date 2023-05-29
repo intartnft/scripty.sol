@@ -10,7 +10,7 @@ pragma solidity ^0.8.17;
 // ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░░░░╚═╝░░░░░░╚═╝░░░ //
 ///////////////////////////////////////////////////////////
 
-import {HTMLRequest, HeadRequest, ScriptRequest} from "./../ScriptyCore.sol";
+import {HTMLRequest, HeadRequest, ScriptRequest} from "./../core/ScriptyCore.sol";
 
 interface IScriptyHTMLSingleScriptTag {
     // =============================================================

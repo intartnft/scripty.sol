@@ -18,9 +18,9 @@ pragma solidity ^0.8.17;
   Special thanks to @cxkoda and @frolic
 */
 
-import "./ScriptyCore.sol";
-import "./ScriptyHTML.sol";
-import "./ScriptyHTMLSingleScriptTag.sol";
-import "./ScriptyHTMLURLSafe.sol";
+import "./core/ScriptyCore.sol";
+import "./htmlBuilders/ScriptyHTML.sol";
+import "./htmlBuilders/ScriptyHTMLSingleScriptTag.sol";
+import "./htmlBuilders/ScriptyHTMLURLSafe.sol";
 
 contract ScriptyBuilderV2 is ScriptyCore, ScriptyHTML, ScriptyHTMLSingleScriptTag, ScriptyHTMLURLSafe {}
