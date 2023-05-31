@@ -15,6 +15,12 @@ pragma solidity ^0.8.17;
 import "./../core/ScriptyCore.sol";
 import "./../interfaces/IScriptyHTML.sol";
 
+/**
+  @title Generates HTML with multiple <script> tags after fetching and assembling given script and head requests.
+  @author @0xthedude
+  @author @xtremetom
+*/
+
 contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     using DynamicBuffer for bytes;
 
@@ -23,24 +29,25 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     // =============================================================
 
     /**
-     * @notice Get requested scripts housed in <body> with custom wrappers
+     * @notice  Get HTML with requested head tags and scripts housed in
+     *          multiple <script> tags
      * @dev Your requested scripts are returned in the following format:
      *      <html>
      *          <head>
-     *              [wrapPrefix[0]]{headTagRequest[0]}[wrapSuffix[0]]
-     *              [wrapPrefix[1]]{headTagRequest[1]}[wrapSuffix[1]]
+     *              [tagOpen[0]][tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][tagContent[1]][tagClose[1]]
      *              ...
-     *              [wrapPrefix[n]]{headTagRequest[n]}[wrapSuffix[n]]
+     *              [tagOpen[n]][tagContent[n]][tagClose[n]]
      *          </head>
-     *          <body style='margin:0;'>
-     *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
-     *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
+     *          <body>
+     *              [tagOpen[0]]{request[0]}[tagClose[0]]
+     *              [tagOpen[1]]{request[1]}[tagClose[1]]
      *              ...
-     *              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
+     *              [tagOpen[n]]{request[n]}[tagClose[n]]
      *          </body>
      *      </html>
-     * @param htmlRequest - Array of HeadRequests
-     * @return Full html wrapped scripts
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return Full html with head and script tags
      */
     function getHTML(
         HTMLRequest memory htmlRequest
@@ -81,6 +88,13 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
         return htmlFile;
     }
 
+    /**
+    /* @dev Fetches the script, sets the tag open, tag close
+     *      and calculates final buffer size of all scripts
+     *      and their tags.
+     * @param requests - Array of ScriptRequest
+     * @return Enriched script requests and the final buffer size
+     */
     function _enrichScripts(
         ScriptRequest[] memory requests
     ) private view returns (ScriptRequest[] memory, uint256) {
@@ -113,6 +127,12 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
         return (requests, totalSize);
     }
 
+    /**
+    /* @notice Calculates the final buffer size of HTML
+     * @param headRequests - Array of HeadRequest
+     * @param scriptSize - Buffer size of all scripts and their tags
+     * @return size - Final buffer size of HTML
+     */
     function _getHTMLBufferSize(
         HeadRequest[] memory headRequests,
         uint256 scriptSize
@@ -130,9 +150,9 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     // =============================================================
 
     /**
-     * @notice Get {getHTMLWrapped} and base64 encode it
-     * @param htmlRequest - Array of WrappedScriptRequests
-     * @return Full html wrapped scripts, base64 encoded
+     * @notice Get {getHTML} and base64 encode it
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return Full html with head and script tags, base64 encoded
      */
     function getEncodedHTML(
         HTMLRequest memory htmlRequest
@@ -155,8 +175,8 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     // =============================================================
 
     /**
-     * @notice Convert {getHTMLWrapped} output to a string
-     * @param htmlRequest - Array of WrappedScriptRequests
+     * @notice Convert {getHTML} output to a string
+     * @param htmlRequest - A struct that contains head and script requests
      * @return {getHTMLWrapped} as a string
      */
     function getHTMLString(
@@ -166,9 +186,9 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     }
 
     /**
-     * @notice Convert {getEncodedHTMLWrapped} output to a string
-     * @param htmlRequest - Array of WrappedScriptRequests
-     * @return {getEncodedHTMLWrapped} as a string
+     * @notice Convert {getEncodedHTML} output to a string
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return {getEncodedHTML} as a string
      */
     function getEncodedHTMLString(
         HTMLRequest memory htmlRequest

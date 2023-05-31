@@ -11,7 +11,7 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 
 /**
-  @title A generic HTML builder that fetches and assembles given JS requests.
+  @title A generic HTML builder that fetches and assembles given JS and head requests.
   @author @0xthedude
   @author @xtremetom
 

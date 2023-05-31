@@ -15,6 +15,12 @@ pragma solidity ^0.8.17;
 import "./../core/ScriptyCore.sol";
 import "./../interfaces/IScriptyHTMLSingleScriptTag.sol";
 
+/**
+  @title Generates HTML with single <script> tag after fetching and assembling given script and head requests.
+  @author @0xthedude
+  @author @xtremetom
+*/
+
 contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag {
     using DynamicBuffer for bytes;
 
@@ -23,26 +29,25 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
     // =============================================================
 
     /**
-     * @notice Get requested scripts housed in <body> all wrapped in <script></script>
+     * @notice  Get HTML with requested head tags and scripts housed in 
+     *          single <script> tag
      * @dev Your requested scripts are returned in the following format:
      *      <html>
      *          <head>
-     *              [wrapPrefix[0]]{headTagRequest[0]}[wrapSuffix[0]]
-     *              [wrapPrefix[1]]{headTagRequest[1]}[wrapSuffix[1]]
+     *              [tagOpen[0]][tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][tagContent[1]][tagClose[1]]
      *              ...
-     *              [wrapPrefix[n]]{headTagRequest[n]}[wrapSuffix[n]]
+     *              [tagOpen[n]][tagContent[n]][tagClose[n]]
      *          </head>
      *          <body>
-     *              <script>
-     *                  {request[0]}
-     *                  {request[1]}
-     *                  ...
-     *                  {request[n]}
-     *              </script>
+     *              [tagOpen[0]]{request[0]}[tagClose[0]]
+     *              [tagOpen[1]]{request[1]}[tagClose[1]]
+     *              ...
+     *              [tagOpen[n]]{request[n]}[tagClose[n]]
      *          </body>
      *      </html>
-     * @param htmlRequest - Array of InlineScriptRequest
-     * @return Full html wrapped scripts
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return Full html with head and single script tag
      */
     function getHTMLSingleScriptTag(
         HTMLRequest memory htmlRequest
@@ -87,6 +92,12 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
         return htmlFile;
     }
 
+    /**
+    /* @dev Fetches the script and calculates final buffer 
+     *      size of all scripts and their tags.
+     * @param requests - Array of ScriptRequest
+     * @return Enriched script requests and the final buffer size
+     */
     function _enrichScriptsForHTMLSingleScriptTag(
         ScriptRequest[] memory requests
     ) private view returns (ScriptRequest[] memory, uint256) {
@@ -111,6 +122,12 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
         return (requests, totalSize);
     }
 
+    /**
+    /* @notice Calculates the final buffer size of HTML
+     * @param headRequests - Array of HeadRequest
+     * @param scriptSize - Buffer size of all scripts and their tags
+     * @return size - Final buffer size of HTML
+     */
     function _getHTMLSingleScriptTagBufferSize(
         HeadRequest[] memory headRequests,
         uint256 scriptSize
@@ -129,9 +146,9 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
     // =============================================================
 
     /**
-     * @notice Get {getHTMLInline} and base64 encode it
-     * @param htmlRequest - Array of InlineScriptRequests
-     * @return Full html wrapped scripts, base64 encoded
+     * @notice Get {getHTMLSingleScriptTag} and base64 encode it
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return Full html with head and single script tag, base64 encoded
      */
     function getEncodedHTMLSingleScriptTag(
         HTMLRequest memory htmlRequest
@@ -155,9 +172,9 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
     // =============================================================
 
     /**
-     * @notice Convert {getHTMLInline} output to a string
-     * @param htmlRequest - Array of InlineScriptRequests
-     * @return {getHTMLInline} as a string
+     * @notice Convert {getHTMLSingleScriptTag} output to a string
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return {getHTMLSingleScriptTag} as a string
      */
     function getHTMLSingleScriptTagString(
         HTMLRequest memory htmlRequest
@@ -166,9 +183,9 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
     }
 
     /**
-     * @notice Convert {getEncodedHTMLInline} output to a string
-     * @param htmlRequest - Array of InlineScriptRequests
-     * @return {getEncodedHTMLInline} as a string
+     * @notice Convert {getEncodedHTMLSingleScriptTag} output to a string
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return {getEncodedHTMLSingleScriptTag} as a string
      */
     function getEncodedHTMLSingleScriptTagString(
         HTMLRequest memory htmlRequest

@@ -29,7 +29,7 @@ async function deployOrGetContracts(networkName) {
 
 		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
 		await scriptyBuilderContract.deployed()
-		console.log("ScriptyBuilder deployed");
+		console.log("ScriptyBuilderV2 deployed");
 
 		return { scriptyStorageContract, scriptyBuilderContract }
 	}else{
@@ -40,12 +40,12 @@ async function deployOrGetContracts(networkName) {
 		);
 		console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
 
-		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilder")
+		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
 		const scriptyBuilderContract = await ethers.getContractAt(
-			"ScriptyBuilder",
+			"ScriptyBuilderV2",
 			scriptyBuilderAddress
 		);
-		console.log("ScriptyBuilder is already deployed at", scriptyBuilderAddress);
+		console.log("ScriptyBuilderV2 is already deployed at", scriptyBuilderAddress);
 
 		return { scriptyStorageContract, scriptyBuilderContract }
 	}
@@ -63,8 +63,10 @@ async function storeScript(storageContract, name, filePath) {
     const script = utilities.readFile(path.join(__dirname, filePath))
     const scriptChunks = utilities.chunkSubstr(script, 24575)
 
-    // First create the script in the storage contract
-    await waitIfNeeded(await storageContract.createScript(name, utilities.stringToBytes(name)))
+	if (storedScript.owner == utilities.emptyAddress) {
+		// First create the script in the storage contract
+		await waitIfNeeded(await storageContract.createScript(name, utilities.stringToBytes(name)))
+	}
 
     // Store each chunk
     // [WARNING]: With big files this can be very costly

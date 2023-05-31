@@ -18,19 +18,25 @@ interface IScriptyHTMLSingleScriptTag {
     // =============================================================
 
     /**
-     * @notice Get requested scripts housed in <body> with custom wrappers
+     * @notice  Get HTML with requested head tags and scripts housed in 
+     *          single <script> tag
      * @dev Your requested scripts are returned in the following format:
      *      <html>
-     *          <head></head>
-     *          <body style='margin:0;'>
-     *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
-     *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
+     *          <head>
+     *              [tagOpen[0]][tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][tagContent[1]][tagClose[1]]
      *              ...
-     *              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
+     *              [tagOpen[n]][tagContent[n]][tagClose[n]]
+     *          </head>
+     *          <body>
+     *              [tagOpen[0]]{request[0]}[tagClose[0]]
+     *              [tagOpen[1]]{request[1]}[tagClose[1]]
+     *              ...
+     *              [tagOpen[n]]{request[n]}[tagClose[n]]
      *          </body>
      *      </html>
-     * @param htmlRequest - Array of WrappedScriptRequests
-     * @return Full html wrapped scripts
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return Full html with head and single script tag
      */
     function getHTMLSingleScriptTag(
         HTMLRequest memory htmlRequest
@@ -41,9 +47,9 @@ interface IScriptyHTMLSingleScriptTag {
     // =============================================================
 
     /**
-     * @notice Get {getHTMLInline} and base64 encode it
-     * @param htmlRequest - Array of InlineScriptRequests
-     * @return Full html wrapped scripts, base64 encoded
+     * @notice Get {getHTMLSingleScriptTag} and base64 encode it
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return Full html with head and single script tag, base64 encoded
      */
     function getEncodedHTMLSingleScriptTag(
         HTMLRequest memory htmlRequest
@@ -54,18 +60,18 @@ interface IScriptyHTMLSingleScriptTag {
     // =============================================================
 
     /**
-     * @notice Convert {getHTMLInline} output to a string
-     * @param htmlRequest - Array of InlineScriptRequests
-     * @return {getHTMLInline} as a string
+     * @notice Convert {getHTMLSingleScriptTag} output to a string
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return {getHTMLSingleScriptTag} as a string
      */
     function getHTMLSingleScriptTagString(
         HTMLRequest memory htmlRequest
     ) external view returns (string memory);
 
     /**
-     * @notice Convert {getEncodedHTMLInline} output to a string
-     * @param htmlRequest - Array of InlineScriptRequests
-     * @return {getEncodedHTMLInline} as a string
+     * @notice Convert {getEncodedHTMLSingleScriptTag} output to a string
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return {getEncodedHTMLSingleScriptTag} as a string
      */
     function getEncodedHTMLSingleScriptTagString(
         HTMLRequest memory htmlRequest

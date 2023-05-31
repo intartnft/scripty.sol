@@ -19,9 +19,9 @@ async function main() {
 	await scriptyStorageContract.deployed()
 	console.log("ScriptyStorage deployed", scriptyStorageContract.address);
 
-	const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilder")).deploy()
+	const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
 	await scriptyBuilderContract.deployed()
-	console.log("ScriptyBuilder deployed", scriptyBuilderContract.address);
+	console.log("ScriptyBuilderV2 deployed", scriptyBuilderContract.address);
 
     const ethfsFileStorageContract = await (await ethers.getContractFactory("ETHFSFileStorage")).deploy(
         ethfs_FileStore_Address

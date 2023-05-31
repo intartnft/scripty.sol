@@ -15,6 +15,12 @@ pragma solidity ^0.8.17;
 import "./../core/ScriptyCore.sol";
 import "./../interfaces/IScriptyHTMLURLSafe.sol";
 
+/**
+  @title Generates URL safe HTML after fetching and assembling given script and head requests.
+  @author @0xthedude
+  @author @xtremetom
+*/
+
 contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     using DynamicBuffer for bytes;
 
@@ -23,8 +29,9 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     // =============================================================
 
     /**
-     * @notice Get requested scripts housed in URL Safe wrappers
-     * @dev Any wrapper type 0 scripts are converted to base64 and wrapped
+     * @notice  Get URL safe HTML with requested head tags and scripts housed
+     *          in single <script> tag
+     * @dev Any tag type 0 scripts are converted to base64 and wrapped
      *      with <script src="data:text/javascript;base64,[SCRIPT]"></script>
      *
      *      [WARNING]: Large non-base64 libraries that need base64 encoding
@@ -34,20 +41,20 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
      *      Your requested scripts are returned in the following format:
      *      <html>
      *          <head>
-     *              [wrapPrefix[0]]{headTagRequest[0]}[wrapSuffix[0]]
-     *              [wrapPrefix[1]]{headTagRequest[1]}[wrapSuffix[1]]
+     *              [tagOpen[0]][tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][tagContent[1]][tagClose[1]]
      *              ...
-     *              [wrapPrefix[n]]{headTagRequest[n]}[wrapSuffix[n]]
+     *              [tagOpen[n]][tagContent[n]][tagClose[n]]
      *          </head>
-     *          <body style='margin:0;'>
+     *          <body>
      *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
      *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
      *              ...
      *              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
      *          </body>
      *      </html>
-     * @param htmlRequest - Array of WrappedScriptRequests
-     * @return Full URL Safe wrapped scripts
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return Full URL safe html with head and script tags
      */
     function getHTMLURLSafe(
         HTMLRequest memory htmlRequest
@@ -89,6 +96,13 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
         return htmlFile;
     }
 
+    /**
+    /* @dev Fetches the script, sets the tag open, tag close
+     *      and calculates final buffer size of all scripts
+     *      and their tags. 
+     * @param requests - Array of ScriptRequest
+     * @return Enriched script requests and the final buffer size
+     */
     function _enrichScriptsForHTMLURLSafe(
         ScriptRequest[] memory requests
     ) private view returns (ScriptRequest[] memory, uint256) {
@@ -111,8 +125,8 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
                 requests[i].scriptContent = script;
                 scriptSize = script.length;
 
-                // When wrapType = 0, script will be base64 encoded.
-                // script size should account that change as well.
+                // When tagType = 0, script will be base64 encoded.
+                // Script size should account that change as well.
                 if (requests[i].tagType == 0) {
                     scriptSize = sizeForBase64Encoding(scriptSize);
                 }
@@ -131,6 +145,12 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
         return (requests, totalSize);
     }
 
+    /**
+    /* @notice Calculates the final buffer size of HTML
+     * @param headRequests - Array of HeadRequest
+     * @param scriptSize - Buffer size of all scripts and their tags
+     * @return size - Final buffer size of HTML
+     */
     function _getHTMLURLSafeBufferSize(
         HeadRequest[] memory headRequests,
         uint256 scriptSize
@@ -145,24 +165,24 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
 
     /**
      * @notice Append URL safe HTML wrapped requests to the buffer
-     * @dev If you submit a request that uses wrapType = 0, it will undergo a few changes:
+     * @dev If you submit a request that uses tagType = 0, it will undergo a few changes:
      *
-     *      Example request with wrapType of 0:
+     *      Example request with tagType of 0:
      *      console.log("Hello World")
      *
-     *      1. `_wrapURLSafePrefixAndSuffixFor()` will convert the wrap to the following
+     *      1. `urlSafeScriptTagOpenAndCloseFor()` will convert the wrap to the following
      *      - <script>  =>  %253Cscript%2520src%253D%2522data%253Atext%252Fjavascript%253Bbase64%252C
      *      - </script> =>  %2522%253E%253C%252Fscript%253E
      *
-     *      2. `_appendWrappedHTMLRequests()` will base64 encode the script to the following
+     *      2. `_appendScriptTag()` will base64 encode the script to the following
      *      - console.log("Hello World") => Y29uc29sZS5sb2coIkhlbGxvIFdvcmxkIik=
      *
-     *      Due to the above, it is highly advised that you do not attempt to use `wrapType = 0` in
+     *      Due to the above, it is highly advised that you do not attempt to use `tagType = 0` in
      *      conjunction with a large JS script. This contract will try to base64 encode it which could
-     *      result in a gas out. Instead use a a base64 encoded version of the script and `wrapType = 1`
+     *      result in a gas out. Instead use a a base64 encoded version of the script and `tagType = 1`
      *
      * @param htmlFile - Final buffer holding all requests
-     * @param requests - Array of WrappedScriptRequests
+     * @param requests - Array of ScriptRequest
      */
     function _appendHTMLURLSafeBody(
         bytes memory htmlFile,
@@ -185,9 +205,9 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     // =============================================================
 
     /**
-     * @notice Convert {getHTMLWrappedURLSafe} output to a string
-     * @param htmlRequest - Array of WrappedScriptRequests
-     * @return {getHTMLWrappedURLSafe} as a string
+     * @notice Convert {getHTMLURLSafe} output to a string
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return {getHTMLURLSafe} as a string
      */
     function getHTMLURLSafeString(
         HTMLRequest memory htmlRequest

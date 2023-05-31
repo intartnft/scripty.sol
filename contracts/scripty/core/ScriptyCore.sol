@@ -147,28 +147,28 @@ contract ScriptyCore {
     // =============================================================
 
     /**
-     * @notice Grab script wrapping based on script type
+     * @notice Grab script tag open and close depending on request tag type
      * @dev
-     *      wrapType: 0:
+     *      tagType: 0:
      *          <script>[SCRIPT]</script>
      *
-     *      wrapType: 1:
+     *      tagType: 1:
      *          <script src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      wrapType: 2:
+     *      tagType: 2:
      *          <script type="text/javascript+gzip" src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      wrapType: 3
+     *      tagType: 3
      *          <script type="text/javascript+png" name="[NAME]" src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      wrapType: 4 or any other:
-     *          [wrapPrefix][scriptContent or scriptFromContract][wrapSuffix]
+     *      tagType: 4 or any other:
+     *          [tagOpen][scriptContent or scriptFromContract][tagClose]
      *
      *      [IMPORTANT NOTE]: The tags `text/javascript+gzip` and `text/javascript+png` are used to identify scripts
      *      during decompression
      *
-     * @param request - WrappedScriptRequest data for code
-     * @return (prefix, suffix) - Type specific prefix and suffix as a tuple
+     * @param request - ScriptRequest data for code
+     * @return (tagOpen, tagClose) - Tag open and close as a tuple
      */
     function scriptTagOpenAndCloseFor(
         ScriptRequest memory request
@@ -192,26 +192,26 @@ contract ScriptyCore {
     }
 
     /**
-     * @notice Grab URL safe script wrapping based on script type
+     * @notice Grab URL safe script tag open and close depending on request tag type
      * @dev
-     *      wrapType: 0:
-     *      wrapType: 1:
+     *      tagType: 0:
+     *      tagType: 1:
      *          <script src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      wrapType: 2:
+     *      tagType: 2:
      *          <script type="text/javascript+gzip" src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      wrapType: 3
+     *      tagType: 3
      *          <script type="text/javascript+png" name="[NAME]" src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      wrapType: 4 or any other:
+     *      tagType: 4 or any other:
      *          [wrapPrefix][scriptContent or scriptFromContract][wrapSuffix]
      *
      *      [IMPORTANT NOTE]: The tags `text/javascript+gzip` and `text/javascript+png` are used to identify scripts
      *      during decompression
      *
-     * @param request - WrappedScriptRequest data for code
-     * @return (prefix, suffix) - Type specific prefix and suffix as a tuple
+     * @param request - ScriptRequest data for code
+     * @return (tagOpen, tagClose) - Tag open and close as a tuple
      */
     function urlSafeScriptTagOpenAndCloseFor(
         ScriptRequest memory request
@@ -241,9 +241,34 @@ contract ScriptyCore {
         return (request.tagOpen, request.tagClose);
     }
 
+    // =============================================================
+    //                       SCRIPT FETCHER
+    // =============================================================
+
+    /**
+     * @notice Grabs requested script from storage
+     * @dev
+     *      If given ScriptRequest contains non empty scriptContent
+     *      method will return scriptContent. Otherwise, method will
+     *      fetch it from the given storage contract
+     *   
+     * @param scriptRequest - ScriptRequest that contains 
+     */
+    function fetchScript(
+        ScriptRequest memory scriptRequest
+    ) public view returns (bytes memory) {
+        if (scriptRequest.scriptContent.length > 0) {
+            return scriptRequest.scriptContent;
+        }
+        return
+            IContractScript(scriptRequest.contractAddress).getScript(
+                scriptRequest.name,
+                scriptRequest.contractData
+            );
+    }
 
     // =============================================================
-    //                     HEAD SIZE OPERATIONS
+    //                        SIZE OPERATIONS
     // =============================================================
 
     /**
@@ -270,32 +295,6 @@ contract ScriptyCore {
             } while (++i < headRequests.length);
         }
     }
-
-    // =============================================================
-    //                    SCRIPT SIZE OPERATIONS
-    // =============================================================
-
-    /**
-     * @notice Grabs requested script from storage
-     * @param scriptRequest - Name given to the script. Eg: threejs.min.js_r148
-     */
-    function fetchScript(
-        ScriptRequest memory scriptRequest
-    ) public view returns (bytes memory) {
-        if (scriptRequest.scriptContent.length > 0) {
-            return scriptRequest.scriptContent;
-        }
-        return
-            IContractScript(scriptRequest.contractAddress).getScript(
-                scriptRequest.name,
-                scriptRequest.contractData
-            );
-    }
-
-
-    // =============================================================
-    //                   BASE64 SIZE OPERATIONS
-    // =============================================================
 
     /**
      * @notice Calculate the buffer size post base64 encoding
@@ -335,6 +334,13 @@ contract ScriptyCore {
         }
     }
 
+    /**
+     * @notice Append requests to the html buffer for script tags
+     * @param htmlFile - bytes buffer
+     * @param scriptRequests - array of script requests
+     * @param includeTags - include tag open and close or not
+     * @param encodeScripts - encodes script content with base64
+     */
     function _appendScriptTags(
         bytes memory htmlFile,
         ScriptRequest[] memory scriptRequests,
@@ -354,6 +360,13 @@ contract ScriptyCore {
         }
     }
 
+    /**
+     * @notice Append single request to the html buffer for a script tag
+     * @param htmlFile - bytes buffer
+     * @param scriptRequest - script request
+     * @param includeTags - include tag open and close or not
+     * @param encodeScripts - encodes script content with base64
+     */
     function _appendScriptTag(
         bytes memory htmlFile,
         ScriptRequest memory scriptRequest,

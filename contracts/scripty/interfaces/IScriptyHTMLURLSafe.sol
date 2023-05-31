@@ -18,8 +18,9 @@ interface IScriptyHTMLURLSafe {
     // =============================================================
 
     /**
-     * @notice Get requested scripts housed in URL Safe wrappers
-     * @dev Any wrapper type 0 scripts are converted to base64 and wrapped
+     * @notice  Get URL safe HTML with requested head tags and scripts housed
+     *          in single <script> tag
+     * @dev Any tag type 0 scripts are converted to base64 and wrapped
      *      with <script src="data:text/javascript;base64,[SCRIPT]"></script>
      *
      *      [WARNING]: Large non-base64 libraries that need base64 encoding
@@ -29,20 +30,20 @@ interface IScriptyHTMLURLSafe {
      *      Your requested scripts are returned in the following format:
      *      <html>
      *          <head>
-     *              [wrapPrefix[0]]{headTagRequest[0]}[wrapSuffix[0]]
-     *              [wrapPrefix[1]]{headTagRequest[1]}[wrapSuffix[1]]
+     *              [tagOpen[0]][tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][tagContent[1]][tagClose[1]]
      *              ...
-     *              [wrapPrefix[n]]{headTagRequest[n]}[wrapSuffix[n]]
+     *              [tagOpen[n]][tagContent[n]][tagClose[n]]
      *          </head>
-     *          <body style='margin:0;'>
+     *          <body>
      *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
      *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
      *              ...
      *              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
      *          </body>
      *      </html>
-     * @param htmlRequest - Array of WrappedScriptRequests
-     * @return Full URL Safe wrapped scripts
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return Full URL safe html with head and script tags
      */
     function getHTMLURLSafe(
         HTMLRequest memory htmlRequest
@@ -53,9 +54,9 @@ interface IScriptyHTMLURLSafe {
     // =============================================================
 
     /**
-     * @notice Convert {getHTMLWrappedURLSafe} output to a string
-     * @param htmlRequest - Array of WrappedScriptRequests
-     * @return {getHTMLWrappedURLSafe} as a string
+     * @notice Convert {getHTMLURLSafe} output to a string
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return {getHTMLURLSafe} as a string
      */
     function getHTMLURLSafeString(
         HTMLRequest memory htmlRequest

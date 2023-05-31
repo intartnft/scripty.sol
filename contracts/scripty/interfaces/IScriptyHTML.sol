@@ -18,19 +18,25 @@ interface IScriptyHTML {
     // =============================================================
 
     /**
-     * @notice Get requested scripts housed in <body> with custom wrappers
+     * @notice  Get HTML with requested head tags and scripts housed in
+     *          multiple <script> tags
      * @dev Your requested scripts are returned in the following format:
      *      <html>
-     *          <head></head>
-     *          <body style='margin:0;'>
-     *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
-     *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
+     *          <head>
+     *              [tagOpen[0]][tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][tagContent[1]][tagClose[1]]
      *              ...
-     *              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
+     *              [tagOpen[n]][tagContent[n]][tagClose[n]]
+     *          </head>
+     *          <body>
+     *              [tagOpen[0]]{request[0]}[tagClose[0]]
+     *              [tagOpen[1]]{request[1]}[tagClose[1]]
+     *              ...
+     *              [tagOpen[n]]{request[n]}[tagClose[n]]
      *          </body>
      *      </html>
-     * @param htmlRequest - Array of WrappedScriptRequests
-     * @return Full html wrapped scripts
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return Full html with head and script tags
      */
     function getHTML(
         HTMLRequest memory htmlRequest
@@ -41,9 +47,9 @@ interface IScriptyHTML {
     // =============================================================
 
     /**
-     * @notice Get {getHTMLWrapped} and base64 encode it
-     * @param htmlRequest - Array of WrappedScriptRequests
-     * @return Full html wrapped scripts, base64 encoded
+     * @notice Get {getHTML} and base64 encode it
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return Full html with head and script tags, base64 encoded
      */
     function getEncodedHTML(
         HTMLRequest memory htmlRequest
@@ -54,8 +60,8 @@ interface IScriptyHTML {
     // =============================================================
 
     /**
-     * @notice Convert {getHTMLWrapped} output to a string
-     * @param htmlRequest - Array of WrappedScriptRequests
+     * @notice Convert {getHTML} output to a string
+     * @param htmlRequest - A struct that contains head and script requests
      * @return {getHTMLWrapped} as a string
      */
     function getHTMLString(
@@ -63,9 +69,9 @@ interface IScriptyHTML {
     ) external view returns (string memory);
 
     /**
-     * @notice Convert {getEncodedHTMLWrapped} output to a string
-     * @param htmlRequest - Array of WrappedScriptRequests
-     * @return {getEncodedHTMLWrapped} as a string
+     * @notice Convert {getEncodedHTML} output to a string
+     * @param htmlRequest - A struct that contains head and script requests
+     * @return {getEncodedHTML} as a string
      */
     function getEncodedHTMLString(
         HTMLRequest memory htmlRequest

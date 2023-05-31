@@ -29,7 +29,7 @@ async function deployOrGetContracts(networkName) {
 
 		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
 		await scriptyBuilderContract.deployed()
-		console.log("ScriptyBuilder deployed");
+		console.log("ScriptyBuilderV2 deployed");
 
 		return { scriptyStorageContract, scriptyBuilderContract }
 	}else{
@@ -42,10 +42,10 @@ async function deployOrGetContracts(networkName) {
 
 		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
 		const scriptyBuilderContract = await ethers.getContractAt(
-			"ScriptyBuilder",
+			"ScriptyBuilderV2",
 			scriptyBuilderAddress
 		);
-		console.log("ScriptyBuilder is already deployed at", scriptyBuilderAddress);
+		console.log("ScriptyBuilderV2 is already deployed at", scriptyBuilderAddress);
 
 		return { scriptyStorageContract, scriptyBuilderContract }
 	}
