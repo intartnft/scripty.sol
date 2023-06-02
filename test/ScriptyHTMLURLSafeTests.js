@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const utilities = require("../utilities/utilities")
 
-const recordMode = true;
+const recordMode = false;
 const expectedResultsPath = __dirname + "/expectedResults/ScriptyHTMLURLSafe/";
 
 const writeHTMLResult = (name, result) => {
@@ -61,7 +61,7 @@ describe("ScriptyHTMLURLSafe Tests", function () {
 
         return scriptRequests
     }
-    
+
     function addScriptsWithContent(tagType, scriptRequests) {
         const baseScriptContent = "scriptContent"
 
@@ -105,6 +105,34 @@ describe("ScriptyHTMLURLSafe Tests", function () {
 
         expectHTML(title, htmlRawString);
     }
+
+    describe("Get URL Safe HTML Tests - Zero requests", async function () {
+        it("Zero scripts amd Zero head", async function () {
+            const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
+
+            let headRequests = []
+            let scriptRequests = []
+
+            await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
+        });
+    });
+
+    describe("Get HTML String", async function () {
+        it("Zero scripts amd Zero head", async function () {
+            const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
+
+            let headRequests = []
+            let scriptRequests = []
+
+            const htmlRequest = getHtmlRequest(headRequests, scriptRequests)
+
+            const htmlRaw = await scriptyBuilderContract.getHTMLURLSafe(htmlRequest)
+            const htmlRawString = utilities.bytesToString(htmlRaw)
+            const htmlString = await scriptyBuilderContract.getHTMLURLSafeString(htmlRequest);
+
+            expect(htmlRawString).to.eq(htmlString);
+        });
+    });
 
     describe("Get URL Safe HTML Tests - Only contract scripts", async function () {
         it("Only contract scripts - tagType = 0", async function () {

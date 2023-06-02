@@ -11,6 +11,28 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 //░░░░░░░░░░░░░░░░░    WRAPPED HTML    ░░░░░░░░░░░░░░░░░░//
 ///////////////////////////////////////////////////////////
+//
+// This module is designed to manage arrays of scripts where
+// each script might require a custom wrapper:
+//
+// eg;
+//     <html>
+//        <head>
+//             <title>Hi</title>
+//             <style>[css code]</style>
+//         </head>
+//         <body>
+//             <script>[SCRIPT]</script>
+//             <script type="text/javascript+gzip" src="data:text/javascript;base64,[SCRIPT]"></script>
+//         </body>
+//     </html>
+//
+// [NOTE]
+// If this is your first time using Scripty and you have a
+// fairly standard JS structure, this is probably the module
+// you will be using.
+//
+///////////////////////////////////////////////////////////
 
 import "./ScriptyCore.sol";
 import "./interfaces/IScriptyHTML.sol";
@@ -32,14 +54,14 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
      *              ...
      *              [wrapPrefix[n]]{headTagRequest[n]}[wrapSuffix[n]]
      *          </head>
-     *          <body style='margin:0;'>
+     *          <body>
      *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
      *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
      *              ...
      *              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
      *          </body>
      *      </html>
-     * @param htmlRequest - Array of HeadRequests
+     * @param htmlRequest - HTMLRequest
      * @return Full html wrapped scripts
      */
     function getHTML(
@@ -81,6 +103,13 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
         return htmlFile;
     }
 
+    /**
+     * @notice Adds the required tags and calculates buffer size of requests
+     * @dev Effectively two functions bundled into one as this saves gas
+     * @param requests - Array of ScriptRequests
+     * @return Updated ScriptRequests
+     * @return Total buffersize of updated ScriptRequests
+     */
     function _enrichScripts(
         ScriptRequest[] memory requests
     ) private view returns (ScriptRequest[] memory, uint256) {
@@ -113,6 +142,11 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
         return (requests, totalSize);
     }
 
+    /**
+     * @notice Calculates the total buffersize for all elements
+     * @param headRequests - HTMLRequest
+     * @return size - Total buffersize of all elements
+     */
     function _getHTMLBufferSize(
         HeadRequest[] memory headRequests,
         uint256 scriptSize
@@ -130,8 +164,8 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     // =============================================================
 
     /**
-     * @notice Get {getHTMLWrapped} and base64 encode it
-     * @param htmlRequest - Array of WrappedScriptRequests
+     * @notice Get {getHTML} and base64 encode it
+     * @param htmlRequest - HTMLRequest
      * @return Full html wrapped scripts, base64 encoded
      */
     function getEncodedHTML(
@@ -155,8 +189,8 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     // =============================================================
 
     /**
-     * @notice Convert {getHTMLWrapped} output to a string
-     * @param htmlRequest - Array of WrappedScriptRequests
+     * @notice Convert {getHTML} output to a string
+     * @param htmlRequest - HTMLRequest
      * @return {getHTMLWrapped} as a string
      */
     function getHTMLString(
@@ -166,9 +200,9 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     }
 
     /**
-     * @notice Convert {getEncodedHTMLWrapped} output to a string
-     * @param htmlRequest - Array of WrappedScriptRequests
-     * @return {getEncodedHTMLWrapped} as a string
+     * @notice Convert {getEncodedHTML} output to a string
+     * @param htmlRequest - HTMLRequest
+     * @return {getEncodedHTML} as a string
      */
     function getEncodedHTMLString(
         HTMLRequest memory htmlRequest

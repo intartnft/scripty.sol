@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const utilities = require("../utilities/utilities")
 
-const recordMode = true;
+const recordMode = false;
 const expectedResultsPath = __dirname + "/expectedResults/ScriptyHTML/";
 
 const writeHTMLResult = (name, result) => {
@@ -110,6 +110,49 @@ describe("ScriptyHTML Tests", function () {
         expectHTML(title + "_encoded", htmlEncodedString);
         expectHTML(title, htmlRawString);
     }
+
+    describe("Get HTML Tests - Zero requests", async function () {
+        it("Zero scripts amd Zero head", async function () {
+            const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
+
+            let headRequests = []
+            let scriptRequests = []
+
+            await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
+        });
+    });
+
+    describe("Get HTML String", async function () {
+        it("Zero scripts amd Zero head", async function () {
+            const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
+
+            let headRequests = []
+            let scriptRequests = []
+
+            const htmlRequest = getHtmlRequest(headRequests, scriptRequests)
+
+            const htmlRaw = await scriptyBuilderContract.getHTML(htmlRequest)
+            const htmlRawString = utilities.bytesToString(htmlRaw)
+            const htmlString = await scriptyBuilderContract.getHTMLString(htmlRequest);
+
+            expect(htmlRawString).to.eq(htmlString);
+        });
+
+        it("Zero scripts amd Zero head - encoded", async function () {
+            const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
+
+            let headRequests = []
+            let scriptRequests = []
+
+            const htmlRequest = getHtmlRequest(headRequests, scriptRequests)
+
+            const htmlRawEncoded = await scriptyBuilderContract.getEncodedHTML(htmlRequest)
+            const htmlRawEncodedString = utilities.bytesToString(htmlRawEncoded)
+            const htmlEncodedString = await scriptyBuilderContract.getEncodedHTMLString(htmlRequest);
+
+            expect(htmlRawEncodedString).to.eq(htmlEncodedString);
+        });
+    });
 
     describe("Get HTML Tests - Only contract scripts", async function () {
         it("Only contract scripts - tagType = 0", async function () {

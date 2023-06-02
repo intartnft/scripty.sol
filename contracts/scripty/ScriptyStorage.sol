@@ -111,6 +111,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
      */
     function updateDetails(string calldata name, bytes calldata details)
         public
+        isFrozen(name)
         scriptOwner(name)
     {
         scripts[name].details = details;
@@ -127,7 +128,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
     function updateScriptVerification(string calldata name, bool isVerified)
         public
         isFrozen(name)
-        onlyOwner
+        scriptOwner(name)
     {
         scripts[name].isVerified = isVerified;
         emit ScriptVerificationUpdated(name, isVerified);
