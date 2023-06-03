@@ -39,6 +39,8 @@ import "./../interfaces/IScriptyHTMLURLSafe.sol";
   @title Generates URL safe HTML after fetching and assembling given script and head requests.
   @author @0xthedude
   @author @xtremetom
+
+  Special thanks to @cxkoda, @frolic and @dhof
 */
 
 contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {

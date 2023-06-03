@@ -15,7 +15,7 @@ pragma solidity ^0.8.17;
   @author @0xthedude
   @author @xtremetom
 
-  Special thanks to @cxkoda and @frolic
+  Special thanks to @cxkoda, @frolic and @dhof
 */
 
 import "./core/ScriptyCore.sol";

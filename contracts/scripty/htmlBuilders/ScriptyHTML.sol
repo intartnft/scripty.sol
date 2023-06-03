@@ -41,6 +41,8 @@ import "./../interfaces/IScriptyHTML.sol";
   @title Generates HTML with multiple <script> tags after fetching and assembling given script and head requests.
   @author @0xthedude
   @author @xtremetom
+
+  Special thanks to @cxkoda, @frolic and @dhof
 */
 
 contract ScriptyHTML is ScriptyCore, IScriptyHTML {

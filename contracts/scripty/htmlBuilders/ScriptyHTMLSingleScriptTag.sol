@@ -39,6 +39,8 @@ import "./../interfaces/IScriptyHTMLSingleScriptTag.sol";
   @title Generates HTML with single <script> tag after fetching and assembling given script and head requests.
   @author @0xthedude
   @author @xtremetom
+
+  Special thanks to @cxkoda, @frolic and @dhof
 */
 
 contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag {
@@ -49,7 +51,7 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
     // =============================================================
 
     /**
-     * @notice  Get HTML with requested head tags and scripts housed in 
+     * @notice  Get HTML with requested head tags and scripts housed in
      *          single <script> tag
      * @dev Your HTML is returned in the following format:
      *      <html>

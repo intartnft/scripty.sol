@@ -16,6 +16,8 @@ pragma solidity ^0.8.17;
   @title A generic data storage contract.
   @author @xtremetom
   @author @0xthedude
+
+  Special thanks to @cxkoda, @frolic and @dhof
 */
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
