@@ -11,6 +11,26 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 //░░░░░░░░░░░░░░░░░░    INLINE HTML    ░░░░░░░░░░░░░░░░░░//
 ///////////////////////////////////////////////////////////
+//
+// This module is designed to manage an array of scripts
+// that share the same script tags:
+//
+// eg;
+//     <html>
+//        <head>
+//             <title>Hi</title>
+//             <style>[css code]</style>
+//         </head>
+//         <body>
+//             <script>
+//                  [SCRIPT_1]
+//                  [SCRIPT_2]
+//                  [SCRIPT_3]
+//             </script>
+//         </body>
+//     </html>
+//
+///////////////////////////////////////////////////////////
 
 import "./../core/ScriptyCore.sol";
 import "./../interfaces/IScriptyHTMLSingleScriptTag.sol";
@@ -46,8 +66,8 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
      *              [tagOpen[n]]{request[n]}[tagClose[n]]
      *          </body>
      *      </html>
-     * @param htmlRequest - A struct that contains head and script requests
-     * @return Full html with head and single script tag
+     * @param htmlRequest - HTMLRequest
+     * @return Full html wrapped scripts
      */
     function getHTMLSingleScriptTag(
         HTMLRequest memory htmlRequest
@@ -93,10 +113,11 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
     }
 
     /**
-    /* @dev Fetches the script and calculates final buffer 
-     *      size of all scripts and their tags.
-     * @param requests - Array of ScriptRequest
-     * @return Enriched script requests and the final buffer size
+     * @notice Adds the required tags and calculates buffer size of requests
+     * @dev Effectively two functions bundled into one as this saves gas
+     * @param requests - Array of ScriptRequests
+     * @return Updated ScriptRequests
+     * @return Total buffersize of updated ScriptRequests
      */
     function _enrichScriptsForHTMLSingleScriptTag(
         ScriptRequest[] memory requests
@@ -123,10 +144,9 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
     }
 
     /**
-    /* @notice Calculates the final buffer size of HTML
-     * @param headRequests - Array of HeadRequest
-     * @param scriptSize - Buffer size of all scripts and their tags
-     * @return size - Final buffer size of HTML
+     * @notice Calculates the total buffersize for all elements
+     * @param headRequests - HeadRequest
+     * @return size - Total buffersize of all elements
      */
     function _getHTMLSingleScriptTagBufferSize(
         HeadRequest[] memory headRequests,
@@ -147,8 +167,8 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
 
     /**
      * @notice Get {getHTMLSingleScriptTag} and base64 encode it
-     * @param htmlRequest - A struct that contains head and script requests
-     * @return Full html with head and single script tag, base64 encoded
+     * @param htmlRequest - HTMLRequest
+     * @return Full html wrapped scripts, base64 encoded
      */
     function getEncodedHTMLSingleScriptTag(
         HTMLRequest memory htmlRequest
@@ -173,7 +193,7 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
 
     /**
      * @notice Convert {getHTMLSingleScriptTag} output to a string
-     * @param htmlRequest - A struct that contains head and script requests
+     * @param htmlRequest - HTMLRequest
      * @return {getHTMLSingleScriptTag} as a string
      */
     function getHTMLSingleScriptTagString(
@@ -184,7 +204,7 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
 
     /**
      * @notice Convert {getEncodedHTMLSingleScriptTag} output to a string
-     * @param htmlRequest - A struct that contains head and script requests
+     * @param htmlRequest - HTMLRequest
      * @return {getEncodedHTMLSingleScriptTag} as a string
      */
     function getEncodedHTMLSingleScriptTagString(

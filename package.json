@@ -1,7 +1,9 @@
 {
     "scripts": {
         "clean": "npx hardhat clean",
-        "build": "node baseScripts/builder.js && npx hardhat compile",
+        "build": "npm run clean && node baseScripts/builder.js && npx hardhat compile",
+        "coverage": "npm run build && hardhat coverage",
+        "compile": "hardhat compile",
         "test": "npx hardhat test",
         "examples": "sh ./runAllExamples.sh",
         "examples-localhost": "npm run examples --network=localhost",

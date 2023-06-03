@@ -72,7 +72,7 @@ describe("getHTMLSingleScriptTag Tests", function () {
         }
         return headRequests
     }
-    
+
     function getHtmlRequest(headRequests, scriptRequests) {
         return [
             headRequests,
@@ -94,6 +94,49 @@ describe("getHTMLSingleScriptTag Tests", function () {
         expectHTML(title, htmlRawString);
     }
 
+    describe("HTML with single - Zero requests", async function () {
+        it("Zero scripts amd Zero head", async function () {
+            const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
+
+            let headRequests = []
+            let scriptRequests = []
+
+            await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
+        });
+    });
+
+    describe("Get HTML String", async function () {
+        it("Zero scripts amd Zero head", async function () {
+            const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
+
+            let headRequests = []
+            let scriptRequests = []
+
+            const htmlRequest = getHtmlRequest(headRequests, scriptRequests)
+
+            const htmlRaw = await scriptyBuilderContract.getHTMLSingleScriptTag(htmlRequest)
+            const htmlRawString = utilities.bytesToString(htmlRaw)
+            const htmlString = await scriptyBuilderContract.getHTMLSingleScriptTagString(htmlRequest);
+
+            expect(htmlRawString).to.eq(htmlString);
+        });
+
+        it("Zero scripts amd Zero head - encoded", async function () {
+            const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
+
+            let headRequests = []
+            let scriptRequests = []
+
+            const htmlRequest = getHtmlRequest(headRequests, scriptRequests)
+
+            const htmlRawEncoded = await scriptyBuilderContract.getEncodedHTMLSingleScriptTag(htmlRequest)
+            const htmlRawEncodedString = utilities.bytesToString(htmlRawEncoded)
+            const htmlEncodedString = await scriptyBuilderContract.getEncodedHTMLSingleScriptTagString(htmlRequest);
+
+            expect(htmlRawEncodedString).to.eq(htmlEncodedString);
+        });
+    });
+
     describe("HTML with single script tag tests", async function () {
         it("Without headers", async function () {
             const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
@@ -103,7 +146,7 @@ describe("getHTMLSingleScriptTag Tests", function () {
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, [], scriptRequests);
         });
-        
+
         it("Only contract scripts", async function () {
             const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
 

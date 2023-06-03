@@ -11,6 +11,25 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 //░░░░░░░░░░░░░    WRAPPED URL SAFE HTML    ░░░░░░░░░░░░░//
 ///////////////////////////////////////////////////////////
+//
+// This module is designed to manage an scripts with custom
+// script tags:
+//
+// eg;
+//     <html>
+//        <head>
+//             <title>Hi</title>
+//             <style>[css code]</style>
+//         </head>
+//         <body>
+//              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
+//              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
+//              ...
+//              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
+//         </body>
+//     </html>
+//
+///////////////////////////////////////////////////////////
 
 import "./../core/ScriptyCore.sol";
 import "./../interfaces/IScriptyHTMLURLSafe.sol";
@@ -53,8 +72,8 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
      *              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
      *          </body>
      *      </html>
-     * @param htmlRequest - A struct that contains head and script requests
-     * @return Full URL safe html with head and script tags
+     * @param htmlRequest - HTMLRequest
+     * @return Full URL Safe wrapped scripts
      */
     function getHTMLURLSafe(
         HTMLRequest memory htmlRequest
@@ -97,11 +116,11 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     }
 
     /**
-    /* @dev Fetches the script, sets the tag open, tag close
-     *      and calculates final buffer size of all scripts
-     *      and their tags. 
-     * @param requests - Array of ScriptRequest
-     * @return Enriched script requests and the final buffer size
+     * @notice Adds the required tags and calculates buffer size of requests
+     * @dev Effectively two functions bundled into one as this saves gas
+     * @param requests - Array of ScriptRequests
+     * @return Updated ScriptRequests
+     * @return Total buffersize of updated ScriptRequests
      */
     function _enrichScriptsForHTMLURLSafe(
         ScriptRequest[] memory requests
@@ -146,10 +165,9 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     }
 
     /**
-    /* @notice Calculates the final buffer size of HTML
-     * @param headRequests - Array of HeadRequest
-     * @param scriptSize - Buffer size of all scripts and their tags
-     * @return size - Final buffer size of HTML
+     * @notice Calculates the total buffersize for all elements
+     * @param headRequests - HeadRequest
+     * @return size - Total buffersize of all elements
      */
     function _getHTMLURLSafeBufferSize(
         HeadRequest[] memory headRequests,
@@ -182,7 +200,7 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
      *      result in a gas out. Instead use a a base64 encoded version of the script and `tagType = 1`
      *
      * @param htmlFile - Final buffer holding all requests
-     * @param requests - Array of ScriptRequest
+     * @param requests - Array of ScriptRequests
      */
     function _appendHTMLURLSafeBody(
         bytes memory htmlFile,
@@ -206,7 +224,7 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
 
     /**
      * @notice Convert {getHTMLURLSafe} output to a string
-     * @param htmlRequest - A struct that contains head and script requests
+     * @param htmlRequest - HTMLRequest
      * @return {getHTMLURLSafe} as a string
      */
     function getHTMLURLSafeString(

@@ -32,7 +32,7 @@ contract ScriptyCore {
     //                        TAG CONSTANTS
     // =============================================================
 
-    // data:text/html;base64,,
+    // data:text/html;base64,
     // raw
     // 22 bytes
     bytes public constant DATA_HTML_BASE64_URI_RAW = "data:text/html;base64,";
@@ -140,7 +140,6 @@ contract ScriptyCore {
 
     // data:text/html;base64,
     uint256 public constant HTML_BASE64_DATA_URI_BYTES = 22;
-
 
     // =============================================================
     //                        SCRIPT TAG TYPES
@@ -337,9 +336,9 @@ contract ScriptyCore {
     /**
      * @notice Append requests to the html buffer for script tags
      * @param htmlFile - bytes buffer
-     * @param scriptRequests - array of script requests
-     * @param includeTags - include tag open and close or not
-     * @param encodeScripts - encodes script content with base64
+     * @param scriptRequests - Requests being added to buffer
+     * @param includeTags - Bool to handle tag inclusion
+     * @param encodeScripts - Bool to handle script encoding
      */
     function _appendScriptTags(
         bytes memory htmlFile,
@@ -361,11 +360,11 @@ contract ScriptyCore {
     }
 
     /**
-     * @notice Append single request to the html buffer for a script tag
+     * @notice Append request to the html buffer for script tags
      * @param htmlFile - bytes buffer
-     * @param scriptRequest - script request
-     * @param includeTags - include tag open and close or not
-     * @param encodeScripts - encodes script content with base64
+     * @param scriptRequest - Request being added to buffer
+     * @param includeTags - Bool to handle tag inclusion
+     * @param encodeScripts - Bool to handle script encoding
      */
     function _appendScriptTag(
         bytes memory htmlFile,
