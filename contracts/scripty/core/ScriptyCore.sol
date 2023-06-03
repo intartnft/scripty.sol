@@ -251,7 +251,7 @@ contract ScriptyCore {
      *      method will return scriptContent. Otherwise, method will
      *      fetch it from the given storage contract
      *   
-     * @param scriptRequest - ScriptRequest that contains 
+     * @param scriptRequest - ScriptRequest
      */
     function fetchScript(
         ScriptRequest memory scriptRequest

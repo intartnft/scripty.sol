@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const utilities = require("../utilities/utilities")
 
-describe.only("ScriptyStorage Tests", function () {
+describe("ScriptyStorage Tests", function () {
     async function deploy() {
         const contentStore = await (await ethers.getContractFactory("ContentStore")).deploy()
         await contentStore.deployed()
