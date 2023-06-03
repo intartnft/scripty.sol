@@ -80,7 +80,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
         canCreate(name)
     {
         scripts[name] = Script(false, false, msg.sender, 0, details, new address[](0));
-        emit ScriptCreated(name, msg.sender, details);
+        emit ScriptCreated(name, details);
     }
 
     /**
@@ -115,7 +115,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
         scriptOwner(name)
     {
         scripts[name].details = details;
-        emit ScriptDetailsUpdated(name, msg.sender, details);
+        emit ScriptDetailsUpdated(name, details);
     }
 
     /**

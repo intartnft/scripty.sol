@@ -63,10 +63,9 @@ interface IScriptyStorage {
     /**
      * @notice Event for, Successful creation of a script
      * @param name - Name given to the script. Eg: threejs.min.js_r148
-     * @param owner - Address of the script owner
      * @param details - Custom details of the script
      */
-    event ScriptCreated(string indexed name, address owner, bytes details);
+    event ScriptCreated(string indexed name, bytes details);
 
     /**
      * @notice Event for, Successful addition of script chunk
@@ -78,14 +77,9 @@ interface IScriptyStorage {
     /**
      * @notice Event for, Successful update of custom details
      * @param name - Name given to the script. Eg: threejs.min.js_r148
-     * @param owner - Address of the script owner
      * @param details - Custom details of the script
      */
-    event ScriptDetailsUpdated(
-        string indexed name,
-        address owner,
-        bytes details
-    );
+    event ScriptDetailsUpdated(string indexed name, bytes details);
 
     // =============================================================
     //                      MANAGEMENT OPERATIONS

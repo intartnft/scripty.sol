@@ -1,5 +1,6 @@
 const { expect } = require("chai");
 const utilities = require("../utilities/utilities")
+const {byteLength, bytesToString} = require("../utilities/utilities");
 
 describe("ScriptyStorage Tests", function () {
     async function deploy() {
@@ -14,8 +15,34 @@ describe("ScriptyStorage Tests", function () {
         return { scriptyStorageContract }
     }
 
+    let chunk = "chunk"
+    let chunkData = utilities.stringToBytes(chunk);
+    let finalChunkString = "";
+
+    async function addChunk(chunkCount) {
+        // reset
+        finalChunkString = "";
+
+        for(let i = 0; i < chunkCount; i++) {
+            const chunkData = utilities.stringToBytes(chunk + i)
+            finalChunkString += `${chunk}${i}`
+
+            await expect(scriptyStorageContract.addChunkToScript("script", chunkData))
+                .to.emit(scriptyStorageContract, "ChunkStored")
+                .withArgs("script", bytesToString(chunkData).length);
+        }
+
+        // Test the final output is as expected
+        const storedScript = await scriptyStorageContract.getScript("script", utilities.emptyBytes())
+        const storedScriptString = utilities.bytesToString(storedScript)
+        expect(storedScriptString).to.equal(finalChunkString)
+    }
+
     let owner, addr1;
     let scriptyStorageContract;
+
+    const details = utilities.stringToBytes("details");
+    const newDetails = utilities.stringToBytes("details2");
 
     beforeEach( async() => {
         [owner, addr1] = await ethers.getSigners();
@@ -23,57 +50,50 @@ describe("ScriptyStorage Tests", function () {
         scriptyStorageContract = obj.scriptyStorageContract;
     });
 
-    describe("Script ownage tests", async function () {
-        it("Try to create already created script", async function () {
-            await scriptyStorageContract.createScript("script", utilities.stringToBytes("details"))
+    describe("createScript()", async function () {
+        it("Create Script", async function () {
+            await expect(scriptyStorageContract.createScript("script", details))
+                .to.emit(scriptyStorageContract, "ScriptCreated")
+                .withArgs("script", details);
+        });
 
-            await expect(scriptyStorageContract.createScript("script", utilities.stringToBytes("details")))
-                .to.be.revertedWithCustomError(scriptyStorageContract, "ScriptExists")
-        })
+        it("Fail to create script with duplicate name", async function () {
+            await scriptyStorageContract.createScript("script", details)
+            await expect(
+                scriptyStorageContract.connect(addr1).createScript("script", details)
+            ).to.be.revertedWithCustomError(scriptyStorageContract,"ScriptExists");
+        });
+    });
 
-        it("Try to add chunk to not owned script", async function () {
-            await scriptyStorageContract.createScript("script1", utilities.stringToBytes("script1"))
-            await scriptyStorageContract.addChunkToScript("script1", utilities.stringToBytes("chunk1"))
+    describe("addChunkToScript()", async function () {
 
-            const addr1ScriptyContract = scriptyStorageContract.connect(addr1)
-            await addr1ScriptyContract.createScript("script2", utilities.stringToBytes("script2"))
-            await addr1ScriptyContract.addChunkToScript("script2", utilities.stringToBytes("chunk1"))
+        beforeEach( async() => {
+            await scriptyStorageContract.createScript("script", details)
+        });
 
-            await expect(addr1ScriptyContract.addChunkToScript("script1", utilities.stringToBytes("chunk2")))
-                .to.be.revertedWithCustomError(scriptyStorageContract, "NotScriptOwner")
-        })
+        it("Add chunk", async function () {
+            await addChunk(1);
+        });
 
-        it("Try to update details of not owned script", async function () {
-            await scriptyStorageContract.createScript("script1", utilities.stringToBytes("script1"))
-            await scriptyStorageContract.updateDetails("script1", utilities.stringToBytes("script1 new details"))
+        it("Add multiple chunks", async function () {
+            await addChunk(10);
+        });
 
-            const addr1ScriptyContract = scriptyStorageContract.connect(addr1)
-            await addr1ScriptyContract.createScript("script2", utilities.stringToBytes("script2"))
-            await addr1ScriptyContract.updateDetails("script2", utilities.stringToBytes("script2 new details"))
+        it("Fail to add chunk as non-owner", async function () {
+            await expect(
+                scriptyStorageContract.connect(addr1).addChunkToScript("script", chunkData)
+            ).to.be.revertedWithCustomError(scriptyStorageContract,"NotScriptOwner");
+        });
 
-            await expect(addr1ScriptyContract.updateDetails("script1", utilities.stringToBytes("script1 test details")))
-                .to.be.revertedWithCustomError(scriptyStorageContract, "NotScriptOwner")
-        })
-
-        it("Add chunks", async function () {
-            const chunk = "chunk"
-
-            await scriptyStorageContract.createScript("script", utilities.stringToBytes("details"))
-            for (let i = 0; i < 50; i++) {
-                await scriptyStorageContract.addChunkToScript("script", utilities.stringToBytes(chunk + i))
-            }
-
-            const storedScript = await scriptyStorageContract.getScript("script", utilities.emptyBytes())
-            const storedScriptString = utilities.bytesToString(storedScript)
-
-            const expectedScriptString = "chunk0chunk1chunk2chunk3chunk4chunk5chunk6chunk7chunk8chunk9chunk10chunk11chunk12chunk13chunk14chunk15chunk16chunk17chunk18chunk19chunk20chunk21chunk22chunk23chunk24chunk25chunk26chunk27chunk28chunk29chunk30chunk31chunk32chunk33chunk34chunk35chunk36chunk37chunk38chunk39chunk40chunk41chunk42chunk43chunk44chunk45chunk46chunk47chunk48chunk49"
-            expect(storedScriptString).to.equal(expectedScriptString)
-        })
-    })
+        it("Fail to add chunk as owner when frozen", async function () {
+            await scriptyStorageContract.freezeScript("script");
+            await expect(
+                scriptyStorageContract.addChunkToScript("script", chunkData)
+            ).to.be.revertedWithCustomError(scriptyStorageContract,"ScriptIsFrozen");
+        });
+    });
 
     describe("updateDetails()", async function () {
-
-        const newDetails = utilities.stringToBytes("details2");
 
         beforeEach( async() => {
             await scriptyStorageContract.createScript("script", utilities.stringToBytes("details"))
@@ -82,7 +102,7 @@ describe("ScriptyStorage Tests", function () {
         it("Update details as owner", async function () {
             await expect(scriptyStorageContract.updateDetails("script", newDetails))
                 .to.emit(scriptyStorageContract, "ScriptDetailsUpdated")
-                .withArgs("script", owner.address, newDetails);
+                .withArgs("script", newDetails);
         });
 
         it("Fail to update details as non-owner", async function () {
@@ -152,8 +172,15 @@ describe("ScriptyStorage Tests", function () {
     });
 
     describe("getScriptChunkPointers()", async function () {
+
+        beforeEach( async() => {
+            await scriptyStorageContract.createScript("script", details)
+        });
+
         it("Get script pointers", async function () {
+            await addChunk(10);
             const pointers = await scriptyStorageContract.getScriptChunkPointers("script");
+            expect(pointers.length).to.eq(10);
         });
     });
 });
