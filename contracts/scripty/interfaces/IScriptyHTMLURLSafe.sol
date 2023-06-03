@@ -27,7 +27,7 @@ interface IScriptyHTMLURLSafe {
      *      carry a high risk of causing a gas out. Highly advised the use
      *      of base64 encoded scripts where possible
      *
-     *      Your requested scripts are returned in the following format:
+     *      Your HTML is returned in the following format:
      *      <html>
      *          <head>
      *              [tagOpen[0]][tagContent[0]][tagClose[0]]
@@ -36,14 +36,14 @@ interface IScriptyHTMLURLSafe {
      *              [tagOpen[n]][tagContent[n]][tagClose[n]]
      *          </head>
      *          <body>
-     *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
-     *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
+     *              [tagOpen[0]]{request[0]}[tagClose[0]]
+     *              [tagOpen[1]]{request[1]}[tagClose[1]]
      *              ...
-     *              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
+     *              [tagOpen[n]]{request[n]}[tagClose[n]]
      *          </body>
      *      </html>
-     * @param htmlRequest - A struct that contains head and script requests
-     * @return Full URL safe html with head and script tags
+     * @param htmlRequest - HTMLRequest
+     * @return Full URL safe HTML with head and script tags
      */
     function getHTMLURLSafe(
         HTMLRequest memory htmlRequest
@@ -55,7 +55,7 @@ interface IScriptyHTMLURLSafe {
 
     /**
      * @notice Convert {getHTMLURLSafe} output to a string
-     * @param htmlRequest - A struct that contains head and script requests
+     * @param htmlRequest - HTMLRequest
      * @return {getHTMLURLSafe} as a string
      */
     function getHTMLURLSafeString(

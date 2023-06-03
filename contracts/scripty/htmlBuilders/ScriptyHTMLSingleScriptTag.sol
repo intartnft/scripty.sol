@@ -51,7 +51,7 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
     /**
      * @notice  Get HTML with requested head tags and scripts housed in 
      *          single <script> tag
-     * @dev Your requested scripts are returned in the following format:
+     * @dev Your HTML is returned in the following format:
      *      <html>
      *          <head>
      *              [tagOpen[0]][tagContent[0]][tagClose[0]]
@@ -60,14 +60,16 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
      *              [tagOpen[n]][tagContent[n]][tagClose[n]]
      *          </head>
      *          <body>
-     *              [tagOpen[0]]{request[0]}[tagClose[0]]
-     *              [tagOpen[1]]{request[1]}[tagClose[1]]
-     *              ...
-     *              [tagOpen[n]]{request[n]}[tagClose[n]]
+     *              <script>
+     *                  {request[0]}
+     *                  {request[1]}
+     *                  ...
+     *                  {request[n]}
+     *              </script>
      *          </body>
      *      </html>
      * @param htmlRequest - HTMLRequest
-     * @return Full html wrapped scripts
+     * @return Full HTML with head and script tags
      */
     function getHTMLSingleScriptTag(
         HTMLRequest memory htmlRequest
@@ -168,7 +170,7 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
     /**
      * @notice Get {getHTMLSingleScriptTag} and base64 encode it
      * @param htmlRequest - HTMLRequest
-     * @return Full html wrapped scripts, base64 encoded
+     * @return Full HTML with head and script tags, base64 encoded
      */
     function getEncodedHTMLSingleScriptTag(
         HTMLRequest memory htmlRequest

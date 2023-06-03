@@ -53,7 +53,7 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     /**
      * @notice  Get HTML with requested head tags and scripts housed in
      *          multiple <script> tags
-     * @dev Your requested scripts are returned in the following format:
+     * @dev @dev Your HTML is returned in the following format:
      *      <html>
      *          <head>
      *              [tagOpen[0]][tagContent[0]][tagClose[0]]
@@ -62,14 +62,14 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
      *              [tagOpen[n]][tagContent[n]][tagClose[n]]
      *          </head>
      *          <body>
-     *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
-     *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
+     *              [tagOpen[0]]{request[0]}[tagClose[0]]
+     *              [tagOpen[1]]{request[1]}[tagClose[1]]
      *              ...
      *              [tagOpen[n]]{request[n]}[tagClose[n]]
      *          </body>
      *      </html>
      * @param htmlRequest - HTMLRequest
-     * @return Full html wrapped scripts
+     * @return Full HTML with head and script tags
      */
     function getHTML(
         HTMLRequest memory htmlRequest
@@ -173,7 +173,7 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     /**
      * @notice Get {getHTML} and base64 encode it
      * @param htmlRequest - HTMLRequest
-     * @return Full html wrapped scripts, base64 encoded
+     * @return Full HTML with head and script tags, base64 encoded
      */
     function getEncodedHTML(
         HTMLRequest memory htmlRequest

@@ -20,7 +20,7 @@ interface IScriptyHTMLSingleScriptTag {
     /**
      * @notice  Get HTML with requested head tags and scripts housed in 
      *          single <script> tag
-     * @dev Your requested scripts are returned in the following format:
+     * @dev Your HTML is returned in the following format:
      *      <html>
      *          <head>
      *              [tagOpen[0]][tagContent[0]][tagClose[0]]
@@ -29,14 +29,16 @@ interface IScriptyHTMLSingleScriptTag {
      *              [tagOpen[n]][tagContent[n]][tagClose[n]]
      *          </head>
      *          <body>
-     *              [tagOpen[0]]{request[0]}[tagClose[0]]
-     *              [tagOpen[1]]{request[1]}[tagClose[1]]
-     *              ...
-     *              [tagOpen[n]]{request[n]}[tagClose[n]]
+     *              <script>
+     *                  {request[0]}
+     *                  {request[1]}
+     *                  ...
+     *                  {request[n]}
+     *              </script>
      *          </body>
      *      </html>
-     * @param htmlRequest - A struct that contains head and script requests
-     * @return Full html with head and single script tag
+     * @param htmlRequest - HTMLRequest
+     * @return Full HTML with head and script tags
      */
     function getHTMLSingleScriptTag(
         HTMLRequest memory htmlRequest
@@ -48,8 +50,8 @@ interface IScriptyHTMLSingleScriptTag {
 
     /**
      * @notice Get {getHTMLSingleScriptTag} and base64 encode it
-     * @param htmlRequest - A struct that contains head and script requests
-     * @return Full html with head and single script tag, base64 encoded
+     * @param htmlRequest - HTMLRequest
+     * @return Full HTML with head and script tags, base64 encoded
      */
     function getEncodedHTMLSingleScriptTag(
         HTMLRequest memory htmlRequest
@@ -61,7 +63,7 @@ interface IScriptyHTMLSingleScriptTag {
 
     /**
      * @notice Convert {getHTMLSingleScriptTag} output to a string
-     * @param htmlRequest - A struct that contains head and script requests
+     * @param htmlRequest - HTMLRequest
      * @return {getHTMLSingleScriptTag} as a string
      */
     function getHTMLSingleScriptTagString(
@@ -70,7 +72,7 @@ interface IScriptyHTMLSingleScriptTag {
 
     /**
      * @notice Convert {getEncodedHTMLSingleScriptTag} output to a string
-     * @param htmlRequest - A struct that contains head and script requests
+     * @param htmlRequest - HTMLRequest
      * @return {getEncodedHTMLSingleScriptTag} as a string
      */
     function getEncodedHTMLSingleScriptTagString(

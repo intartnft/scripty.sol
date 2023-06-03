@@ -12,8 +12,9 @@ pragma solidity ^0.8.17;
 //░░░░░░░░░░░░░    WRAPPED URL SAFE HTML    ░░░░░░░░░░░░░//
 ///////////////////////////////////////////////////////////
 //
-// This module is designed to manage an scripts with custom
-// script tags:
+// This module is designed to manage arrays of scripts where
+// each script might require a custom wrapper. It's designed
+// to return URL safe HTML.
 //
 // eg;
 //     <html>
@@ -22,10 +23,10 @@ pragma solidity ^0.8.17;
 //             <style>[css code]</style>
 //         </head>
 //         <body>
-//              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
-//              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
+//              [tagOpen[0]]{request[0]}[tagClose[0]]
+//              [tagOpen[1]]{request[1]}[tagClose[1]]
 //              ...
-//              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
+//              [tagOpen[n]]{request[n]}[tagClose[n]]
 //         </body>
 //     </html>
 //
@@ -57,7 +58,7 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
      *      carry a high risk of causing a gas out. Highly advised the use
      *      of base64 encoded scripts where possible
      *
-     *      Your requested scripts are returned in the following format:
+     *      Your HTML is returned in the following format:
      *      <html>
      *          <head>
      *              [tagOpen[0]][tagContent[0]][tagClose[0]]
@@ -66,14 +67,14 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
      *              [tagOpen[n]][tagContent[n]][tagClose[n]]
      *          </head>
      *          <body>
-     *              [wrapPrefix[0]]{request[0]}[wrapSuffix[0]]
-     *              [wrapPrefix[1]]{request[1]}[wrapSuffix[1]]
+     *              [tagOpen[0]]{request[0]}[tagClose[0]]
+     *              [tagOpen[1]]{request[1]}[tagClose[1]]
      *              ...
-     *              [wrapPrefix[n]]{request[n]}[wrapSuffix[n]]
+     *              [tagOpen[n]]{request[n]}[tagClose[n]]
      *          </body>
      *      </html>
      * @param htmlRequest - HTMLRequest
-     * @return Full URL Safe wrapped scripts
+     * @return Full URL safe HTML with head and script tags
      */
     function getHTMLURLSafe(
         HTMLRequest memory htmlRequest

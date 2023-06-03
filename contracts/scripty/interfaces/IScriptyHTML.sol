@@ -20,7 +20,7 @@ interface IScriptyHTML {
     /**
      * @notice  Get HTML with requested head tags and scripts housed in
      *          multiple <script> tags
-     * @dev Your requested scripts are returned in the following format:
+     * @dev @dev Your HTML is returned in the following format:
      *      <html>
      *          <head>
      *              [tagOpen[0]][tagContent[0]][tagClose[0]]
@@ -35,8 +35,8 @@ interface IScriptyHTML {
      *              [tagOpen[n]]{request[n]}[tagClose[n]]
      *          </body>
      *      </html>
-     * @param htmlRequest - A struct that contains head and script requests
-     * @return Full html with head and script tags
+     * @param htmlRequest - HTMLRequest
+     * @return Full HTML with head and script tags
      */
     function getHTML(
         HTMLRequest memory htmlRequest
@@ -48,8 +48,8 @@ interface IScriptyHTML {
 
     /**
      * @notice Get {getHTML} and base64 encode it
-     * @param htmlRequest - A struct that contains head and script requests
-     * @return Full html with head and script tags, base64 encoded
+     * @param htmlRequest - HTMLRequest
+     * @return Full HTML with head and script tags, base64 encoded
      */
     function getEncodedHTML(
         HTMLRequest memory htmlRequest
@@ -61,7 +61,7 @@ interface IScriptyHTML {
 
     /**
      * @notice Convert {getHTML} output to a string
-     * @param htmlRequest - A struct that contains head and script requests
+     * @param htmlRequest - HTMLRequest
      * @return {getHTMLWrapped} as a string
      */
     function getHTMLString(
@@ -70,7 +70,7 @@ interface IScriptyHTML {
 
     /**
      * @notice Convert {getEncodedHTML} output to a string
-     * @param htmlRequest - A struct that contains head and script requests
+     * @param htmlRequest - HTMLRequest
      * @return {getEncodedHTML} as a string
      */
     function getEncodedHTMLString(
