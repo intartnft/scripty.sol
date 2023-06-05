@@ -6,6 +6,26 @@
           {
             "components": [
               {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "contractAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "contractData",
+                "type": "bytes"
+              },
+              {
+                "internalType": "enum HTMLTagType",
+                "name": "tagType",
+                "type": "uint8"
+              },
+              {
                 "internalType": "bytes",
                 "name": "tagOpen",
                 "type": "bytes"
@@ -21,8 +41,8 @@
                 "type": "bytes"
               }
             ],
-            "internalType": "struct HeadRequest[]",
-            "name": "headRequests",
+            "internalType": "struct HTMLTag[]",
+            "name": "headTags",
             "type": "tuple[]"
           },
           {
@@ -43,7 +63,7 @@
                 "type": "bytes"
               },
               {
-                "internalType": "uint8",
+                "internalType": "enum HTMLTagType",
                 "name": "tagType",
                 "type": "uint8"
               },
@@ -59,12 +79,12 @@
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
-            "internalType": "struct ScriptRequest[]",
-            "name": "scriptRequests",
+            "internalType": "struct HTMLTag[]",
+            "name": "bodyTags",
             "type": "tuple[]"
           }
         ],
@@ -91,6 +111,26 @@
           {
             "components": [
               {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "contractAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "contractData",
+                "type": "bytes"
+              },
+              {
+                "internalType": "enum HTMLTagType",
+                "name": "tagType",
+                "type": "uint8"
+              },
+              {
                 "internalType": "bytes",
                 "name": "tagOpen",
                 "type": "bytes"
@@ -106,8 +146,8 @@
                 "type": "bytes"
               }
             ],
-            "internalType": "struct HeadRequest[]",
-            "name": "headRequests",
+            "internalType": "struct HTMLTag[]",
+            "name": "headTags",
             "type": "tuple[]"
           },
           {
@@ -128,7 +168,7 @@
                 "type": "bytes"
               },
               {
-                "internalType": "uint8",
+                "internalType": "enum HTMLTagType",
                 "name": "tagType",
                 "type": "uint8"
               },
@@ -144,12 +184,12 @@
               },
               {
                 "internalType": "bytes",
-                "name": "scriptContent",
+                "name": "tagContent",
                 "type": "bytes"
               }
             ],
-            "internalType": "struct ScriptRequest[]",
-            "name": "scriptRequests",
+            "internalType": "struct HTMLTag[]",
+            "name": "bodyTags",
             "type": "tuple[]"
           }
         ],
