@@ -50,12 +50,6 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "bytes",
         "name": "details",
         "type": "bytes"
@@ -72,12 +66,6 @@
         "internalType": "string",
         "name": "name",
         "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
       },
       {
         "indexed": false,

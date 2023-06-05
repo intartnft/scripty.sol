@@ -32,9 +32,6 @@ pragma solidity ^0.8.17;
 //
 ///////////////////////////////////////////////////////////
 
-import "./../core/ScriptyCore.sol";
-import "./../interfaces/IScriptyHTMLURLSafe.sol";
-
 /**
   @title Generates URL safe HTML after fetching and assembling given script and head requests.
   @author @0xthedude
@@ -42,6 +39,9 @@ import "./../interfaces/IScriptyHTMLURLSafe.sol";
 
   Special thanks to @cxkoda, @frolic and @dhof
 */
+
+import "./../core/ScriptyCore.sol";
+import "./../interfaces/IScriptyHTMLURLSafe.sol";
 
 contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     using DynamicBuffer for bytes;
@@ -81,14 +81,22 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     function getHTMLURLSafe(
         HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
-        (, uint256 scriptBufferSize) = _enrichScriptsForHTMLURLSafe(
-            htmlRequest.scriptRequests
+        (, uint256 headBufferSize) = _enrichHTMLTags(
+            htmlRequest.headTags,
+            true,
+            true
+        );
+
+        (, uint256 bodyBufferSize) = _enrichHTMLTags(
+            htmlRequest.bodyTags,
+            false,
+            false
         );
 
         bytes memory htmlFile = DynamicBuffer.allocate(
             _getHTMLURLSafeBufferSize(
-                htmlRequest.headRequests,
-                scriptBufferSize
+                headBufferSize,
+                bodyBufferSize
             )
         );
 
@@ -100,16 +108,16 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
 
         // <head>
         htmlFile.appendSafe(HEAD_OPEN_URL_SAFE);
-        if (htmlRequest.headRequests.length > 0) {
-            _appendHeadTags(htmlFile, htmlRequest.headRequests);
+        if (htmlRequest.headTags.length > 0) {
+            _appendHTMLTags(htmlFile, htmlRequest.headTags, true, false);
         }
         htmlFile.appendSafe(HEAD_CLOSE_URL_SAFE);
         // </head>
 
         // <body>
         htmlFile.appendSafe(BODY_OPEN_URL_SAFE);
-        if (htmlRequest.scriptRequests.length > 0) {
-            _appendHTMLURLSafeBody(htmlFile, htmlRequest.scriptRequests);
+        if (htmlRequest.bodyTags.length > 0) {
+            _appendHTMLURLSafeBody(htmlFile, htmlRequest.bodyTags);
         }
         htmlFile.appendSafe(HTML_BODY_CLOSED_URL_SAFE);
         // </body>
@@ -119,68 +127,20 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     }
 
     /**
-     * @notice Adds the required tags and calculates buffer size of requests
-     * @dev Effectively two functions bundled into one as this saves gas
-     * @param requests - Array of ScriptRequests
-     * @return Updated ScriptRequests
-     * @return Total buffersize of updated ScriptRequests
-     */
-    function _enrichScriptsForHTMLURLSafe(
-        ScriptRequest[] memory requests
-    ) private view returns (ScriptRequest[] memory, uint256) {
-        if (requests.length == 0) {
-            return (requests, 0);
-        }
-
-        bytes memory tagOpen;
-        bytes memory tagClose;
-        bytes memory script;
-
-        uint256 scriptSize;
-        uint256 totalSize;
-        uint256 length = requests.length;
-        uint256 i;
-
-        unchecked {
-            do {
-                script = fetchScript(requests[i]);
-                requests[i].scriptContent = script;
-                scriptSize = script.length;
-
-                // When tagType = 0, script will be base64 encoded.
-                // Script size should account that change as well.
-                if (requests[i].tagType == 0) {
-                    scriptSize = sizeForBase64Encoding(scriptSize);
-                }
-
-                (tagOpen, tagClose) = urlSafeScriptTagOpenAndCloseFor(
-                    requests[i]
-                );
-                requests[i].tagOpen = tagOpen;
-                requests[i].tagClose = tagClose;
-
-                totalSize += tagOpen.length;
-                totalSize += scriptSize;
-                totalSize += tagClose.length;
-            } while (++i < length);
-        }
-        return (requests, totalSize);
-    }
-
-    /**
      * @notice Calculates the total buffersize for all elements
-     * @param headRequests - HeadRequest
+     * @param headBufferSize - HeadRequest
+     * @param bodyBufferSize - HeadRequest
      * @return size - Total buffersize of all elements
      */
     function _getHTMLURLSafeBufferSize(
-        HeadRequest[] memory headRequests,
-        uint256 scriptSize
+        uint256 headBufferSize,
+        uint256 bodyBufferSize
     ) private pure returns (uint256 size) {
         unchecked {
             // urlencode(<html><head></head><body></body></html>)
             size = URLS_SAFE_BYTES;
-            size += _getBufferSizeForHeadTags(headRequests);
-            size += scriptSize;
+            size += headBufferSize;
+            size += bodyBufferSize;
         }
     }
 
@@ -203,21 +163,21 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
      *      result in a gas out. Instead use a a base64 encoded version of the script and `tagType = 1`
      *
      * @param htmlFile - Final buffer holding all requests
-     * @param requests - Array of ScriptRequests
+     * @param htmlTags - Array of ScriptRequests
      */
     function _appendHTMLURLSafeBody(
         bytes memory htmlFile,
-        ScriptRequest[] memory requests
+        HTMLTag[] memory htmlTags
     ) internal pure {
-        ScriptRequest memory request;
+        HTMLTag memory htmlTag;
         uint256 i;
         unchecked {
             do {
-                request = requests[i];
-                (request.tagType == 0)
-                    ? _appendScriptTag(htmlFile, request, true, true)
-                    : _appendScriptTag(htmlFile, request, true, false);
-            } while (++i < requests.length);
+                htmlTag = htmlTags[i];
+                (htmlTag.tagType == HTMLTagType.any)
+                    ? _appendHTMLTag(htmlFile, htmlTag, true, true)
+                    : _appendHTMLTag(htmlFile, htmlTag, true, false);
+            } while (++i < htmlTags.length);
         }
     }
 

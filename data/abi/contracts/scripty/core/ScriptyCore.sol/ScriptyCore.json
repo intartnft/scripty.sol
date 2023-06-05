@@ -383,7 +383,7 @@
             "type": "bytes"
           },
           {
-            "internalType": "uint8",
+            "internalType": "enum HTMLTagType",
             "name": "tagType",
             "type": "uint8"
           },
@@ -399,16 +399,16 @@
           },
           {
             "internalType": "bytes",
-            "name": "scriptContent",
+            "name": "tagContent",
             "type": "bytes"
           }
         ],
-        "internalType": "struct ScriptRequest",
-        "name": "scriptRequest",
+        "internalType": "struct HTMLTag",
+        "name": "htmlTag",
         "type": "tuple"
       }
     ],
-    "name": "fetchScript",
+    "name": "fetchTagContent",
     "outputs": [
       {
         "internalType": "bytes",
@@ -417,67 +417,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "address",
-            "name": "contractAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "bytes",
-            "name": "contractData",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint8",
-            "name": "tagType",
-            "type": "uint8"
-          },
-          {
-            "internalType": "bytes",
-            "name": "tagOpen",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "tagClose",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "scriptContent",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct ScriptRequest",
-        "name": "request",
-        "type": "tuple"
-      }
-    ],
-    "name": "scriptTagOpenAndCloseFor",
-    "outputs": [
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
-      }
-    ],
-    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -519,7 +458,7 @@
             "type": "bytes"
           },
           {
-            "internalType": "uint8",
+            "internalType": "enum HTMLTagType",
             "name": "tagType",
             "type": "uint8"
           },
@@ -535,16 +474,77 @@
           },
           {
             "internalType": "bytes",
-            "name": "scriptContent",
+            "name": "tagContent",
             "type": "bytes"
           }
         ],
-        "internalType": "struct ScriptRequest",
-        "name": "request",
+        "internalType": "struct HTMLTag",
+        "name": "htmlTag",
         "type": "tuple"
       }
     ],
-    "name": "urlSafeScriptTagOpenAndCloseFor",
+    "name": "tagOpenCloseForHTMLTag",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes",
+            "name": "contractData",
+            "type": "bytes"
+          },
+          {
+            "internalType": "enum HTMLTagType",
+            "name": "tagType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes",
+            "name": "tagOpen",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "tagClose",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "tagContent",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct HTMLTag",
+        "name": "htmlTag",
+        "type": "tuple"
+      }
+    ],
+    "name": "tagOpenCloseForHTMLTagURLSafe",
     "outputs": [
       {
         "internalType": "bytes",

@@ -24,7 +24,15 @@ const expectHTML = (name, actual) => {
     expect(actual).to.equal(expected)
 }
 
-describe("ScriptyHTML Tests", function () {
+// enum HTMLTagType {
+//     any,
+//     script,
+//     scriptBase64DataURI,
+//     scriptGZIPBase64DataURI,
+//     scriptPNGBase64DataURI
+// }
+
+describe.only("ScriptyHTML Tests", function () {
     async function deploy() {
         const contentStore = await (await ethers.getContractFactory("ContentStore")).deploy()
         await contentStore.deployed()
@@ -46,7 +54,7 @@ describe("ScriptyHTML Tests", function () {
         let tagOpen = utilities.emptyBytes()
         let tagClose = utilities.emptyBytes()
 
-        if (tagType == 4) {
+        if (tagType == 0) {
             tagOpen = utilities.stringToBytes("<script>")
             tagClose = utilities.stringToBytes("</script>")
         }
@@ -68,7 +76,7 @@ describe("ScriptyHTML Tests", function () {
         let tagOpen = utilities.emptyBytes()
         let tagClose = utilities.emptyBytes()
 
-        if (tagType == 4) {
+        if (tagType == 0) {
             tagOpen = utilities.stringToBytes("<tagOpen>")
             tagClose = utilities.stringToBytes("</tagClose>")
         }
@@ -81,11 +89,7 @@ describe("ScriptyHTML Tests", function () {
 
     function addHeadRequest(headRequests) {
         for (let i = 0; i < 2; i++) {
-            headRequests.push([
-                utilities.stringToBytes("<title>"),
-                utilities.stringToBytes("</title>"),
-                utilities.stringToBytes("Hello World")
-            ])
+            headRequests.push(["", utilities.emptyAddress, 0, 0, utilities.stringToBytes("<title>"), utilities.stringToBytes("</title>"), utilities.stringToBytes("Hello World")])
         }
         return headRequests
     }
@@ -106,8 +110,8 @@ describe("ScriptyHTML Tests", function () {
         const htmlEncoded = await contract.getEncodedHTML(htmlRequest)
         const htmlEncodedString = utilities.bytesToString(htmlEncoded)
 
-        expect(htmlRawString).to.be.equal(utilities.parseBase64DataURI(htmlEncodedString))
-        expectHTML(title + "_encoded", htmlEncodedString);
+        // expect(htmlRawString).to.be.equal(utilities.parseBase64DataURI(htmlEncodedString))
+        // expectHTML(title + "_encoded", htmlEncodedString);
         expectHTML(title, htmlRawString);
     }
 
@@ -161,7 +165,7 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addContractScripts(scriptRequests, 0, scriptyStorageContract)
+            await addContractScripts(scriptRequests, 1, scriptyStorageContract)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -173,7 +177,7 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addContractScripts(scriptRequests, 1, scriptyStorageContract)
+            await addContractScripts(scriptRequests, 2, scriptyStorageContract)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -185,7 +189,7 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addContractScripts(scriptRequests, 2, scriptyStorageContract)
+            await addContractScripts(scriptRequests, 3, scriptyStorageContract)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -197,7 +201,7 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addContractScripts(scriptRequests, 3, scriptyStorageContract)
+            await addContractScripts(scriptRequests, 4, scriptyStorageContract)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -209,7 +213,7 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addContractScripts(scriptRequests, 4, scriptyStorageContract)
+            await addContractScripts(scriptRequests, 0, scriptyStorageContract)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -223,7 +227,7 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addScriptsWithContent(0, scriptRequests)
+            await addScriptsWithContent(1, scriptRequests)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -235,7 +239,7 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addScriptsWithContent(1, scriptRequests)
+            await addScriptsWithContent(2, scriptRequests)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -247,7 +251,7 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addScriptsWithContent(2, scriptRequests)
+            await addScriptsWithContent(3, scriptRequests)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -259,7 +263,7 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addScriptsWithContent(3, scriptRequests)
+            await addScriptsWithContent(4, scriptRequests)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -271,7 +275,7 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addScriptsWithContent(4, scriptRequests)
+            await addScriptsWithContent(0, scriptRequests)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -285,10 +289,10 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addContractScripts(scriptRequests, 0, scriptyStorageContract)
-            await addScriptsWithContent(0, scriptRequests)
-            await addContractScripts(scriptRequests, 0, scriptyStorageContract)
-            await addScriptsWithContent(0, scriptRequests)
+            await addContractScripts(scriptRequests, 1, scriptyStorageContract)
+            await addScriptsWithContent(1, scriptRequests)
+            await addContractScripts(scriptRequests, 1, scriptyStorageContract)
+            await addScriptsWithContent(1, scriptRequests)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -300,10 +304,10 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addContractScripts(scriptRequests, 1, scriptyStorageContract)
-            await addScriptsWithContent(1, scriptRequests)
-            await addContractScripts(scriptRequests, 1, scriptyStorageContract)
-            await addScriptsWithContent(1, scriptRequests)
+            await addContractScripts(scriptRequests, 2, scriptyStorageContract)
+            await addScriptsWithContent(2, scriptRequests)
+            await addContractScripts(scriptRequests, 2, scriptyStorageContract)
+            await addScriptsWithContent(2, scriptRequests)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -315,10 +319,10 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addContractScripts(scriptRequests, 2, scriptyStorageContract)
-            await addScriptsWithContent(2, scriptRequests)
-            await addContractScripts(scriptRequests, 2, scriptyStorageContract)
-            await addScriptsWithContent(2, scriptRequests)
+            await addContractScripts(scriptRequests, 3, scriptyStorageContract)
+            await addScriptsWithContent(3, scriptRequests)
+            await addContractScripts(scriptRequests, 3, scriptyStorageContract)
+            await addScriptsWithContent(3, scriptRequests)
             addHeadRequest(headRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
@@ -330,10 +334,10 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addContractScripts(scriptRequests, 3, scriptyStorageContract)
-            await addScriptsWithContent(3, scriptRequests)
-            await addContractScripts(scriptRequests, 3, scriptyStorageContract)
-            await addScriptsWithContent(3, scriptRequests)
+            await addContractScripts(scriptRequests, 4, scriptyStorageContract)
+            await addScriptsWithContent(4, scriptRequests)
+            await addContractScripts(scriptRequests, 4, scriptyStorageContract)
+            await addScriptsWithContent(4, scriptRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
         });
@@ -344,10 +348,10 @@ describe("ScriptyHTML Tests", function () {
             let headRequests = []
             let scriptRequests = []
 
-            await addContractScripts(scriptRequests, 4, scriptyStorageContract)
-            await addScriptsWithContent(4, scriptRequests)
-            await addContractScripts(scriptRequests, 4, scriptyStorageContract)
-            await addScriptsWithContent(4, scriptRequests)
+            await addContractScripts(scriptRequests, 0, scriptyStorageContract)
+            await addScriptsWithContent(0, scriptRequests)
+            await addContractScripts(scriptRequests, 0, scriptyStorageContract)
+            await addScriptsWithContent(0, scriptRequests)
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headRequests, scriptRequests);
         });

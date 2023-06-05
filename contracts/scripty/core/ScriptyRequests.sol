@@ -13,22 +13,24 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 
 struct HTMLRequest {
-    HeadRequest[] headRequests;
-    ScriptRequest[] scriptRequests;
+    HTMLTag[] headTags;
+    HTMLTag[] bodyTags;
 }
 
-struct HeadRequest {
-    bytes tagOpen;
-    bytes tagClose;
-    bytes tagContent;
+enum HTMLTagType {
+    any,
+    script,
+    scriptBase64DataURI,
+    scriptGZIPBase64DataURI,
+    scriptPNGBase64DataURI
 }
 
-struct ScriptRequest {
+struct HTMLTag {
     string name;
     address contractAddress;
     bytes contractData;
-    uint8 tagType;
+    HTMLTagType tagType;
     bytes tagOpen;
     bytes tagClose;
-    bytes scriptContent;
+    bytes tagContent;
 }

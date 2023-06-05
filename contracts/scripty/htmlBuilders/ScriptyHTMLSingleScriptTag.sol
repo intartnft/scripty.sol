@@ -32,9 +32,6 @@ pragma solidity ^0.8.17;
 //
 ///////////////////////////////////////////////////////////
 
-import "./../core/ScriptyCore.sol";
-import "./../interfaces/IScriptyHTMLSingleScriptTag.sol";
-
 /**
   @title Generates HTML with single <script> tag after fetching and assembling given script and head requests.
   @author @0xthedude
@@ -43,7 +40,13 @@ import "./../interfaces/IScriptyHTMLSingleScriptTag.sol";
   Special thanks to @cxkoda, @frolic and @dhof
 */
 
-contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag {
+import "./../core/ScriptyCore.sol";
+import "./../interfaces/IScriptyHTMLSingleScriptTag.sol";
+
+contract ScriptyHTMLSingleScriptTag is
+    ScriptyCore,
+    IScriptyHTMLSingleScriptTag
+{
     using DynamicBuffer for bytes;
 
     // =============================================================
@@ -76,12 +79,20 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
     function getHTMLSingleScriptTag(
         HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
-        (, uint256 scriptBufferSize) = _enrichScriptsForHTMLSingleScriptTag(
-            htmlRequest.scriptRequests
+        (, uint256 headBufferSize) = _enrichHTMLTags(
+            htmlRequest.headTags,
+            true,
+            false
+        );
+
+        (, uint256 bodyBufferSize) = _enrichHTMLTags(
+            htmlRequest.bodyTags,
+            false,
+            false
         );
 
         bytes memory htmlFile = DynamicBuffer.allocate(
-            _getHTMLSingleScriptTagBufferSize(htmlRequest.headRequests, scriptBufferSize)
+            _getHTMLSingleScriptTagBufferSize(headBufferSize, bodyBufferSize)
         );
 
         // <html>
@@ -89,8 +100,8 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
 
         // <head>
         htmlFile.appendSafe(HEAD_OPEN_RAW);
-        if (htmlRequest.headRequests.length > 0) {
-            _appendHeadTags(htmlFile, htmlRequest.headRequests);
+        if (htmlRequest.headTags.length > 0) {
+            _appendHTMLTags(htmlFile, htmlRequest.headTags, true, false);
         }
         htmlFile.appendSafe(HEAD_CLOSE_RAW);
         // </head>
@@ -99,13 +110,8 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
         // <script>
         htmlFile.appendSafe(BODY_OPEN_RAW);
         htmlFile.appendSafe(SCRIPT_OPEN_RAW);
-        if (htmlRequest.scriptRequests.length > 0) {
-            _appendScriptTags(
-                htmlFile,
-                htmlRequest.scriptRequests,
-                false,
-                false
-            );
+        if (htmlRequest.bodyTags.length > 0) {
+            _appendHTMLTags(htmlFile, htmlRequest.bodyTags, false, false);
         }
         htmlFile.appendSafe(SCRIPT_CLOSE_RAW);
         htmlFile.appendSafe(HTML_BODY_CLOSED_RAW);
@@ -117,51 +123,21 @@ contract ScriptyHTMLSingleScriptTag is ScriptyCore, IScriptyHTMLSingleScriptTag 
     }
 
     /**
-     * @notice Adds the required tags and calculates buffer size of requests
-     * @dev Effectively two functions bundled into one as this saves gas
-     * @param requests - Array of ScriptRequests
-     * @return Updated ScriptRequests
-     * @return Total buffersize of updated ScriptRequests
-     */
-    function _enrichScriptsForHTMLSingleScriptTag(
-        ScriptRequest[] memory requests
-    ) private view returns (ScriptRequest[] memory, uint256) {
-        if (requests.length == 0) {
-            return (requests, 0);
-        }
-
-        bytes memory script;
-
-        uint256 totalSize;
-        uint256 length = requests.length;
-        uint256 i;
-
-        unchecked {
-            do {
-                script = fetchScript(requests[i]);
-                requests[i].scriptContent = script;
-
-                totalSize += script.length;
-            } while (++i < length);
-        }
-        return (requests, totalSize);
-    }
-
-    /**
      * @notice Calculates the total buffersize for all elements
-     * @param headRequests - HeadRequest
+     * @param headBufferSize - HTMLRequest
+     * @param bodyBufferSize - HTMLRequest
      * @return size - Total buffersize of all elements
      */
     function _getHTMLSingleScriptTagBufferSize(
-        HeadRequest[] memory headRequests,
-        uint256 scriptSize
+        uint256 headBufferSize,
+        uint256 bodyBufferSize
     ) private pure returns (uint256 size) {
         unchecked {
             // <html><head></head><body></body></html>
             // <script></script>
             size = URLS_RAW_BYTES + SCRIPT_INLINE_BYTES;
-            size += _getBufferSizeForHeadTags(headRequests);
-            size += scriptSize;
+            size += headBufferSize;
+            size += bodyBufferSize;
         }
     }
 
