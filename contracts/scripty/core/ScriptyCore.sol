@@ -20,7 +20,7 @@ pragma solidity ^0.8.17;
   Special thanks to @cxkoda, @frolic and @dhof
 */
 
-import {HTMLRequest, HTMLTagType, HTMLTag} from "./ScriptyRequests.sol";
+import {HTMLRequest, HTMLTagType, HTMLTag} from "./ScriptyStructs.sol";
 import {DynamicBuffer} from "./../utils/DynamicBuffer.sol";
 import {IScriptyStorage} from "./../interfaces/IScriptyStorage.sol";
 import {IContractScript} from "./../interfaces/IContractScript.sol";
@@ -217,7 +217,7 @@ contract ScriptyCore {
     ) public pure returns (bytes memory, bytes memory) {
         if (
             htmlTag.tagType == HTMLTagType.script ||
-            htmlTag.tagType == HTMLTagType.any
+            htmlTag.tagType == HTMLTagType.scriptBase64DataURI
         ) {
             // <script src="data:text/javascript;base64,
             // "></script>
@@ -274,31 +274,6 @@ contract ScriptyCore {
     // =============================================================
 
     /**
-    //  * @notice Get the total buffer size for the head tags
-    //  * @param headRequests - Request being added to buffer
-    //  * @return size - buffer size for head tags
-    //  */
-    // function _getBufferSizeForHeadTags(
-    //     HeadRequest[] memory headRequests
-    // ) internal pure returns (uint256 size) {
-    //     if (headRequests.length == 0) {
-    //         return 0;
-    //     }
-
-    //     HeadRequest memory headRequest;
-    //     uint256 i;
-
-    //     unchecked {
-    //         do {
-    //             headRequest = headRequests[i];
-    //             size += headRequest.tagOpen.length;
-    //             size += headRequest.tagContent.length;
-    //             size += headRequest.tagClose.length;
-    //         } while (++i < headRequests.length);
-    //     }
-    // }
-
-    /**
      * @notice Calculate the buffer size post base64 encoding
      * @param value - Starting buffer size
      * @return Final buffer size as uint256
@@ -315,17 +290,15 @@ contract ScriptyCore {
      * @notice Adds the required tags and calculates buffer size of requests
      * @dev Effectively two functions bundled into one as this saves gas
      * @param htmlTags - Array of ScriptRequests
-     * @param includeTagOpenAndClose - Array of ScriptRequests
-     * @return Updated ScriptRequests
+     * @param isURLSafe - Array of ScriptRequests
      * @return Total buffersize of updated ScriptRequests
      */
     function _enrichHTMLTags(
         HTMLTag[] memory htmlTags,
-        bool includeTagOpenAndClose,
-        bool useURLSafeTagOpenAndClose
-    ) internal view returns (HTMLTag[] memory, uint256) {
+        bool isURLSafe
+    ) internal view returns (uint256) {
         if (htmlTags.length == 0) {
-            return (htmlTags, 0);
+            return 0;
         }
 
         bytes memory tagOpen;
@@ -340,23 +313,29 @@ contract ScriptyCore {
             do {
                 tagContent = fetchTagContent(htmlTags[i]);
                 htmlTags[i].tagContent = tagContent;
-                totalSize += tagContent.length;
 
-                if (includeTagOpenAndClose) {
-                    if (useURLSafeTagOpenAndClose) {
-                        (tagOpen, tagClose) = tagOpenCloseForHTMLTagURLSafe(htmlTags[i]);
-                    }else{
-                        (tagOpen, tagClose) = tagOpenCloseForHTMLTag(htmlTags[i]);
-                    }
-                    htmlTags[i].tagOpen = tagOpen;
-                    htmlTags[i].tagClose = tagClose;
-
-                    totalSize += tagOpen.length;
-                    totalSize += tagClose.length;
+                if (isURLSafe && htmlTags[i].tagType == HTMLTagType.script) {
+                    totalSize += sizeForBase64Encoding(tagContent.length);
+                } else {
+                    totalSize += tagContent.length;
                 }
+
+                if (isURLSafe) {
+                    (tagOpen, tagClose) = tagOpenCloseForHTMLTagURLSafe(
+                        htmlTags[i]
+                    );
+                } else {
+                    (tagOpen, tagClose) = tagOpenCloseForHTMLTag(htmlTags[i]);
+                }
+
+                htmlTags[i].tagOpen = tagOpen;
+                htmlTags[i].tagClose = tagClose;
+
+                totalSize += tagOpen.length;
+                totalSize += tagClose.length;
             } while (++i < length);
         }
-        return (htmlTags, totalSize);
+        return totalSize;
     }
 
     // =============================================================
@@ -367,14 +346,12 @@ contract ScriptyCore {
      * @notice Append requests to the html buffer for script tags
      * @param htmlFile - bytes buffer
      * @param htmlTags - Requests being added to buffer
-     * @param includeTags - Bool to handle tag inclusion
-     * @param encodeScripts - Bool to handle script encoding
+     * @param encodeTagContent - Bool to handle script encoding
      */
     function _appendHTMLTags(
         bytes memory htmlFile,
         HTMLTag[] memory htmlTags,
-        bool includeTags,
-        bool encodeScripts
+        bool encodeTagContent
     ) internal pure {
         uint256 i;
         unchecked {
@@ -382,8 +359,7 @@ contract ScriptyCore {
                 _appendHTMLTag(
                     htmlFile,
                     htmlTags[i],
-                    includeTags,
-                    encodeScripts
+                    encodeTagContent
                 );
             } while (++i < htmlTags.length);
         }
@@ -393,25 +369,19 @@ contract ScriptyCore {
      * @notice Append request to the html buffer for script tags
      * @param htmlFile - bytes buffer
      * @param htmlTag - Request being added to buffer
-     * @param includeTags - Bool to handle tag inclusion
-     * @param encodeScripts - Bool to handle script encoding
+     * @param encodeTagContent - Bool to handle script encoding
      */
     function _appendHTMLTag(
         bytes memory htmlFile,
         HTMLTag memory htmlTag,
-        bool includeTags,
-        bool encodeScripts
+        bool encodeTagContent
     ) internal pure {
-        if (includeTags) {
-            htmlFile.appendSafe(htmlTag.tagOpen);
-        }
-        if (encodeScripts) {
+        htmlFile.appendSafe(htmlTag.tagOpen);
+        if (encodeTagContent) {
             htmlFile.appendSafeBase64(htmlTag.tagContent, false, false);
         } else {
             htmlFile.appendSafe(htmlTag.tagContent);
         }
-        if (includeTags) {
-            htmlFile.appendSafe(htmlTag.tagClose);
-        }
+        htmlFile.appendSafe(htmlTag.tagClose);
     }
 }

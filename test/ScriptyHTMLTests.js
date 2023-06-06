@@ -24,14 +24,6 @@ const expectHTML = (name, actual) => {
     expect(actual).to.equal(expected)
 }
 
-// enum HTMLTagType {
-//     any,
-//     script,
-//     scriptBase64DataURI,
-//     scriptGZIPBase64DataURI,
-//     scriptPNGBase64DataURI
-// }
-
 describe.only("ScriptyHTML Tests", function () {
     async function deploy() {
         const contentStore = await (await ethers.getContractFactory("ContentStore")).deploy()

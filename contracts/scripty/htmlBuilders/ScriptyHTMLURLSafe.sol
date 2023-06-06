@@ -81,16 +81,14 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     function getHTMLURLSafe(
         HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
-        (, uint256 headBufferSize) = _enrichHTMLTags(
+        uint256 headBufferSize = _enrichHTMLTags(
             htmlRequest.headTags,
-            true,
             true
         );
 
-        (, uint256 bodyBufferSize) = _enrichHTMLTags(
+        uint256 bodyBufferSize = _enrichHTMLTags(
             htmlRequest.bodyTags,
-            false,
-            false
+            true
         );
 
         bytes memory htmlFile = DynamicBuffer.allocate(
@@ -109,7 +107,7 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
         // <head>
         htmlFile.appendSafe(HEAD_OPEN_URL_SAFE);
         if (htmlRequest.headTags.length > 0) {
-            _appendHTMLTags(htmlFile, htmlRequest.headTags, true, false);
+            _appendHTMLURLSafeTags(htmlFile, htmlRequest.headTags);
         }
         htmlFile.appendSafe(HEAD_CLOSE_URL_SAFE);
         // </head>
@@ -117,7 +115,7 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
         // <body>
         htmlFile.appendSafe(BODY_OPEN_URL_SAFE);
         if (htmlRequest.bodyTags.length > 0) {
-            _appendHTMLURLSafeBody(htmlFile, htmlRequest.bodyTags);
+            _appendHTMLURLSafeTags(htmlFile, htmlRequest.bodyTags);
         }
         htmlFile.appendSafe(HTML_BODY_CLOSED_URL_SAFE);
         // </body>
@@ -146,16 +144,16 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
 
     /**
      * @notice Append URL safe HTML wrapped requests to the buffer
-     * @dev If you submit a request that uses tagType = 0, it will undergo a few changes:
+     * @dev If you submit a request that uses tagType = .script, it will undergo a few changes:
      *
-     *      Example request with tagType of 0:
+     *      Example request with tagType of .script:
      *      console.log("Hello World")
      *
-     *      1. `urlSafeScriptTagOpenAndCloseFor()` will convert the wrap to the following
+     *      1. `tagOpenCloseForHTMLTag()` will convert the wrap to the following
      *      - <script>  =>  %253Cscript%2520src%253D%2522data%253Atext%252Fjavascript%253Bbase64%252C
      *      - </script> =>  %2522%253E%253C%252Fscript%253E
      *
-     *      2. `_appendScriptTag()` will base64 encode the script to the following
+     *      2. `_appendHTMLTag()` will base64 encode the script to the following
      *      - console.log("Hello World") => Y29uc29sZS5sb2coIkhlbGxvIFdvcmxkIik=
      *
      *      Due to the above, it is highly advised that you do not attempt to use `tagType = 0` in
@@ -165,7 +163,7 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
      * @param htmlFile - Final buffer holding all requests
      * @param htmlTags - Array of ScriptRequests
      */
-    function _appendHTMLURLSafeBody(
+    function _appendHTMLURLSafeTags(
         bytes memory htmlFile,
         HTMLTag[] memory htmlTags
     ) internal pure {
@@ -174,9 +172,9 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
         unchecked {
             do {
                 htmlTag = htmlTags[i];
-                (htmlTag.tagType == HTMLTagType.any)
-                    ? _appendHTMLTag(htmlFile, htmlTag, true, true)
-                    : _appendHTMLTag(htmlFile, htmlTag, true, false);
+                (htmlTag.tagType == HTMLTagType.script)
+                    ? _appendHTMLTag(htmlFile, htmlTag, true)
+                    : _appendHTMLTag(htmlFile, htmlTag, false);
             } while (++i < htmlTags.length);
         }
     }

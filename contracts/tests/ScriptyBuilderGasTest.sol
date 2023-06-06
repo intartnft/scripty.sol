@@ -14,24 +14,6 @@ contract ScriptyBuilderGasTest {
     }
 
     // solc-ignore-next-line func-mutability
-    function getEncodedHTMLSingleScriptTag_Few(
-        HTMLRequest memory htmlRequest
-    ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLSingleScriptTag(
-            htmlRequest
-        );
-    }
-
-    // solc-ignore-next-line func-mutability
-    function getEncodedHTMLSingleScriptTag_Many(
-        HTMLRequest memory htmlRequest
-    ) external {
-        IScriptyBuilderV2(scriptyBuilderAddress).getEncodedHTMLSingleScriptTag(
-            htmlRequest
-        );
-    }
-
-    // solc-ignore-next-line func-mutability
     function getEncodedHTML_TagType_0_Few(
         HTMLRequest memory htmlRequest
     ) external {

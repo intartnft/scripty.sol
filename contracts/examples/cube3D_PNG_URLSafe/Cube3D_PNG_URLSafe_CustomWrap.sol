@@ -49,9 +49,9 @@ contract Cube3D_PNG_URLSafe_CustomWrap is ERC721 {
         bodyTags[3].contractAddress = scriptyStorageAddress;
 
         // double encoded:
-        // <script>
+        // <style>
         //     html{height:100%}body{min-height:100%;margin:0;padding:0}canvas{padding:0;margin:auto;display:block;position:absolute;top:0;bottom:0;left:0;right:0}
-        // </script>
+        // </style>
         HTMLTag[] memory headTags = new HTMLTag[](1);
         headTags[0].tagOpen = "%253Cstyle%253E";
         headTags[0].tagContent = "html%257Bheight%253A100%2525%257Dbody%257Bmin-height%253A100%2525%253Bmargin%253A0%253Bpadding%253A0%257Dcanvas%257Bpadding%253A0%253Bmargin%253Aauto%253Bdisplay%253Ablock%253Bposition%253Aabsolute%253Btop%253A0%253Bbottom%253A0%253Bleft%253A0%253Bright%253A0%257D";

@@ -37,7 +37,6 @@ contract ThreeJSModules_URLSafe is ERC721 {
         bodyTags[1].contractAddress = scriptyStorageAddress;
 
         bodyTags[2].name = "threejs.module.js.gz";
-        bodyTags[2].tagType = HTMLTagType.any; // custom see tagOpen + tagClose
         // double encoded:
         // - <script>var t3 = "
         // - "</script>
@@ -46,7 +45,6 @@ contract ThreeJSModules_URLSafe is ERC721 {
         bodyTags[2].contractAddress = scriptyStorageAddress;
 
         bodyTags[3].name = "OrbitControls.module.js.gz";
-        bodyTags[3].tagType = HTMLTagType.any; // custom see wrapPrefix + wrapSuffix
         // double encoded:
         // - <script>var oc = "
         // - "</script>
@@ -55,7 +53,7 @@ contract ThreeJSModules_URLSafe is ERC721 {
         bodyTags[3].contractAddress = scriptyStorageAddress;
 
         bodyTags[4].name = "importHandler";
-        bodyTags[4].tagType = HTMLTagType.any; // <script>[script]</script>
+        bodyTags[4].tagType = HTMLTagType.script; // <script>[script]</script>
         bodyTags[4].contractAddress = scriptyStorageAddress;
 
         bodyTags[5].name = "";
@@ -63,7 +61,6 @@ contract ThreeJSModules_URLSafe is ERC721 {
         bodyTags[5].tagContent = 'injectImportMap([["three",t3],["OrbitControls",oc]],gunzipScripts)';
 
         bodyTags[6].name = "torus";
-        bodyTags[6].tagType = HTMLTagType.any; // <script>[script]</script>
         // double encoded:
         // - <script type="module" src="data:text/javascript;base64,
         // - "></script>

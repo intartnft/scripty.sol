@@ -19,7 +19,6 @@ pragma solidity ^0.8.17;
 */
 
 import "./IScriptyHTML.sol";
-import "./IScriptyHTMLSingleScriptTag.sol";
 import "./IScriptyHTMLURLSafe.sol";
 
-interface IScriptyBuilderV2 is IScriptyHTML, IScriptyHTMLSingleScriptTag, IScriptyHTMLURLSafe {}
+interface IScriptyBuilderV2 is IScriptyHTML, IScriptyHTMLURLSafe {}

@@ -76,9 +76,15 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     function getHTML(
         HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
-        (, uint256 headBufferSize) = _enrichHTMLTags(htmlRequest.headTags, true, false);
+        uint256 headBufferSize = _enrichHTMLTags(
+            htmlRequest.headTags,
+            false
+        );
 
-        (, uint256 bodyBufferSize) = _enrichHTMLTags(htmlRequest.bodyTags, true, false);
+        uint256 bodyBufferSize = _enrichHTMLTags(
+            htmlRequest.bodyTags,
+            false
+        );
 
         bytes memory htmlFile = DynamicBuffer.allocate(
             _getHTMLBufferSize(headBufferSize, bodyBufferSize)
@@ -90,12 +96,7 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
         // <head>
         htmlFile.appendSafe(HEAD_OPEN_RAW);
         if (htmlRequest.headTags.length > 0) {
-            _appendHTMLTags(
-                htmlFile, 
-                htmlRequest.headTags, 
-                true, 
-                false
-            );
+            _appendHTMLTags(htmlFile, htmlRequest.headTags, false);
         }
         htmlFile.appendSafe(HEAD_CLOSE_RAW);
         // </head>
@@ -103,12 +104,7 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
         // <body>
         htmlFile.appendSafe(BODY_OPEN_RAW);
         if (htmlRequest.bodyTags.length > 0) {
-            _appendHTMLTags(
-                htmlFile,
-                htmlRequest.bodyTags,
-                true,
-                false
-            );
+            _appendHTMLTags(htmlFile, htmlRequest.bodyTags, false);
         }
         htmlFile.appendSafe(HTML_BODY_CLOSED_RAW);
         // </body>

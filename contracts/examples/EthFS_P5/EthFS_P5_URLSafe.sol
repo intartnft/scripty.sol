@@ -57,7 +57,7 @@ contract EthFS_P5_URLSafe is ERC721 {
 
         HTMLRequest memory htmlRequest;
         htmlRequest.headTags = headTags;
-        htmlRequest.headTags = bodyTags;
+        htmlRequest.bodyTags = bodyTags;
 
         bytes memory doubleURLEncodedHTMLDataURI = IScriptyBuilderV2(
             scriptyBuilderAddress

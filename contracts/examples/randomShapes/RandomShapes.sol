@@ -67,7 +67,7 @@ contract RandomShapes is ERC721 {
 
         bytes memory base64EncodedHTMLDataURI = IScriptyBuilderV2(
             scriptyBuilderAddress
-        ).getEncodedHTMLSingleScriptTag(htmlRequest);
+        ).getEncodedHTML(htmlRequest);
 
         bytes memory metadata = abi.encodePacked(
             '{"name":"Random Shapes", "description":"Assembles two raw scripts that draw shapes on same <canvas></canvas> element.","animation_url":"',

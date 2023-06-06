@@ -18,7 +18,7 @@ struct HTMLRequest {
 }
 
 enum HTMLTagType {
-    any,
+    useTagOpenAndClose,
     script,
     scriptBase64DataURI,
     scriptGZIPBase64DataURI,
