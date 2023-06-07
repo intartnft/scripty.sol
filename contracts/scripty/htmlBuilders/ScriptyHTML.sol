@@ -55,7 +55,7 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     /**
      * @notice  Get HTML with requested head tags and scripts housed in
      *          multiple <script> tags
-     * @dev @dev Your HTML is returned in the following format:
+     * @dev Your HTML is returned in the following format:
      *      <html>
      *          <head>
      *              [tagOpen[0]][tagContent[0]][tagClose[0]]
@@ -76,18 +76,27 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     function getHTML(
         HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
-        uint256 headBufferSize = _enrichHTMLTags(
-            htmlRequest.headTags,
-            false
-        );
 
-        uint256 bodyBufferSize = _enrichHTMLTags(
-            htmlRequest.bodyTags,
-            false
-        );
+        // calculate buffer size for requests
+        uint256 requestBufferSize;
+        unchecked {
+            if (htmlRequest.headTags.length > 0) {
+                requestBufferSize = _enrichHTMLTags(
+                    htmlRequest.headTags,
+                    false
+                );
+            }
+
+            if (htmlRequest.bodyTags.length > 0) {
+                requestBufferSize += _enrichHTMLTags(
+                    htmlRequest.bodyTags,
+                    false
+                );
+            }
+        }
 
         bytes memory htmlFile = DynamicBuffer.allocate(
-            _getHTMLBufferSize(headBufferSize, bodyBufferSize)
+            _getHTMLBufferSize(requestBufferSize)
         );
 
         // <html>
@@ -115,19 +124,16 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
 
     /**
      * @notice Calculates the total buffersize for all elements
-     * @param headBufferSize - HTMLRequest
-     * @param bodyBufferSize - HTMLRequest
+     * @param requestBufferSize - Buffersize of request data
      * @return size - Total buffersize of all elements
      */
     function _getHTMLBufferSize(
-        uint256 headBufferSize,
-        uint256 bodyBufferSize
+        uint256 requestBufferSize
     ) private pure returns (uint256 size) {
         unchecked {
             // <html><head></head><body></body></html>
             size = URLS_RAW_BYTES;
-            size += headBufferSize;
-            size += bodyBufferSize;
+            size += requestBufferSize;
         }
     }
 

@@ -81,21 +81,26 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     function getHTMLURLSafe(
         HTMLRequest memory htmlRequest
     ) public view returns (bytes memory) {
-        uint256 headBufferSize = _enrichHTMLTags(
-            htmlRequest.headTags,
-            true
-        );
+        // calculate buffer size for requests
+        uint256 requestBufferSize;
+        unchecked {
+            if (htmlRequest.headTags.length > 0) {
+                requestBufferSize = _enrichHTMLTags(
+                    htmlRequest.headTags,
+                    true
+                );
+            }
 
-        uint256 bodyBufferSize = _enrichHTMLTags(
-            htmlRequest.bodyTags,
-            true
-        );
+            if (htmlRequest.bodyTags.length > 0) {
+                requestBufferSize += _enrichHTMLTags(
+                    htmlRequest.bodyTags,
+                    true
+                );
+            }
+        }
 
         bytes memory htmlFile = DynamicBuffer.allocate(
-            _getHTMLURLSafeBufferSize(
-                headBufferSize,
-                bodyBufferSize
-            )
+            _getHTMLURLSafeBufferSize(requestBufferSize)
         );
 
         // data:text/html,
@@ -126,19 +131,16 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
 
     /**
      * @notice Calculates the total buffersize for all elements
-     * @param headBufferSize - HeadRequest
-     * @param bodyBufferSize - HeadRequest
+     * @param requestBufferSize - Buffersize of request data
      * @return size - Total buffersize of all elements
      */
     function _getHTMLURLSafeBufferSize(
-        uint256 headBufferSize,
-        uint256 bodyBufferSize
+        uint256 requestBufferSize
     ) private pure returns (uint256 size) {
         unchecked {
             // urlencode(<html><head></head><body></body></html>)
             size = URLS_SAFE_BYTES;
-            size += headBufferSize;
-            size += bodyBufferSize;
+            size += requestBufferSize;
         }
     }
 

@@ -43,7 +43,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
      * @notice Check if the msg.sender is the owner of the script
      * @param name - Name given to the script. Eg: threejs.min.js_r148
      */
-    modifier scriptOwner(string calldata name) {
+    modifier isScriptOwner(string calldata name) {
         if (msg.sender != scripts[name].owner) revert NotScriptOwner();
         _;
     }
@@ -93,10 +93,9 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
      * Emits an {ChunkStored} event.
      */
     function addChunkToScript(string calldata name, bytes calldata chunk)
-
         public
         isFrozen(name)
-        scriptOwner(name)
+        isScriptOwner(name)
     {
         (, address pointer) = contentStore.addContent(chunk);
         scripts[name].chunks.push(pointer);
@@ -114,7 +113,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
     function updateDetails(string calldata name, bytes calldata details)
         public
         isFrozen(name)
-        scriptOwner(name)
+        isScriptOwner(name)
     {
         scripts[name].details = details;
         emit ScriptDetailsUpdated(name, details);
@@ -130,7 +129,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
     function updateScriptVerification(string calldata name, bool isVerified)
         public
         isFrozen(name)
-        scriptOwner(name)
+        isScriptOwner(name)
     {
         scripts[name].isVerified = isVerified;
         emit ScriptVerificationUpdated(name, isVerified);
@@ -146,7 +145,7 @@ contract ScriptyStorage is Ownable, IScriptyStorage, IContractScript {
     function freezeScript(string calldata name)
         public
         isFrozen(name)
-        scriptOwner(name)
+        isScriptOwner(name)
     {
         scripts[name].isFrozen = true;
         emit ScriptFrozen(name);
