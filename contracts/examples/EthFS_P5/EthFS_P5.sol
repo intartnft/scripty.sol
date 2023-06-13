@@ -29,27 +29,28 @@ contract EthFS_P5 is ERC721 {
     function tokenURI(
         uint256 /*_tokenId*/
     ) public view virtual override returns (string memory) {
-        HTMLTag[] memory bodyTags = new HTMLTag[](4);
-        bodyTags[0].name = "scriptyBase";
-        bodyTags[0].tagType = HTMLTagType.script; // <script>[script]</script>
-        bodyTags[0].contractAddress = scriptyStorageAddress;
+        HTMLTag[] memory headTags = new HTMLTag[](1);
 
-        bodyTags[1].name = "p5-v1.5.0.min.js.gz";
-        bodyTags[1].tagType = HTMLTagType.scriptGZIPBase64DataURI; // <script type="text/javascript+gzip" src="data:text/javascript;base64,[script]"></script>
+        // <link rel="stylesheet" href="data:text/css;base64,[fullSizeCanvas.css, base64 encoded]">
+        headTags[0].name = "fullSizeCanvas.css";
+        headTags[0].tagOpen = '<link rel="stylesheet" href="data:text/css;base64,';
+        headTags[0].tagClose = '">';
+        headTags[0].contractAddress = ethfsFileStorageAddress;
+
+
+        HTMLTag[] memory bodyTags = new HTMLTag[](3);
+        bodyTags[0].name = "p5-v1.5.0.min.js.gz";
+        bodyTags[0].tagType = HTMLTagType.scriptGZIPBase64DataURI; // <script type="text/javascript+gzip" src="data:text/javascript;base64,[script]"></script>
+        bodyTags[0].contractAddress = ethfsFileStorageAddress;
+
+        bodyTags[1].name = "gunzipScripts-0.0.1.js";
+        bodyTags[1].tagType = HTMLTagType.scriptBase64DataURI; // <script src="data:text/javascript;base64,[script]"></script>
         bodyTags[1].contractAddress = ethfsFileStorageAddress;
 
-        bodyTags[2].name = "gunzipScripts-0.0.1.js";
-        bodyTags[2].tagType = HTMLTagType.scriptBase64DataURI; // <script src="data:text/javascript;base64,[script]"></script>
-        bodyTags[2].contractAddress = ethfsFileStorageAddress;
-
-        bodyTags[3].name = "pointsAndLines";
-        bodyTags[3].tagType = HTMLTagType.script; // <script>[script]</script>
-        bodyTags[3].contractAddress = scriptyStorageAddress;
+        bodyTags[2].name = "pointsAndLines";
+        bodyTags[2].tagType = HTMLTagType.script; // <script>[script]</script>
+        bodyTags[2].contractAddress = scriptyStorageAddress;
         
-        HTMLTag[] memory headTags = new HTMLTag[](1);
-        headTags[0].tagOpen = "<style>";
-        headTags[0].tagContent = "html{height:100%}body{min-height:100%;margin:0;padding:0}canvas{padding:0;margin:auto;display:block;position:absolute;top:0;bottom:0;left:0;right:0}";
-        headTags[0].tagClose = "</style>";
 
         HTMLRequest memory htmlRequest;
         htmlRequest.headTags = headTags;

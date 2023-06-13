@@ -1,4 +1,4 @@
-<html><head><style>html{height:100%}body{min-height:100%;margin:0;padding:0}canvas{padding:0;margin:auto;display:block;position:absolute;top:0;bottom:0;left:0;right:0}</style></head><body>let _sb={};_sb.events=[];_sb.scripts={};_sb.addEvent=(s,e)=>{if(!_sb.events[s]){_sb.events[s]=[e]}else{_sb.events[s].push(e)}};_sb.callEvents=(s,...e)=>{if(_sb.events[s]){_sb.events[s].forEach((s=>s(...e)))}};_sb.createMainCanvas=()=>{if(_sb.mainCanvas){return _sb.mainCanvas}const s=document.createElement("canvas");_sb.mainCanvas=s;_sb.mainContext2d=s.getContext("2d");document.body.appendChild(s);return s};
+<html><head><style>html{height:100%}body{min-height:100%;margin:0;padding:0}canvas{padding:0;margin:auto;display:block;position:absolute;top:0;bottom:0;left:0;right:0}</style></head><body><script>let _sb={};_sb.events=[];_sb.scripts={};_sb.addEvent=(s,e)=>{if(!_sb.events[s]){_sb.events[s]=[e]}else{_sb.events[s].push(e)}};_sb.callEvents=(s,...e)=>{if(_sb.events[s]){_sb.events[s].forEach((s=>s(...e)))}};_sb.createMainCanvas=()=>{if(_sb.mainCanvas){return _sb.mainCanvas}const s=document.createElement("canvas");_sb.mainCanvas=s;_sb.mainContext2d=s.getContext("2d");document.body.appendChild(s);return s};</script><script>
 function drawCircles(count) {
     let c = _sb.createMainCanvas();
     let ctx = _sb.mainContext2d;
@@ -13,7 +13,7 @@ function drawCircles(count) {
         ctx.stroke();
     }
 }
-
+</script><script>
 function drawRectangles(count) {
     let c = _sb.createMainCanvas();
     let ctx = _sb.mainContext2d;
@@ -28,7 +28,7 @@ function drawRectangles(count) {
         ctx.stroke();
     }
 }
-function drawShapes(circleCount, rectangleCount) {
+</script><script>function drawShapes(circleCount, rectangleCount) {
     let c = _sb.createMainCanvas();
 
     function draw() {
@@ -40,4 +40,4 @@ function drawShapes(circleCount, rectangleCount) {
     }
 
     window.requestAnimationFrame(draw);
-}drawShapes(87,187);</body></html>
+}</script><script>drawShapes(172,172);</script></body></html>

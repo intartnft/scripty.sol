@@ -26,8 +26,17 @@ contract ThreeJSModules_URLSafe is ERC721 {
     function tokenURI(
         uint256 /*_tokenId*/
     ) public view virtual override returns (string memory) {
-        HTMLTag[] memory bodyTags = new HTMLTag[](7);
+        // double encoded:
+        // <style>
+        //     html{height:100%}body{min-height:100%;margin:0;padding:0}canvas{padding:0;margin:auto;display:block;position:absolute;top:0;bottom:0;left:0;right:0}
+        // </style>
+        HTMLTag[] memory headTags = new HTMLTag[](1);
+        headTags[0].tagOpen = "%253Cstyle%253E";
+        headTags[0].tagContent = "html%257Bheight%253A100%2525%257Dbody%257Bmin-height%253A100%2525%253Bmargin%253A0%253Bpadding%253A0%257Dcanvas%257Bpadding%253A0%253Bmargin%253Aauto%253Bdisplay%253Ablock%253Bposition%253Aabsolute%253Btop%253A0%253Bbottom%253A0%253Bleft%253A0%253Bright%253A0%257D";
+        headTags[0].tagClose = "%253C%252Fstyle%253E";
 
+
+        HTMLTag[] memory bodyTags = new HTMLTag[](7);
         bodyTags[0].name = "gunzipScripts-0.0.1.js";
         bodyTags[0].tagType = HTMLTagType.scriptBase64DataURI; // <script src="data:text/javascript;base64,[script]"></script>
         bodyTags[0].contractAddress = scriptyStorageAddress;
@@ -68,14 +77,6 @@ contract ThreeJSModules_URLSafe is ERC721 {
         bodyTags[6].tagClose = "%2522%253E%253C%252Fscript%253E";
         bodyTags[6].contractAddress = scriptyStorageAddress;
 
-        // double encoded:
-        // <style>
-        //     html{height:100%}body{min-height:100%;margin:0;padding:0}canvas{padding:0;margin:auto;display:block;position:absolute;top:0;bottom:0;left:0;right:0}
-        // </style>
-        HTMLTag[] memory headTags = new HTMLTag[](1);
-        headTags[0].tagOpen = "%253Cstyle%253E";
-        headTags[0].tagContent = "html%257Bheight%253A100%2525%257Dbody%257Bmin-height%253A100%2525%253Bmargin%253A0%253Bpadding%253A0%257Dcanvas%257Bpadding%253A0%253Bmargin%253Aauto%253Bdisplay%253Ablock%253Bposition%253Aabsolute%253Btop%253A0%253Bbottom%253A0%253Bleft%253A0%253Bright%253A0%257D";
-        headTags[0].tagClose = "%253C%252Fstyle%253E";
 
         HTMLRequest memory htmlRequest;
         htmlRequest.headTags = headTags;
