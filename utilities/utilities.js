@@ -45,3 +45,17 @@ exports.toBase64String = (data) => {
 exports.toGZIPBase64String = (data) => {
 	return zlib.deflateSync(data).toString('base64');
 }
+
+exports.toURLSafe = (data) => {
+	return encodeURIComponent(data)
+}
+
+exports.toURLSafeDouble = (data) => {
+	return encodeURIComponent(encodeURIComponent(data))
+}
+
+exports.parseDoubleURLEncodedDataURI = (uri) => {
+	let firstDecode = decodeURIComponent(uri)
+	const data = firstDecode.split("data:")[1].split(",")[1]
+	return decodeURIComponent(data)
+}

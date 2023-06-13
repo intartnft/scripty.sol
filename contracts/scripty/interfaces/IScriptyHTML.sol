@@ -18,25 +18,24 @@ interface IScriptyHTML {
     // =============================================================
 
     /**
-     * @notice  Get HTML with requested head tags and scripts housed in
-     *          multiple <script> tags
-     * @dev @dev Your HTML is returned in the following format:
+     * @notice  Get HTML with requested head tags and body tags
+     * @dev Your HTML is returned in the following format:
      *      <html>
      *          <head>
-     *              [tagOpen[0]][tagContent[0]][tagClose[0]]
-     *              [tagOpen[1]][tagContent[1]][tagClose[1]]
+     *              [tagOpen[0]][contractRequest[0] | tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][contractRequest[0] | tagContent[1]][tagClose[1]]
      *              ...
-     *              [tagOpen[n]][tagContent[n]][tagClose[n]]
+     *              [tagOpen[n]][contractRequest[0] | tagContent[n]][tagClose[n]]
      *          </head>
      *          <body>
-     *              [tagOpen[0]]{request[0]}[tagClose[0]]
-     *              [tagOpen[1]]{request[1]}[tagClose[1]]
+     *              [tagOpen[0]][contractRequest[0] | tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][contractRequest[0] | tagContent[1]][tagClose[1]]
      *              ...
-     *              [tagOpen[n]]{request[n]}[tagClose[n]]
+     *              [tagOpen[n]][contractRequest[0] | tagContent[n]][tagClose[n]]
      *          </body>
      *      </html>
      * @param htmlRequest - HTMLRequest
-     * @return Full HTML with head and script tags
+     * @return Full HTML with head and body tags
      */
     function getHTML(
         HTMLRequest memory htmlRequest

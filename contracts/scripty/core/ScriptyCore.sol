@@ -146,21 +146,21 @@ contract ScriptyCore {
     // =============================================================
 
     /**
-     * @notice Grab script tag open and close depending on request tag type
+     * @notice Grab tag open and close depending on tag type
      * @dev
-     *      tagType: 0:
+     *      tagType: 1/HTMLTagType.script:
      *          <script>[SCRIPT]</script>
      *
-     *      tagType: 1:
+     *      tagType: 2/HTMLTagType.scriptBase64DataURI:
      *          <script src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      tagType: 2:
+     *      tagType: 3/HTMLTagType.scriptGZIPBase64DataURI:
      *          <script type="text/javascript+gzip" src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      tagType: 3
+     *      tagType: 4/HTMLTagType.scriptPNGBase64DataURI
      *          <script type="text/javascript+png" name="[NAME]" src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      tagType: 4 or any other:
+     *      tagType: 0/HTMLTagType.useTagOpenAndClose or any other:
      *          [tagOpen][scriptContent or scriptFromContract][tagClose]
      *
      *      [IMPORTANT NOTE]: The tags `text/javascript+gzip` and `text/javascript+png` are used to identify scripts
@@ -191,19 +191,19 @@ contract ScriptyCore {
     }
 
     /**
-     * @notice Grab URL safe script tag open and close depending on request tag type
+     * @notice Grab URL safe tag open and close depending on tag type
      * @dev
-     *      tagType: 0:
-     *      tagType: 1:
+     *      tagType: 1/HTMLTagType.script:
+     *      tagType: 2/HTMLTagType.scriptBase64DataURI:
      *          <script src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      tagType: 2:
+     *      tagType: 3/HTMLTagType.scriptGZIPBase64DataURI:
      *          <script type="text/javascript+gzip" src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      tagType: 3
+     *      tagType: 4/HTMLTagType.scriptPNGBase64DataURI
      *          <script type="text/javascript+png" name="[NAME]" src="data:text/javascript;base64,[SCRIPT]"></script>
      *
-     *      tagType: 4 or any other:
+     *      tagType: 0/HTMLTagType.useTagOpenAndClose or any other:
      *          [wrapPrefix][scriptContent or scriptFromContract][wrapSuffix]
      *
      *      [IMPORTANT NOTE]: The tags `text/javascript+gzip` and `text/javascript+png` are used to identify scripts
@@ -244,7 +244,7 @@ contract ScriptyCore {
     }
 
     // =============================================================
-    //                       SCRIPT FETCHER
+    //                      TAG CONTENT FETCHER
     // =============================================================
 
     /**
@@ -287,11 +287,11 @@ contract ScriptyCore {
     }
 
     /**
-     * @notice Adds the required tags and calculates buffer size of requests
+     * @notice Adds the required tag open/close and calculates buffer size of tags
      * @dev Effectively two functions bundled into one as this saves gas
-     * @param htmlTags - Array of ScriptRequests
-     * @param isURLSafe - Array of ScriptRequests
-     * @return Total buffersize of updated ScriptRequests
+     * @param htmlTags - Array of HTMLTag
+     * @param isURLSafe - Bool to handle tag content/open/close encoding
+     * @return Total buffersize of updated HTMLTags
      */
     function _enrichHTMLTags(
         HTMLTag[] memory htmlTags,
@@ -343,10 +343,10 @@ contract ScriptyCore {
     // =============================================================
 
     /**
-     * @notice Append requests to the html buffer for script tags
+     * @notice Append tags to the html buffer for tags
      * @param htmlFile - bytes buffer
-     * @param htmlTags - Requests being added to buffer
-     * @param encodeTagContent - Bool to handle script encoding
+     * @param htmlTags - Tags being added to buffer
+     * @param encodeTagContent - Bool to handle tag content encoding
      */
     function _appendHTMLTags(
         bytes memory htmlFile,
@@ -366,10 +366,10 @@ contract ScriptyCore {
     }
 
     /**
-     * @notice Append request to the html buffer for script tags
+     * @notice Append tag to the html buffer
      * @param htmlFile - bytes buffer
      * @param htmlTag - Request being added to buffer
-     * @param encodeTagContent - Bool to handle script encoding
+     * @param encodeTagContent - Bool to handle tag content encoding
      */
     function _appendHTMLTag(
         bytes memory htmlFile,

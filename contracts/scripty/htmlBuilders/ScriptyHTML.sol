@@ -12,8 +12,8 @@ pragma solidity ^0.8.17;
 //░░░░░░░░░░░░░░░░░    WRAPPED HTML    ░░░░░░░░░░░░░░░░░░//
 ///////////////////////////////////////////////////////////
 //
-// This module is designed to manage arrays of scripts where
-// each script might require a custom wrapper:
+// This module is designed to manage arrays of head and body 
+// tags each tag might require a custom wrapper:
 //
 // eg;
 //     <html>
@@ -35,7 +35,7 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 
 /**
-  @title Generates HTML with multiple <script> tags after fetching and assembling given script and head requests.
+  @title Generates HTML with multiple head and body tags after fetching and assembling given tag requests.
   @author @0xthedude
   @author @xtremetom
 
@@ -53,25 +53,24 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     // =============================================================
 
     /**
-     * @notice  Get HTML with requested head tags and scripts housed in
-     *          multiple <script> tags
+     * @notice  Get HTML with requested head tags and body tags
      * @dev Your HTML is returned in the following format:
      *      <html>
      *          <head>
-     *              [tagOpen[0]][tagContent[0]][tagClose[0]]
-     *              [tagOpen[1]][tagContent[1]][tagClose[1]]
+     *              [tagOpen[0]][contractRequest[0] | tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][contractRequest[0] | tagContent[1]][tagClose[1]]
      *              ...
-     *              [tagOpen[n]][tagContent[n]][tagClose[n]]
+     *              [tagOpen[n]][contractRequest[0] | tagContent[n]][tagClose[n]]
      *          </head>
      *          <body>
-     *              [tagOpen[0]]{request[0]}[tagClose[0]]
-     *              [tagOpen[1]]{request[1]}[tagClose[1]]
+     *              [tagOpen[0]][contractRequest[0] | tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][contractRequest[0] | tagContent[1]][tagClose[1]]
      *              ...
-     *              [tagOpen[n]]{request[n]}[tagClose[n]]
+     *              [tagOpen[n]][contractRequest[0] | tagContent[n]][tagClose[n]]
      *          </body>
      *      </html>
      * @param htmlRequest - HTMLRequest
-     * @return Full HTML with head and script tags
+     * @return Full HTML with head and body tags
      */
     function getHTML(
         HTMLRequest memory htmlRequest
@@ -144,7 +143,7 @@ contract ScriptyHTML is ScriptyCore, IScriptyHTML {
     /**
      * @notice Get {getHTML} and base64 encode it
      * @param htmlRequest - HTMLRequest
-     * @return Full HTML with head and script tags, base64 encoded
+     * @return Full HTML with head and body tags, base64 encoded
      */
     function getEncodedHTML(
         HTMLRequest memory htmlRequest

@@ -51,9 +51,8 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     // =============================================================
 
     /**
-     * @notice  Get URL safe HTML with requested head tags and scripts housed
-     *          in single <script> tag
-     * @dev Any tag type 0 scripts are converted to base64 and wrapped
+     * @notice  Get URL safe HTML with requested head tags and body tags
+     * @dev Any tags with tagType = 1/script are converted to base64 and wrapped
      *      with <script src="data:text/javascript;base64,[SCRIPT]"></script>
      *
      *      [WARNING]: Large non-base64 libraries that need base64 encoding
@@ -61,22 +60,23 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
      *      of base64 encoded scripts where possible
      *
      *      Your HTML is returned in the following format:
+     *
      *      <html>
      *          <head>
-     *              [tagOpen[0]][tagContent[0]][tagClose[0]]
-     *              [tagOpen[1]][tagContent[1]][tagClose[1]]
+     *              [tagOpen[0]][contractRequest[0] | tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][contractRequest[0] | tagContent[1]][tagClose[1]]
      *              ...
-     *              [tagOpen[n]][tagContent[n]][tagClose[n]]
+     *              [tagOpen[n]][contractRequest[0] | tagContent[n]][tagClose[n]]
      *          </head>
      *          <body>
-     *              [tagOpen[0]]{request[0]}[tagClose[0]]
-     *              [tagOpen[1]]{request[1]}[tagClose[1]]
+     *              [tagOpen[0]][contractRequest[0] | tagContent[0]][tagClose[0]]
+     *              [tagOpen[1]][contractRequest[0] | tagContent[1]][tagClose[1]]
      *              ...
-     *              [tagOpen[n]]{request[n]}[tagClose[n]]
+     *              [tagOpen[n]][contractRequest[0] | tagContent[n]][tagClose[n]]
      *          </body>
      *      </html>
      * @param htmlRequest - HTMLRequest
-     * @return Full URL safe HTML with head and script tags
+     * @return Full HTML with head and body tags
      */
     function getHTMLURLSafe(
         HTMLRequest memory htmlRequest
@@ -145,22 +145,22 @@ contract ScriptyHTMLURLSafe is ScriptyCore, IScriptyHTMLURLSafe {
     }
 
     /**
-     * @notice Append URL safe HTML wrapped requests to the buffer
-     * @dev If you submit a request that uses tagType = .script, it will undergo a few changes:
+     * @notice Append URL safe HTML tags to the buffer
+     * @dev If you submit a tag that uses tagType = .script, it will undergo a few changes:
      *
-     *      Example request with tagType of .script:
+     *      Example tag with tagType of .script:
      *      console.log("Hello World")
      *
-     *      1. `tagOpenCloseForHTMLTag()` will convert the wrap to the following
+     *      1. `tagOpenCloseForHTMLTagURLSafe()` will convert the wrap to the following
      *      - <script>  =>  %253Cscript%2520src%253D%2522data%253Atext%252Fjavascript%253Bbase64%252C
      *      - </script> =>  %2522%253E%253C%252Fscript%253E
      *
      *      2. `_appendHTMLTag()` will base64 encode the script to the following
      *      - console.log("Hello World") => Y29uc29sZS5sb2coIkhlbGxvIFdvcmxkIik=
      *
-     *      Due to the above, it is highly advised that you do not attempt to use `tagType = 0` in
+     *      Due to the above, it is highly advised that you do not attempt to use `tagType = .script` in
      *      conjunction with a large JS script. This contract will try to base64 encode it which could
-     *      result in a gas out. Instead use a a base64 encoded version of the script and `tagType = 1`
+     *      result in a gas out. Instead use a a base64 encoded version of the script and `tagType = .scriptBase64DataURI`
      *
      * @param htmlFile - Final buffer holding all requests
      * @param htmlTags - Array of ScriptRequests
