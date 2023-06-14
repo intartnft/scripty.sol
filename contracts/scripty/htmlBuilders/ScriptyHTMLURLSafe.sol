@@ -9,12 +9,10 @@ pragma solidity ^0.8.17;
 // ██████╔╝╚█████╔╝██║░░██║██║██║░░░░░░░░██║░░░░░░██║░░░ //
 // ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░░░░╚═╝░░░░░░╚═╝░░░ //
 ///////////////////////////////////////////////////////////
-//░░░░░░░░░░░░░    WRAPPED URL SAFE HTML    ░░░░░░░░░░░░░//
+//░░░░░░░░░░░░░    GENERIC URL SAFE HTML    ░░░░░░░░░░░░░//
 ///////////////////////////////////////////////////////////
 //
-// This module is designed to manage arrays of scripts where
-// each script might require a custom wrapper. It's designed
-// to return URL safe HTML.
+// This module is designed to generate URL safe HTML with head and body tags. 
 //
 // eg;
 //     <html>
@@ -23,17 +21,16 @@ pragma solidity ^0.8.17;
 //             <style>[css code]</style>
 //         </head>
 //         <body>
-//              [tagOpen[0]]{request[0]}[tagClose[0]]
-//              [tagOpen[1]]{request[1]}[tagClose[1]]
-//              ...
-//              [tagOpen[n]]{request[n]}[tagClose[n]]
+//             <canvas id="canvas"></canvas>
+//             <script>[SCRIPT]</script>
+//             <script type="text/javascript+gzip" src="data:text/javascript;base64,[SCRIPT]"></script>
 //         </body>
 //     </html>
 //
 ///////////////////////////////////////////////////////////
 
 /**
-  @title Generates URL safe HTML after fetching and assembling given script and head requests.
+  @title Generates URL safe HTML after fetching and assembling given head and body tags.
   @author @0xthedude
   @author @xtremetom
 

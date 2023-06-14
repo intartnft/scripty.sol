@@ -78,22 +78,6 @@ contract ScriptyCore {
     bytes public constant HTML_BODY_CLOSED_URL_SAFE =
         "%3C%2Fbody%3E%3C%2Fhtml%3E";
 
-    // <script>,
-    // raw
-    // 8 bytes
-    bytes public constant SCRIPT_OPEN_RAW = "<script>";
-    // url encoded
-    // 12 bytes
-    bytes public constant SCRIPT_OPEN_URL_SAFE = "%3Cscript%3E";
-
-    // </script>,
-    // raw
-    // 9 bytes
-    bytes public constant SCRIPT_CLOSE_RAW = "</script>";
-    // url encoded
-    // 15 bytes
-    bytes public constant SCRIPT_CLOSE_URL_SAFE = "%3C%2Fscript%3E";
-
     // [RAW]
     // HTML_OPEN + HEAD_OPEN + HEAD_CLOSE + BODY_OPEN + HTML_BODY_CLOSED
     uint256 public constant URLS_RAW_BYTES = 39;
@@ -135,14 +119,11 @@ contract ScriptyCore {
     // %3Chtml%3E%3Chead%3E%3C%2Fhead%3E%3Cbody%3E%3C%2Fbody%3E%3C%2Fhtml%3E
     uint256 public constant URL_SAFE_BYTES = 69;
 
-    // <script></script>
-    uint256 public constant SCRIPT_INLINE_BYTES = 17;
-
     // data:text/html;base64,
     uint256 public constant HTML_BASE64_DATA_URI_BYTES = 22;
 
     // =============================================================
-    //                        SCRIPT TAG TYPES
+    //                    TAG OPEN CLOSE TEMPLATES
     // =============================================================
 
     /**
@@ -204,7 +185,7 @@ contract ScriptyCore {
      *          <script type="text/javascript+png" name="[NAME]" src="data:text/javascript;base64,[SCRIPT]"></script>
      *
      *      tagType: 0/HTMLTagType.useTagOpenAndClose or any other:
-     *          [wrapPrefix][scriptContent or scriptFromContract][wrapSuffix]
+     *          [tagOpen][scriptContent or scriptFromContract][tagClose]
      *
      *      [IMPORTANT NOTE]: The tags `text/javascript+gzip` and `text/javascript+png` are used to identify scripts
      *      during decompression
@@ -248,11 +229,12 @@ contract ScriptyCore {
     // =============================================================
 
     /**
-     * @notice Grabs requested script from storage
+     * @notice Grabs requested tag content from storage
      * @dev
-     *      If given ScriptRequest contains non empty scriptContent
-     *      method will return scriptContent. Otherwise, method will
-     *      fetch it from the given storage contract
+     *      If given HTMLTag contains non empty tagContent
+     *      this method will return tagContent. Otherwise, 
+     *      method will fetch it from the given storage 
+     *      contract
      *
      * @param htmlTag - HTMLTag
      */
@@ -288,7 +270,7 @@ contract ScriptyCore {
 
     /**
      * @notice Adds the required tag open/close and calculates buffer size of tags
-     * @dev Effectively two functions bundled into one as this saves gas
+     * @dev Effectively multiple functions bundled into one as this saves gas
      * @param htmlTags - Array of HTMLTag
      * @param isURLSafe - Bool to handle tag content/open/close encoding
      * @return Total buffersize of updated HTMLTags

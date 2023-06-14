@@ -9,11 +9,10 @@ pragma solidity ^0.8.17;
 // ██████╔╝╚█████╔╝██║░░██║██║██║░░░░░░░░██║░░░░░░██║░░░ //
 // ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░░░░╚═╝░░░░░░╚═╝░░░ //
 ///////////////////////////////////////////////////////////
-//░░░░░░░░░░░░░░░░░    WRAPPED HTML    ░░░░░░░░░░░░░░░░░░//
+//░░░░░░░░░░░░░░░░░    GENERIC HTML    ░░░░░░░░░░░░░░░░░░//
 ///////////////////////////////////////////////////////////
 //
-// This module is designed to manage arrays of head and body 
-// tags each tag might require a custom wrapper:
+// This module is designed to generate HTML with head and body tags. 
 //
 // eg;
 //     <html>
@@ -22,6 +21,7 @@ pragma solidity ^0.8.17;
 //             <style>[css code]</style>
 //         </head>
 //         <body>
+//             <canvas id="canvas"></canvas>
 //             <script>[SCRIPT]</script>
 //             <script type="text/javascript+gzip" src="data:text/javascript;base64,[SCRIPT]"></script>
 //         </body>
@@ -35,7 +35,7 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 
 /**
-  @title Generates HTML with multiple head and body tags after fetching and assembling given tag requests.
+  @title Generates HTML after fetching and assembling given head and body tags.
   @author @0xthedude
   @author @xtremetom
 
