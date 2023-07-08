@@ -8,8 +8,8 @@
         "ethfs_FileStore": "0x9746fD0A77829E12F8A9DBe70D7a322412325B91"
     },
     "goerli": {
-        "ScriptyStorage": "0x5be55EE4845F7dbF2FAB4f37015639207d382aCc",
-        "ScriptyBuilderV2": "0xd87138739EdE6f183ba1f40e1D61576f46a68e34",
+        "ScriptyStorage": "0x4e2f40eef8DFBF200f3f744a9733Afe2E9F83D28",
+        "ScriptyBuilderV2": "0xccd7E419f1EEc86fa748c9079584e3a89312f11C",
         "ETHFSFileStorage": "0x59BF1Fc37B0b82Fa53e71dC01f9CB4BAf0AC5d64",
 
         "ethfs_ContentStore": "0x7c1730B7bE9424D0b983B84aEb254e3a2a105d91",

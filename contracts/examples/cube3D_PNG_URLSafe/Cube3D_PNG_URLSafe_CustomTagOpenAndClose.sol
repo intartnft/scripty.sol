@@ -36,23 +36,27 @@ contract Cube3D_PNG_URLSafe_CustomTagOpenAndClose is ERC721 {
         headTags[0].tagClose = "%253C%252Fstyle%253E";
 
         
-        HTMLTag[] memory bodyTags = new HTMLTag[](3);
-        bodyTags[0].name = "threejs.min.js.png";
+        HTMLTag[] memory bodyTags = new HTMLTag[](4);
+        bodyTags[0].name = "scriptyBase";
+        bodyTags[0].tagType = HTMLTagType.script; // <script>[script]</script>
+        bodyTags[0].contractAddress = scriptyStorageAddress;
+
+        bodyTags[1].name = "threejs.min.js.png";
         // double encoded:
         // - <script type="text/javascript+png" src="data:image/png;base64,[script]"></script>
         // - "></script>
-        bodyTags[0]
+        bodyTags[1]
             .tagOpen = "%253Cscript%2520type%253D%2522text%252Fjavascript%252Bpng%2522%2520src%253D%2522data%253Aimage%252Fpng%253Bbase64%252C";
-        bodyTags[0].tagClose = "%2522%253E%253C%252Fscript%253E";
-        bodyTags[0].contractAddress = scriptyStorageAddress;
-
-        bodyTags[1].name = "injectPNGScripts-0.0.1";
-        bodyTags[1].tagType = HTMLTagType.script; // <script>[script]</script>
+        bodyTags[1].tagClose = "%2522%253E%253C%252Fscript%253E";
         bodyTags[1].contractAddress = scriptyStorageAddress;
 
-        bodyTags[2].name = "cube3D";
+        bodyTags[2].name = "injectPNGScripts-0.0.1";
         bodyTags[2].tagType = HTMLTagType.script; // <script>[script]</script>
         bodyTags[2].contractAddress = scriptyStorageAddress;
+
+        bodyTags[3].name = "cube3D";
+        bodyTags[3].tagType = HTMLTagType.script; // <script>[script]</script>
+        bodyTags[3].contractAddress = scriptyStorageAddress;
 
 
         HTMLRequest memory htmlRequest;

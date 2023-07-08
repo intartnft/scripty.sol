@@ -12,14 +12,6 @@ pragma solidity ^0.8.17;
 //░░░░░░░░░░░░░░░░░░░░░░    CORE    ░░░░░░░░░░░░░░░░░░░░░//
 ///////////////////////////////////////////////////////////
 
-/**
-  @title A generic HTML builder that fetches and assembles given JS requests.
-  @author @0xthedude
-  @author @xtremetom
-
-  Special thanks to @cxkoda, @frolic and @dhof
-*/
-
 import {HTMLRequest, HTMLTagType, HTMLTag} from "./ScriptyStructs.sol";
 import {DynamicBuffer} from "./../utils/DynamicBuffer.sol";
 import {IScriptyStorage} from "./../interfaces/IScriptyStorage.sol";

@@ -36,18 +36,22 @@ contract Cube3D_PNG_URLSafe is ERC721 {
         headTags[0].tagClose = "%253C%252Fstyle%253E";
 
     
-        HTMLTag[] memory bodyTags = new HTMLTag[](3);
-        bodyTags[0].name = "threejs.min.js.png";
-        bodyTags[0].tagType = HTMLTagType.scriptPNGBase64DataURI; // <script type="text/javascript+png" src="data:text/javascript;base64,[script]"></script>
+        HTMLTag[] memory bodyTags = new HTMLTag[](4);
+        bodyTags[0].name = "scriptyBase";
+        bodyTags[0].tagType = HTMLTagType.script; // <script>[script]</script>
         bodyTags[0].contractAddress = scriptyStorageAddress;
-
-        bodyTags[1].name = "injectPNGScripts-0.0.1";
-        bodyTags[1].tagType = HTMLTagType.script; // <script>[script]</script>
+        
+        bodyTags[1].name = "threejs.min.js.png";
+        bodyTags[1].tagType = HTMLTagType.scriptPNGBase64DataURI; // <script type="text/javascript+png" src="data:text/javascript;base64,[script]"></script>
         bodyTags[1].contractAddress = scriptyStorageAddress;
 
-        bodyTags[2].name = "cube3D";
+        bodyTags[2].name = "injectPNGScripts-0.0.1";
         bodyTags[2].tagType = HTMLTagType.script; // <script>[script]</script>
         bodyTags[2].contractAddress = scriptyStorageAddress;
+
+        bodyTags[3].name = "cube3D";
+        bodyTags[3].tagType = HTMLTagType.script; // <script>[script]</script>
+        bodyTags[3].contractAddress = scriptyStorageAddress;
 
 
         HTMLRequest memory htmlRequest;
