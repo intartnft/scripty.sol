@@ -24,7 +24,7 @@
 Contracts and verified scripts(JS) are published through npm:
 ```javascript
 npm install scripty.sol --save-dev
-```  
+```
 
 ## Example
 The example below generates a simple HTML with fullsize canvas element and a script element that draws a rectangle on the canvas:
