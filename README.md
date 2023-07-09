@@ -124,10 +124,10 @@ Assembles multiple uncompressed scripts that draw shapes on same `<canvas></canv
 #### [Cube3D - GZIP Compressed - BASE64 Encoded](https://testnets.opensea.io/assets/goerli/0xEDe0420DAd5e0320919f6EB68caF8f26BFE559C8/0)
 Assembles GZIP compressed Base64 encoded `three.js` with a demo scene. Metadata and animation URL are both base64 encoded.
 
-#### [Cube3D - GZIP Compressed - URL Safe](https://testnets.opensea.io/assets/goerli/0xB2Cc44cCEc7be7bdA61053f60469d0f02827c5d4/0)
+#### [Cube3D - GZIP Compressed - URL Safe](https://testnets.opensea.io/assets/goerli/0x3cdaca789458dadcc57c75d8d18902f0869afa4f/0)
 Assembles GZIP compressed base64 encoded `three.js` with a demo scene. Metadata and animation URL are both URL encoded.
 
-#### [Cube3D - PNG Compressed - URL Safe](https://testnets.opensea.io/assets/goerli/0xfd9c95469d14b01595170e6f29A1a18588487aD8/0)
+#### [Cube3D - PNG Compressed - URL Safe](https://testnets.opensea.io/assets/goerli/0x9256548d8D9Fd06eE2100e5fcC9A3c4AAE6D9e37/0)
 Assembles PNG compressed base64 encoded `three.js` with a demo scene. Metadata and animation URL are both URL encoded.
 
 #### [Cube3D - PNG Compressed - URL Safe with custom wrap](https://testnets.opensea.io/assets/goerli/0x461D1072DdEF25A6b4B011a32f64EE3Ce22e4D1D/0)
