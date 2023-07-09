@@ -4,7 +4,7 @@
 **scripty.sol** is a gas-efficient HTML builder tuned for stitching large JS based <scripts> together.
 ![scripty.sol](https://3939295614-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FH5xTgJNBs6I0hLj9RCqL%2Fuploads%2FZBqLDIPkDrohu45QVMiV%2Fheader.png?alt=media)
 
-### [Documentation](https://int-art.gitbook.io/scripty.sol/)
+### [Documentation](https://int-art.gitbook.io/scripty.sol-v2/)
 **scripty.sol** allows you to build HTML files that embed JS that are stored on-chain. Some benefits of using scripty.sol:
 - Gas efficient. It utilises `DynamicBuffer` and ethfs to save huge amount of gas while storing and assembling scripts together.
 - You can use already deployed storage solutions.
