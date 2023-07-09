@@ -26,8 +26,7 @@ Contracts and verified scripts(JS) are published through npm:
 npm install scripty.sol --save-dev
 ```
 
-
-## Example
+## Example
 The example below generates a simple HTML with fullsize canvas element and a script element that draws a rectangle on the canvas:
 ```solidity
 // Create head tags
@@ -98,13 +97,13 @@ string memory htmlString = IScriptyBuilderV2(
 
 ## Deployed Contracts
 ### Ethereum Mainnet contracts:
--  **ScriptyStorage** - [0x096451F43800f207FC32B4FF86F286EdaF736eE3](https://etherscan.io/address/0x096451F43800f207FC32B4FF86F286EdaF736eE3)
--  **ScriptyBuilder** - [0x16b727a2Fc9322C724F4Bc562910c99a5edA5084](https://etherscan.io/address/0x16b727a2Fc9322C724F4Bc562910c99a5edA5084)
+-  **ScriptyStorageV2** - [0x096451F43800f207FC32B4FF86F286EdaF736eE3](https://etherscan.io/address/0x096451F43800f207FC32B4FF86F286EdaF736eE3)
+-  **ScriptyBuilderV2** - [0x16b727a2Fc9322C724F4Bc562910c99a5edA5084](https://etherscan.io/address/0x16b727a2Fc9322C724F4Bc562910c99a5edA5084)
 -  **ETHFSFileStorage** - [0xFc7453dA7bF4d0c739C1c53da57b3636dAb0e11e](https://etherscan.io/address/0xFc7453dA7bF4d0c739C1c53da57b3636dAb0e11e)
 
 ### Ethereum Goerli contracts:
--  **ScriptyStorage** - [0x4e2f40eef8DFBF200f3f744a9733Afe2E9F83D28](https://goerli.etherscan.io/address/0x730b0adaad15b0551928bae7011f2c1f2a9ca20c)
--  **ScriptyBuilder** - [0xccd7E419f1EEc86fa748c9079584e3a89312f11C](https://goerli.etherscan.io/address/0xc9AB9815d4D5461F3b53Ebd857b6582E82A45C49)
+-  **ScriptyStorageV2** - [0x4e2f40eef8DFBF200f3f744a9733Afe2E9F83D28](https://goerli.etherscan.io/address/0x730b0adaad15b0551928bae7011f2c1f2a9ca20c)
+-  **ScriptyBuilderV2** - [0xccd7E419f1EEc86fa748c9079584e3a89312f11C](https://goerli.etherscan.io/address/0xc9AB9815d4D5461F3b53Ebd857b6582E82A45C49)
 -  **ETHFSFileStorage** - [0x70a78d91A434C1073D47b2deBe31C184aA8CA9Fa](https://goerli.etherscan.io/address/0x70a78d91A434C1073D47b2deBe31C184aA8CA9Fa)
 
 
