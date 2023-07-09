@@ -102,8 +102,8 @@ string memory htmlString = IScriptyBuilderV2(
 -  **ETHFSFileStorage** - [0xFc7453dA7bF4d0c739C1c53da57b3636dAb0e11e](https://etherscan.io/address/0xFc7453dA7bF4d0c739C1c53da57b3636dAb0e11e)
 
 ### Ethereum Goerli contracts:
--  **ScriptyStorageV2** - [0x4e2f40eef8DFBF200f3f744a9733Afe2E9F83D28](https://goerli.etherscan.io/address/0x730b0adaad15b0551928bae7011f2c1f2a9ca20c)
--  **ScriptyBuilderV2** - [0xccd7E419f1EEc86fa748c9079584e3a89312f11C](https://goerli.etherscan.io/address/0xc9AB9815d4D5461F3b53Ebd857b6582E82A45C49)
+-  **ScriptyStorageV2** - [0x4e2f40eef8DFBF200f3f744a9733Afe2E9F83D28](https://goerli.etherscan.io/address/0x4e2f40eef8DFBF200f3f744a9733Afe2E9F83D28)
+-  **ScriptyBuilderV2** - [0xccd7E419f1EEc86fa748c9079584e3a89312f11C](https://goerli.etherscan.io/address/0xccd7E419f1EEc86fa748c9079584e3a89312f11C)
 -  **ETHFSFileStorage** - [0x70a78d91A434C1073D47b2deBe31C184aA8CA9Fa](https://goerli.etherscan.io/address/0x70a78d91A434C1073D47b2deBe31C184aA8CA9Fa)
 
 
