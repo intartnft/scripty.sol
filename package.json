@@ -21,7 +21,7 @@
     },
     "name": "scripty.sol",
     "description": "A generic HTML file builder and data storage solution for on-chain composable generative art and more.",
-    "version": "1.0.2",
+    "version": "2.0.0",
     "main": "hardhat.config.js",
     "directories": {
         "example": "examples",
@@ -49,7 +49,7 @@
         "threejs"
     ],
     "author": "@0xthedude + @xtremetom",
-    "license": "ISC",
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/intartnft/scripty/issues"
     },
