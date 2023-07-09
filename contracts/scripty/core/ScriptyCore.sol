@@ -121,6 +121,9 @@ contract ScriptyCore {
     /**
      * @notice Grab tag open and close depending on tag type
      * @dev
+     *      tagType: 0/HTMLTagType.useTagOpenAndClose or any other:
+     *          [tagOpen][CONTENT][tagClose]
+     *
      *      tagType: 1/HTMLTagType.script:
      *          <script>[SCRIPT]</script>
      *
@@ -132,9 +135,6 @@ contract ScriptyCore {
      *
      *      tagType: 4/HTMLTagType.scriptPNGBase64DataURI
      *          <script type="text/javascript+png" name="[NAME]" src="data:text/javascript;base64,[SCRIPT]"></script>
-     *
-     *      tagType: 0/HTMLTagType.useTagOpenAndClose or any other:
-     *          [tagOpen][scriptContent or scriptFromContract][tagClose]
      *
      *      [IMPORTANT NOTE]: The tags `text/javascript+gzip` and `text/javascript+png` are used to identify scripts
      *      during decompression
@@ -166,6 +166,9 @@ contract ScriptyCore {
     /**
      * @notice Grab URL safe tag open and close depending on tag type
      * @dev
+     *      tagType: 0/HTMLTagType.useTagOpenAndClose or any other:
+     *          [tagOpen][scriptContent or scriptFromContract][tagClose]
+     *
      *      tagType: 1/HTMLTagType.script:
      *      tagType: 2/HTMLTagType.scriptBase64DataURI:
      *          <script src="data:text/javascript;base64,[SCRIPT]"></script>
@@ -175,9 +178,6 @@ contract ScriptyCore {
      *
      *      tagType: 4/HTMLTagType.scriptPNGBase64DataURI
      *          <script type="text/javascript+png" name="[NAME]" src="data:text/javascript;base64,[SCRIPT]"></script>
-     *
-     *      tagType: 0/HTMLTagType.useTagOpenAndClose or any other:
-     *          [tagOpen][scriptContent or scriptFromContract][tagClose]
      *
      *      [IMPORTANT NOTE]: The tags `text/javascript+gzip` and `text/javascript+png` are used to identify scripts
      *      during decompression
