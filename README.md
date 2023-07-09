@@ -12,13 +12,13 @@
 - Supports creating dynamically created JS based `<script>` tags that is super helpful for on-chain generative art.
 
 ### Platforms that use scripty.sol
-- ArtBlocks
-- Alba
+- [ArtBlocks](https://www.artblocks.io/)
+- [Alba](https://www.alba.art)
 
 ### Projects that use scripty.sol
-- CryptoCoaster
-- the metro
-- GOLD
+- [CryptoCoaster](https://www.cryptocoaster.fun/)
+- [the metro](https://drops.int.art/the-metro)
+- [GOLD](https://www.making.gold/)
 
 ## Installation
 Contracts and verified scripts(JS) are published through npm:
@@ -133,7 +133,7 @@ Assembles PNG compressed base64 encoded `three.js` with a demo scene. Metadata a
 #### [Cube3D - PNG Compressed - URL Safe with custom wrap](https://testnets.opensea.io/assets/goerli/0xB00ce86d1b0FeF2A266d1A3c3A541E61c0Ad218E/0)
 Assembles PNG compressed base64 encoded `three.js` with a demo scene. Metadata and animation URL are both URL encoded. It uses custom script wraps.
 
-#### [ThreeJS Module - GZIP Compressed - URL Safe with custom wrap](https://testnets.opensea.io/assets/goerli/0x8aa22dff5fb095f4d35b80fef253f92438ceffac/0)
+#### [ThreeJS Module - GZIP Compressed - URL Safe with custom wrap](https://testnets.opensea.io/assets/goerli/0x7cA4D7310562cA0b563A28c106bBc842f473F73b/0)
 
 Assembles GZIP compressed base64 encoded `modular three.js` with a demo scene. Metadata and animation URL are both URL encoded. It uses custom script wraps. This is the most complex of all the examples. It demonstrates how to:
 - dynamically inject data into your javascript code
