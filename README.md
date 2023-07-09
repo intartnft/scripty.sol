@@ -22,7 +22,78 @@
 
 ## Installation
 Contracts and verified scripts(JS) are published through npm:
+```javascript
 npm install scripty.sol --save-dev
+```  
+
+## Example
+The example below generates a simple HTML with fullsize canvas element and a script element that draws a rectangle on the canvas:
+```solidity
+// Create head tags
+HTMLTag[] memory headTags = new HTMLTag[](1);
+headTags[0].tagOpen = "<style>";
+headTags[0].tagContent = "html{height:100%}body{min-height:100%;margin:0;padding:0}canvas{padding:0;margin:auto;display:block;position:absolute;top:0;bottom:0;left:0;right:0}";
+headTags[0].tagClose = "</style>";
+
+// Create body tags
+HTMLTag[] memory bodyTags = new HTMLTag[](2);
+bodyTags[0].tagOpen = '<canvas id="myCanvas">';
+bodyTags[0].tagClose = "</canvas>";
+
+bodyTags[1].tagContent = 'const canvas=document.getElementById("myCanvas"),ctx=canvas.getContext("2d");ctx.beginPath(),ctx.rect(20,20,150,100),ctx.stroke();';
+bodyTags[1].tagType = HTMLTagType.script;
+
+// Create HTML request with head and body tags
+HTMLRequest memory headTags;
+htmlRequest.headTags = headTags;
+htmlRequest.bodyTags = bodyTags;
+
+// Get full HTML string
+string memory htmlString = IScriptyBuilderV2(
+    scriptyBuilderAddress
+).getHTMLString(htmlRequest);
+```
+
+#### HTML file output:
+```html
+<html>
+  <head>
+    <style>
+      html {
+        height: 100%
+      }
+
+      body {
+        min-height: 100%;
+        margin: 0;
+        padding: 0
+      }
+
+      canvas {
+        padding: 0;
+        margin: auto;
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+    <script>
+      const canvas = document.getElementById("myCanvas");
+      const ctx = canvas.getContext("2d");
+
+      ctx.beginPath();
+      ctx.rect(20, 20, 150, 100);
+      ctx.stroke();
+    </script>
+  </body>
+</html>
+```
 
 ## Deployed Contracts
 ### Ethereum Mainnet contracts:
@@ -36,7 +107,7 @@ npm install scripty.sol --save-dev
 -  **ETHFSFileStorage** - [0x70a78d91A434C1073D47b2deBe31C184aA8CA9Fa](https://goerli.etherscan.io/address/0x70a78d91A434C1073D47b2deBe31C184aA8CA9Fa)
 
 
-## Examples
+## Live Examples
 #### Stacked 3D Objects Shapes - [NFT1](https://testnets.opensea.io/assets/goerli/0x66530853C069734fD0B0A2c28aEd3D60bb76e960/0) [NFT2](https://testnets.opensea.io/assets/goerli/0xCF925C72d69Bf7F1B6123c3036Cb62A79d73d6ea/0)
 
 Both NFTs assemble PNG compressed base 64 encoded `three.js` with an uncompressed demo scene. First NFT creates some 3D cubes. Second NFT gets the first NFT scene on-chain and adds spheres.
