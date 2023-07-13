@@ -97,8 +97,8 @@ string memory htmlString = IScriptyBuilderV2(
 
 ## Deployed Contracts
 ### Ethereum Mainnet contracts:
--  **ScriptyStorageV2** - [0x096451F43800f207FC32B4FF86F286EdaF736eE3](https://etherscan.io/address/0x096451F43800f207FC32B4FF86F286EdaF736eE3)
--  **ScriptyBuilderV2** - [0x16b727a2Fc9322C724F4Bc562910c99a5edA5084](https://etherscan.io/address/0x16b727a2Fc9322C724F4Bc562910c99a5edA5084)
+-  **ScriptyStorageV2** - [0x3349705FF99e44d1A42c8ea600DE7cF5bE36E034](https://etherscan.io/address/0x3349705FF99e44d1A42c8ea600DE7cF5bE36E034)
+-  **ScriptyBuilderV2** - [0x5CEB91D612a735EC5f50Ad68c7AD22a945c602FC](https://etherscan.io/address/0x5CEB91D612a735EC5f50Ad68c7AD22a945c602FC)
 -  **ETHFSFileStorage** - [0xFc7453dA7bF4d0c739C1c53da57b3636dAb0e11e](https://etherscan.io/address/0xFc7453dA7bF4d0c739C1c53da57b3636dAb0e11e)
 
 ### Ethereum Goerli contracts:
