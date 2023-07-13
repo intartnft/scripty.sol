@@ -12,13 +12,13 @@
 - Supports creating dynamically created JS based `<script>` tags that is super helpful for on-chain generative art.
 
 ### Platforms that use scripty.sol
-- [ArtBlocks](https://www.artblocks.io/)
 - [Alba](https://www.alba.art)
 
 ### Projects that use scripty.sol
 - [CryptoCoaster](https://www.cryptocoaster.fun/)
 - [the metro](https://drops.int.art/the-metro)
 - [GOLD](https://www.making.gold/)
+- [Terraform Navigator](https://etherscan.io/address/0xad41bf1c7f22f0ec988dac4c0ae79119cab9bb7e#code)
 
 ## Installation
 Contracts and verified scripts(JS) are published through npm:
