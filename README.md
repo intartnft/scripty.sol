@@ -12,6 +12,7 @@
 - Supports creating dynamically created JS based `<script>` tags that is super helpful for on-chain generative art.
 
 ### Platforms that use scripty.sol
+- [Art Blocks](https://www.artblocks.io)
 - [Alba](https://www.alba.art)
 
 ### Projects that use scripty.sol
