@@ -6,12 +6,7 @@ const expectedResultsPath = __dirname + "/expectedResults/ScriptyHTMLURLSafe/";
 
 describe("ScriptyHTMLURLSafe Tests", function () {
     async function deploy() {
-        const contentStore = await (await ethers.getContractFactory("ContentStore")).deploy()
-        await contentStore.deployed()
-
-        const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyStorage")).deploy(
-            contentStore.address
-        )
+        const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyMockStorage")).deploy()
         await scriptyStorageContract.deployed()
 
         const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyHTMLURLSafe")).deploy()

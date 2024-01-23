@@ -43,8 +43,7 @@ exports.addContractTag = async (tags, tagType, isURLSafe, scriptyStorageContract
 
     for (let i = 0; i < 2; i++) {
         const name = tagContent + storageIndex
-        await scriptyStorageContract.createScript(name, utilities.stringToBytes("details"))
-        await scriptyStorageContract.addChunkToScript(name, utilities.stringToBytes(tagContent + i))
+        await scriptyStorageContract.addChunkToContent(name, utilities.stringToBytes(tagContent + i))
         tags.push([name, scriptyStorageContract.address, 0, tagType, tagOpen, tagClose, utilities.emptyBytes()])
         storageIndex++
     }

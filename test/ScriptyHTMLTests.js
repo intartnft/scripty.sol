@@ -6,12 +6,7 @@ const expectedResultsPath = __dirname + "/expectedResults/ScriptyHTML/";
 
 describe("ScriptyHTML Tests", function () {
     async function deploy() {
-        const contentStore = await (await ethers.getContractFactory("ContentStore")).deploy()
-        await contentStore.deployed()
-
-        const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyStorage")).deploy(
-            contentStore.address
-        )
+        const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyMockStorage")).deploy()
         await scriptyStorageContract.deployed()
 
         const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyHTML")).deploy()
@@ -37,6 +32,7 @@ describe("ScriptyHTML Tests", function () {
     describe("Get HTML Tests - Zero tags", async function () {
         it("Zero head and body tags", async function () {
             const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
+            console.log(scriptyBuilderContract.address);
 
             let headTags = []
             let bodyTags = []

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.22;
 
 ///////////////////////////////////////////////////////////
 // ░██████╗░█████╗░██████╗░██╗██████╗░████████╗██╗░░░██╗ //
@@ -11,9 +11,9 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 
 import {IFileStore} from "./../../dependencies/ethfs/IFileStore.sol";
-import {IContractScript} from "./../../interfaces/IContractScript.sol";
+import {IScriptyStorage} from "./../../interfaces/IScriptyStorage.sol";
 
-contract ETHFSFileStorage is IContractScript {
+contract ETHFSFileStorage is IScriptyStorage {
     IFileStore public immutable fileStore;
 
     constructor(address _fileStoreAddress) {
@@ -30,7 +30,7 @@ contract ETHFSFileStorage is IContractScript {
      * @param data - Arbitrary data. Not used by this contract.
      * @return script - Full script from merged chunks
      */
-    function getScript(
+    function getContent(
         string calldata name,
         bytes memory data
     ) external view returns (bytes memory script) {

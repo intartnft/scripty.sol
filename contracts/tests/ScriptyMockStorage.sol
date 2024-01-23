@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.22;
 
 ///////////////////////////////////////////////////////////
 // ░██████╗░█████╗░██████╗░██╗██████╗░████████╗██╗░░░██╗ //
@@ -10,19 +10,29 @@ pragma solidity ^0.8.17;
 // ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░░░░╚═╝░░░░░░╚═╝░░░ //
 ///////////////////////////////////////////////////////////
 
-interface IContractScript {
-    // =============================================================
-    //                            GETTERS
-    // =============================================================
+/**
+  THIS IS A SIMPLE STORAGE CONTRACT USED FOR TESTING ONLY
+*/
 
-    /**
-     * @notice Get the full script
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
-     * @param data - Arbitrary data to be passed to storage
-     * @return script - Full script from merged chunks
-     */
-    function getScript(string calldata name, bytes memory data)
-        external
-        view
-        returns (bytes memory script);
+import {IScriptyStorage} from "./../scripty/interfaces/IScriptyStorage.sol";
+import {AddressChunks} from "./../scripty/utils/AddressChunks.sol";
+import {SSTORE2} from "solady/src/utils/SSTORE2.sol";
+
+contract ScriptyMockStorage is IScriptyStorage {
+    mapping(string => address[]) contents;
+
+    function addChunkToContent(
+        string calldata name,
+        bytes calldata chunk
+    ) public {
+        address pointer = SSTORE2.write(chunk);
+        contents[name].push(pointer);
+    }
+
+    function getContent(
+        string memory name,
+        bytes memory data
+    ) public view returns (bytes memory content) {
+        return AddressChunks.mergeChunks(contents[name]);
+    }
 }
