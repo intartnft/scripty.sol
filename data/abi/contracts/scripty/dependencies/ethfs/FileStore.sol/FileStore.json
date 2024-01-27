@@ -1,5 +1,16 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_deployer",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "inputs": [],
     "name": "FileEmpty",
     "type": "error"
@@ -56,6 +67,48 @@
       }
     ],
     "name": "SliceEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint32",
+        "name": "codeSize",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "sliceStart",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "sliceEnd",
+        "type": "uint32"
+      }
+    ],
+    "name": "SliceOutOfBounds",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "expectedPointer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "actualPointer",
+        "type": "address"
+      }
+    ],
+    "name": "UnexpectedPointer",
     "type": "error"
   },
   {
@@ -732,6 +785,25 @@
         "internalType": "address",
         "name": "pointer",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "filename",
+        "type": "string"
+      }
+    ],
+    "name": "readFile",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "contents",
+        "type": "string"
       }
     ],
     "stateMutability": "view",

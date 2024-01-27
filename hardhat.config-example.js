@@ -1,5 +1,8 @@
 /** @type import('hardhat/config').HardhatUserConfig */
 require("@nomicfoundation/hardhat-toolbox");
+require("hardhat-gas-reporter");
+require('hardhat-ignore-warnings');
+require('hardhat-abi-exporter');
 require("dotenv").config();
 
 // KEYS
@@ -11,7 +14,7 @@ const GOERLI_PRIVATE_KEY = process.env.GOERLI_PRIVATE_KEY ||
 
 module.exports = {
     solidity: {
-        version: "0.8.17",
+        version: "0.8.22",
         settings: {
             optimizer: {
                 enabled: true,

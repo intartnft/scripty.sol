@@ -6,7 +6,7 @@
 
 ### [Documentation](https://int-art.gitbook.io/scripty.sol-v2/)
 **scripty.sol** allows you to build HTML files that embed JS that are stored on-chain. Some benefits of using scripty.sol:
-- Gas efficient. It utilises `DynamicBuffer` and ethfs to save huge amount of gas while storing and assembling scripts together.
+- Gas efficient. It utilises `DynamicBuffer` to save huge amount of gas while assembling scripts together.
 - You can use already deployed storage solutions.
 - You can build modular JS based HTML files directly on-chain.
 - Supports creating dynamically created JS based `<script>` tags that is super helpful for on-chain generative art.

@@ -18,7 +18,7 @@
         "hardhat": "^2.19.4",
         "hardhat-abi-exporter": "^2.10.1",
         "hardhat-ignore-warnings": "^0.2.9",
-        "solady": "0.0.62",
+        "solady": "0.0.166",
         "terser": "^5.16.1"
     },
     "name": "scripty.sol",

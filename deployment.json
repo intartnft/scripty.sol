@@ -5,7 +5,21 @@
         "ETHFSFileStorage": "0xFc7453dA7bF4d0c739C1c53da57b3636dAb0e11e",
 
         "ethfs_ContentStore": "0xC6806fd75745bB5F5B32ADa19963898155f9DB91",
-        "ethfs_FileStore": "0x9746fD0A77829E12F8A9DBe70D7a322412325B91"
+        "ethfs_FileStore": "0x9746fD0A77829E12F8A9DBe70D7a322412325B91",
+
+        "ethfs_FileStore_v2": "0xFe1411d6864592549AdE050215482e4385dFa0FB"
+    },
+    "localhost": {
+        "ScriptyStorage": "0x564Db7a11653228164FD03BcA60465270E67b3d7",
+        "ScriptyBuilderV2": "0x8B342f4Ddcc71Af65e4D2dA9CD00cc0E945cFD12",
+        "ETHFSFileStorage": "0xFc7453dA7bF4d0c739C1c53da57b3636dAb0e11e",
+
+        "ethfs_ContentStore": "0xC6806fd75745bB5F5B32ADa19963898155f9DB91",
+        "ethfs_FileStore": "0x9746fD0A77829E12F8A9DBe70D7a322412325B91",
+
+        "ethfs_FileStore_v2": "0xFe1411d6864592549AdE050215482e4385dFa0FB",
+        "ScriptyStorageV2": "0x564Db7a11653228164FD03BcA60465270E67b3d7",
+        "ETHFSV2FileStorage": "0xE2307e3710d108ceC7a4722a020a050681c835b3"
     },
     "goerli": {
         "ScriptyStorage": "0x4e2f40eef8DFBF200f3f744a9733Afe2E9F83D28",
@@ -13,6 +27,8 @@
         "ETHFSFileStorage": "0x59BF1Fc37B0b82Fa53e71dC01f9CB4BAf0AC5d64",
 
         "ethfs_ContentStore": "0x7c1730B7bE9424D0b983B84aEb254e3a2a105d91",
-        "ethfs_FileStore": "0x5E348d0975A920E9611F8140f84458998A53af94"
+        "ethfs_FileStore": "0x5E348d0975A920E9611F8140f84458998A53af94",
+
+        "ethfs_FileStore_v2": "0xFe1411d6864592549AdE050215482e4385dFa0FB"
     }
 }

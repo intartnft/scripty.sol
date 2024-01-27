@@ -10,29 +10,30 @@ pragma solidity ^0.8.22;
 // ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░░░░╚═╝░░░░░░╚═╝░░░ //
 ///////////////////////////////////////////////////////////
 
-/**
-  THIS IS A SIMPLE STORAGE CONTRACT USED FOR TESTING ONLY
-*/
+import {IFileStore} from "./../../dependencies/ethfs/IFileStore.sol";
+import {IScriptyContractStorage} from "./../../interfaces/IScriptyContractStorage.sol";
 
-import {IScriptyContractStorage} from "./../scripty/interfaces/IScriptyContractStorage.sol";
-import {AddressChunks} from "./../scripty/utils/AddressChunks.sol";
-import {SSTORE2} from "solady/src/utils/SSTORE2.sol";
+contract ETHFSV2FileStorage is IScriptyContractStorage {
+    IFileStore public immutable fileStore;
 
-contract ScriptyMockStorage is IScriptyContractStorage {
-    mapping(string => address[]) contents;
-
-    function addChunkToContent(
-        string calldata name,
-        bytes calldata chunk
-    ) public {
-        address pointer = SSTORE2.write(chunk);
-        contents[name].push(pointer);
+    constructor(address _fileStoreAddress) {
+        fileStore = IFileStore(_fileStoreAddress);
     }
 
+    // =============================================================
+    //                            GETTERS
+    // =============================================================
+
+    /**
+     * @notice Get the full script from ethfs's FileStore contract
+     * @param name - Name given to the script. Eg: threejs.min.js_r148
+     * @param data - Arbitrary data. Not used by this contract.
+     * @return script - Full script from merged chunks
+     */
     function getContent(
-        string memory name,
+        string calldata name,
         bytes memory data
-    ) public view returns (bytes memory content) {
-        return AddressChunks.mergeChunks(contents[name]);
+    ) external view returns (bytes memory script) {
+        return bytes(fileStore.getFile(name).read());
     }
 }

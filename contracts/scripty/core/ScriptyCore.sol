@@ -14,7 +14,7 @@ pragma solidity ^0.8.17;
 
 import {HTMLRequest, HTMLTagType, HTMLTag} from "./ScriptyStructs.sol";
 import {DynamicBuffer} from "./../utils/DynamicBuffer.sol";
-import {IScriptyStorage} from "./../interfaces/IScriptyStorage.sol";
+import {IScriptyContractStorage} from "./../interfaces/IScriptyContractStorage.sol";
 
 contract ScriptyCore {
     using DynamicBuffer for bytes;
@@ -234,7 +234,7 @@ contract ScriptyCore {
     ) public view returns (bytes memory) {
         if (htmlTag.contractAddress != address(0)) {
             return
-                IScriptyStorage(htmlTag.contractAddress).getContent(
+                IScriptyContractStorage(htmlTag.contractAddress).getContent(
                     htmlTag.name,
                     htmlTag.contractData
                 );

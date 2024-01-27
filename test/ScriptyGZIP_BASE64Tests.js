@@ -39,6 +39,5 @@ describe("Scripty GZIP BASE64 Tests", function () {
         )
         await nftContract.deployed()
         await nftContract.tokenURI_ForGasTest()
-        // TODO: add html assert
     });
 });
