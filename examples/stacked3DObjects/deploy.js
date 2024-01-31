@@ -20,7 +20,7 @@ async function getContracts(networkName) {
 		"ScriptyStorageV2",
 		scriptyStorageAddress
 	);
-	console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
+	console.log("ScriptyStorageV2 is already deployed at", scriptyStorageAddress);
 
 	const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
 	const scriptyBuilderContract = await ethers.getContractAt(
@@ -106,8 +106,8 @@ async function main() {
 	utilities.writeFile(path.join(__dirname, "metadata_1.json"), medatada1)
 	utilities.writeFile(path.join(__dirname, "metadata_2.json"), medatada2)
 
-	// Verify contracts if network is goerli
-	if (hre.network.name == "goerli") {
+	// Verify contracts if network is ethereum_sepolia
+	if (hre.network.name == "ethereum_sepolia") {
 		console.log("Waiting a little bytecode index on Etherscan");
     	await delay(30000)
 

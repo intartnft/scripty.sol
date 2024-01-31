@@ -98,69 +98,69 @@ string memory htmlString = IScriptyBuilderV2(
 ```
 
 ## Deployed Contracts
-### Ethereum Mainnet contracts:
+### Ethereum Mainnet
 -  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://etherscan.io/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
 -  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
 -  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
 
-### Ethereum Goerli contracts:
+### Ethereum Goerli
 -  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://goerli.etherscan.io/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
 -  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://goerli.etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
 -  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://goerli.etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
 
-### Ethereum Sepolia contracts:
+### Ethereum Sepolia
 -  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://sepolia.etherscan.io/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
 -  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://sepolia.etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
 -  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://sepolia.etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
 
-### Base contracts:
+### Base contracts
 -  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://basescan.org/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
 -  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://basescan.org/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
 -  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://basescan.org/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
 
-### Base Sepolia contracts:
+### Base Sepolia
 -  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://sepolia.basescan.org/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
 -  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://sepolia.basescan.org/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
 -  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://sepolia.basescan.org/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
 
-### Optimism contracts:
+### Optimism
 -  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://optimistic.etherscan.io/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
 -  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://optimistic.etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
 -  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://optimistic.etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
 
-### Optimism Sepolia contracts:
+### Optimism Sepolia
 -  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https:/sepolia-optimism.etherscan.io/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
 -  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://sepolia-optimism.etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
 -  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://sepolia-optimism.etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
 
 
 ## Live Examples
-#### Stacked 3D Objects Shapes - [NFT1](https://testnets.opensea.io/assets/goerli/0x66530853C069734fD0B0A2c28aEd3D60bb76e960/0) [NFT2](https://testnets.opensea.io/assets/goerli/0xCF925C72d69Bf7F1B6123c3036Cb62A79d73d6ea/0)
+#### Stacked 3D Objects Shapes - [NFT1](https://testnets.opensea.io/assets/sepolia/0x29aefc985abE4ea7EEf671686423E8E5dfC81b3F/0) [NFT2](https://testnets.opensea.io/assets/sepolia/0x7A89d427099c331234D96AA97AF56ab1D23Eb100/0)
 
 Both NFTs assemble PNG compressed base 64 encoded `three.js` with an uncompressed demo scene. First NFT creates some 3D cubes. Second NFT gets the first NFT scene on-chain and adds spheres.
 
-#### [p5js from EthFS FileStore](https://testnets.opensea.io/assets/goerli/0x1901C748eE74E6256d58A927f90557C34Dc16181/0)
+#### [p5js from EthFS FileStore V2](https://testnets.opensea.io/assets/sepolia/0x1901C748eE74E6256d58A927f90557C34Dc16181/0)
 Assembles base64 encoded `p5.js` that's stored in ethfs's FileStore contract with a demo scene. Metadata and animation URL are both base64 encoded.
 
-#### [p5js from EthFS FileStore - URL Safe](https://testnets.opensea.io/assets/goerli/0xEbadb9173dCb30658808f770Cb0e281A5864F5Ed/0)
+#### [p5js from EthFS FileStore V2 - URL Safe](https://testnets.opensea.io/assets/sepolia/0xEbadb9173dCb30658808f770Cb0e281A5864F5Ed/0)
 Assembles base64 encoded `p5.js` that's stored in ethfs's FileStore contract with a demo scene. Metadata and animation URL are both URL encoded.
 
-#### [Random Shapes](https://testnets.opensea.io/assets/goerli/0x6Db1f31b58C1329CC1b59bEe41C8cD72a1C3D61c/0)
+#### [Random Shapes](https://testnets.opensea.io/assets/sepolia/0xe40e09F70197d4C01bAa250cbE2d0e28d4E40251/0)
 Assembles multiple uncompressed scripts that draw shapes on same `<canvas></canvas>` element with a controller script that is created in NFT contract. This controller script passes some chain parameters to canvas scene.
 
-#### [Cube3D - GZIP Compressed - BASE64 Encoded](https://testnets.opensea.io/assets/goerli/0xEDe0420DAd5e0320919f6EB68caF8f26BFE559C8/0)
+#### [Cube3D - GZIP Compressed - BASE64 Encoded](https://testnets.opensea.io/assets/sepolia/0x27013186Bde55Fd474f7f314299a09185e59D05d/0)
 Assembles GZIP compressed Base64 encoded `three.js` with a demo scene. Metadata and animation URL are both base64 encoded.
 
-#### [Cube3D - GZIP Compressed - URL Safe](https://testnets.opensea.io/assets/goerli/0x3cdaca789458dadcc57c75d8d18902f0869afa4f/0)
+#### [Cube3D - GZIP Compressed - URL Safe](https://testnets.opensea.io/assets/sepolia/0x0df753000d277E043d7Cf713A79cfa3976AC28F2/0)
 Assembles GZIP compressed base64 encoded `three.js` with a demo scene. Metadata and animation URL are both URL encoded.
 
-#### [Cube3D - PNG Compressed - URL Safe](https://testnets.opensea.io/assets/goerli/0x9256548d8D9Fd06eE2100e5fcC9A3c4AAE6D9e37/0)
+#### [Cube3D - PNG Compressed - URL Safe](https://testnets.opensea.io/assets/sepolia/0x770d0949e28B42405aDA6E8c26D051D99c7476C8/0)
 Assembles PNG compressed base64 encoded `three.js` with a demo scene. Metadata and animation URL are both URL encoded.
 
-#### [Cube3D - PNG Compressed - URL Safe with custom wrap](https://testnets.opensea.io/assets/goerli/0xB00ce86d1b0FeF2A266d1A3c3A541E61c0Ad218E/0)
+#### [Cube3D - PNG Compressed - URL Safe with custom wrap](https://testnets.opensea.io/assets/sepolia/0x2aB58dcDAC58636294F5F2d6b4D018F55Dab6842/0)
 Assembles PNG compressed base64 encoded `three.js` with a demo scene. Metadata and animation URL are both URL encoded. It uses custom script wraps.
 
-#### [ThreeJS Module - GZIP Compressed - URL Safe with custom wrap](https://testnets.opensea.io/assets/goerli/0x7cA4D7310562cA0b563A28c106bBc842f473F73b/0)
+#### [ThreeJS Module - GZIP Compressed - URL Safe with custom wrap](https://testnets.opensea.io/assets/sepolia/0x2BC45AFC7D73456D9aFEfd3751accCFa92522EC0/0)
 
 Assembles GZIP compressed base64 encoded `modular three.js` with a demo scene. Metadata and animation URL are both URL encoded. It uses custom script wraps. This is the most complex of all the examples. It demonstrates how to:
 - dynamically inject data into your javascript code

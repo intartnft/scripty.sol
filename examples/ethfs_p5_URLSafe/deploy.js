@@ -14,7 +14,7 @@ const delay = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function getContracts() {
+async function getContracts(networkName) {
     const ethfsFileStorageAddress = deployedContracts.addressFor(networkName, "ETHFSV2FileStorage")
     const ethfsFileStorageContract = await ethers.getContractAt(
         "ETHFSV2FileStorage",
@@ -28,7 +28,7 @@ async function getContracts() {
         "ScriptyStorageV2",
         scriptyStorageAddress
     );
-    console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
+    console.log("ScriptyStorageV2 is already deployed at", scriptyStorageAddress);
 
     const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
     const scriptyBuilderContract = await ethers.getContractAt(
@@ -106,8 +106,8 @@ async function main() {
 	utilities.writeFile(path.join(__dirname, "output.html"), animationURL)
 	utilities.writeFile(path.join(__dirname, "metadata.json"), tokenURIDecoded)
 
-	// Verify contracts if network is goerli
-	if (hre.network.name == "goerli") {
+	// Verify contracts if network is ethereum_sepolia
+	if (hre.network.name == "ethereum_sepolia") {
 		console.log("Waiting a little bytecode index on Etherscan");
     	await delay(30000)
 		
