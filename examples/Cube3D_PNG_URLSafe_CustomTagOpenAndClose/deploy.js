@@ -14,15 +14,15 @@ const delay = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function getContracts() {
-	const scriptyStorageAddress = deployedContracts.addressFor("localhost", "ScriptyStorageV2")
+async function getContracts(networkName) {
+	const scriptyStorageAddress = deployedContracts.addressFor(networkName, "ScriptyStorageV2")
 	const scriptyStorageContract = await ethers.getContractAt(
 		"ScriptyStorageV2",
 		scriptyStorageAddress
 	);
 	console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
 
-	const scriptyBuilderAddress = deployedContracts.addressFor("localhost", "ScriptyBuilderV2")
+	const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
 	const scriptyBuilderContract = await ethers.getContractAt(
 		"ScriptyBuilderV2",
 		scriptyBuilderAddress
@@ -61,12 +61,12 @@ async function storeContent(storageContract, name, filePath) {
 async function main() {
 	console.log("")
 	console.log("----------------------------------")
-	console.log("Running Cube3D_PNG_URLSafe_CustomTagOpenAndClose")
+	console.log("Running cube3D_PNG_URLSafe_CustomTagOpenAndClose")
 	console.log("----------------------------------")
 	
 	// Deploy or use already deployed contracts depending on the network that script runs on
 	console.log("Deploying contracts");
-	const { scriptyStorageContract, scriptyBuilderContract } = await getContracts()
+	const { scriptyStorageContract, scriptyBuilderContract } = await getContracts(hre.network.name)
 
     await storeContent(scriptyStorageContract, "scriptyBase", "../../baseScripts/dist/scriptyBase.js");
 	await storeContent(scriptyStorageContract, "threejs.min.js.png", "../commonScripts/threejs.min.js.png.txt");

@@ -17,7 +17,7 @@ pragma solidity ^0.8.17;
   @author @xtremetom
   @author @0xthedude
 
-  Built on top FileStore from EthFS V2. Chunk pointers
+  Built on top of FileStore from EthFS V2. Chunk pointers
   are deterministic and using the EthFS's salt.
 
   Special thanks to @frolic, @cxkoda and @dhof.
@@ -142,10 +142,11 @@ contract ScriptyStorageV2 is Ownable, IScriptyStorage, IScriptyContractStorage {
     }
 
     /**
-     * @notice Add a code chunk to the content
+     * @notice Submit content to EthFS V2 FileStore
      * @param name - Name given to the content. Eg: threejs.min.js_r148
      * @param metadata - metadata for EthFS V2 File
      *
+     * Uses name as file name.
      * Emits an {ContentSubmittedToFileStore} event.
      */
     function submitToEthFSFileStore(
@@ -163,7 +164,7 @@ contract ScriptyStorageV2 is Ownable, IScriptyStorage, IScriptyContractStorage {
     }
 
     /**
-     * @notice Add a code chunk to the content
+     * @notice Submit content to EthFS V2 FileStore
      * @param name - Name given to the content. Eg: threejs.min.js_r148
      * @param fileName - Name given to the File in FileStore
      * @param metadata - metadata for EthFS V2 File
@@ -182,7 +183,7 @@ contract ScriptyStorageV2 is Ownable, IScriptyStorage, IScriptyContractStorage {
             metadata
         );
         contents[name].isFrozen = true;
-        emit ContentSubmittedToEthFSFileStore(name, name);
+        emit ContentSubmittedToEthFSFileStore(name, fileName);
     }
 
     // =============================================================

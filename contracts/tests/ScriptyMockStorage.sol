@@ -11,7 +11,7 @@ pragma solidity ^0.8.22;
 ///////////////////////////////////////////////////////////
 
 /**
-  THIS IS A SIMPLE STORAGE CONTRACT USED FOR TESTING ONLY
+  USED ONLY FOR TESTS
 */
 
 import {IScriptyContractStorage} from "./../scripty/interfaces/IScriptyContractStorage.sol";

@@ -28,7 +28,7 @@ interface IScriptyStorage {
     // =============================================================
 
     /**
-     * @notice Error for, The Content you are trying to create already exists
+     * @notice Error for, The content you are trying to create already exists
      */
     error ContentExists();
 
@@ -38,7 +38,7 @@ interface IScriptyStorage {
     error NotContentOwner();
 
     /**
-     * @notice Error for, The Content you are trying to edit is frozen
+     * @notice Error for, The content you are trying to edit is frozen
      */
     error ContentIsFrozen(string name);
 
@@ -97,9 +97,9 @@ interface IScriptyStorage {
     ) external;
 
     /**
-     * @notice Add a code chunk to the content
+     * @notice Add a content chunk to the content
      * @param name - Name given to the content. Eg: threejs.min.js_r148
-     * @param chunk - Next sequential code chunk
+     * @param chunk - Next sequential content chunk
      *
      * Emits an {ChunkStored} event.
      */
@@ -109,11 +109,12 @@ interface IScriptyStorage {
     ) external;
 
     /**
-     * @notice Add a code chunk to the content
+     * @notice Submit content to EthFS V2 FileStore
      * @param name - Name given to the content. Eg: threejs.min.js_r148
      * @param metadata - metadata for EthFS V2 File
      *
-     * Emits an {ChunkStored} event.
+     * Uses name as file name.
+     * Emits an {ContentSubmittedToFileStore} event.
      */
     function submitToEthFSFileStore(
         string calldata name,
@@ -121,12 +122,12 @@ interface IScriptyStorage {
     ) external;
 
     /**
-     * @notice Add a code chunk to the content
+     * @notice Submit content to EthFS V2 FileStore
      * @param name - Name given to the content. Eg: threejs.min.js_r148
      * @param fileName - Name given to the File in FileStore
      * @param metadata - metadata for EthFS V2 File
      *
-     * Emits an {ChunkStored} event.
+     * Emits an {ContentSubmittedToFileStore} event.
      */
     function submitToEthFSFileStoreWithFileName(
         string calldata name,

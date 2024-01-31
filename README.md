@@ -9,7 +9,7 @@
 - Gas efficient. It utilises `DynamicBuffer` to save huge amount of gas while assembling scripts together.
 - You can use already deployed storage solutions.
 - You can build modular JS based HTML files directly on-chain.
-- Supports creating dynamically created JS based `<script>` tags that is super helpful for on-chain generative art.
+- Supports custom HTML tags and inline contents.
 
 ### Platforms that use scripty.sol
 - [Art Blocks](https://www.artblocks.io)
@@ -20,6 +20,7 @@
 - [the metro](https://drops.int.art/the-metro)
 - [GOLD](https://www.making.gold/)
 - [Terraform Navigator](https://etherscan.io/address/0xad41bf1c7f22f0ec988dac4c0ae79119cab9bb7e#code)
+- [Panopticon](https://panopticon.teto.io)
 
 ## Installation
 Contracts and verified scripts(JS) are published through npm:
@@ -98,14 +99,39 @@ string memory htmlString = IScriptyBuilderV2(
 
 ## Deployed Contracts
 ### Ethereum Mainnet contracts:
--  **ScriptyStorageV2** - [0x3349705FF99e44d1A42c8ea600DE7cF5bE36E034](https://etherscan.io/address/0x3349705FF99e44d1A42c8ea600DE7cF5bE36E034)
--  **ScriptyBuilderV2** - [0x5CEB91D612a735EC5f50Ad68c7AD22a945c602FC](https://etherscan.io/address/0x5CEB91D612a735EC5f50Ad68c7AD22a945c602FC)
--  **ETHFSFileStorage** - [0xFc7453dA7bF4d0c739C1c53da57b3636dAb0e11e](https://etherscan.io/address/0xFc7453dA7bF4d0c739C1c53da57b3636dAb0e11e)
+-  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://etherscan.io/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
+-  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
+-  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
 
 ### Ethereum Goerli contracts:
--  **ScriptyStorageV2** - [0x4e2f40eef8DFBF200f3f744a9733Afe2E9F83D28](https://goerli.etherscan.io/address/0x4e2f40eef8DFBF200f3f744a9733Afe2E9F83D28)
--  **ScriptyBuilderV2** - [0xccd7E419f1EEc86fa748c9079584e3a89312f11C](https://goerli.etherscan.io/address/0xccd7E419f1EEc86fa748c9079584e3a89312f11C)
--  **ETHFSFileStorage** - [0x70a78d91A434C1073D47b2deBe31C184aA8CA9Fa](https://goerli.etherscan.io/address/0x70a78d91A434C1073D47b2deBe31C184aA8CA9Fa)
+-  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://goerli.etherscan.io/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
+-  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://goerli.etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
+-  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://goerli.etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
+
+### Ethereum Sepolia contracts:
+-  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://sepolia.etherscan.io/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
+-  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://sepolia.etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
+-  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://sepolia.etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
+
+### Base contracts:
+-  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://basescan.org/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
+-  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://basescan.org/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
+-  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://basescan.org/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
+
+### Base Sepolia contracts:
+-  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://sepolia.basescan.org/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
+-  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://sepolia.basescan.org/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
+-  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://sepolia.basescan.org/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
+
+### Optimism contracts:
+-  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://optimistic.etherscan.io/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
+-  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://optimistic.etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
+-  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://optimistic.etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
+
+### Optimism Sepolia contracts:
+-  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https:/sepolia-optimism.etherscan.io/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
+-  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://sepolia-optimism.etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
+-  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://sepolia-optimism.etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
 
 
 ## Live Examples
@@ -143,7 +169,7 @@ Assembles GZIP compressed base64 encoded `modular three.js` with a demo scene. M
 - make it all URL safe
 
 ## Authors
-- [@0xthedude](https://twitter.com/0xthedude)
+- [int.art / @0xthedude](https://twitter.com/intartNFT)
 - [@xtremetom](https://twitter.com/xtremetom)
 
 ## Acknowledgments

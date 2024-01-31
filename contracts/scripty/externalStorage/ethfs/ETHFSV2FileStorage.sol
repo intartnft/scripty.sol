@@ -25,10 +25,10 @@ contract ETHFSV2FileStorage is IScriptyContractStorage {
     // =============================================================
 
     /**
-     * @notice Get the full script from ethfs's FileStore contract
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
+     * @notice Get the full file from ethfs's FileStore contract
+     * @param name - Name given to the file. Eg: threejs.min.js_r148
      * @param data - Arbitrary data. Not used by this contract.
-     * @return script - Full script from merged chunks
+     * @return script - Full file from merged chunks
      */
     function getContent(
         string calldata name,

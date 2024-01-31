@@ -15,8 +15,8 @@ const delay = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function getContracts() {
-    const ethfsFileStorageAddress = deployedContracts.addressFor("localhost", "ETHFSV2FileStorage")
+async function getContracts(networkName) {
+    const ethfsFileStorageAddress = deployedContracts.addressFor(networkName, "ETHFSV2FileStorage")
     const ethfsFileStorageContract = await ethers.getContractAt(
         "ETHFSV2FileStorage",
         ethfsFileStorageAddress
@@ -24,14 +24,14 @@ async function getContracts() {
     console.log("ETHFSV2FileStorage is already deployed at", ethfsFileStorageAddress);
 
 
-    const scriptyStorageAddress = deployedContracts.addressFor("localhost", "ScriptyStorageV2")
+    const scriptyStorageAddress = deployedContracts.addressFor(networkName, "ScriptyStorageV2")
     const scriptyStorageContract = await ethers.getContractAt(
         "ScriptyStorageV2",
         scriptyStorageAddress
     );
     console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
 
-    const scriptyBuilderAddress = deployedContracts.addressFor("localhost", "ScriptyBuilderV2")
+    const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
     const scriptyBuilderContract = await ethers.getContractAt(
         "ScriptyBuilderV2",
         scriptyBuilderAddress
@@ -85,7 +85,7 @@ async function main() {
         ethfsFileStorageContract,
         scriptyStorageContract,
         scriptyBuilderContract
-    } = await getContracts()
+    } = await getContracts(hre.network.name)
 
     await storeContent(scriptyStorageContract, "scriptyBase", "../../baseScripts/dist/scriptyBase.js");
     await storeContent(scriptyStorageContract, "pointsAndLines", "scripts/pointsAndLines.js");

@@ -10,6 +10,10 @@ pragma solidity ^0.8.17;
 // ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░░░░╚═╝░░░░░░╚═╝░░░ //
 ///////////////////////////////////////////////////////////
 
+/**
+  USED ONLY FOR TESTS
+*/
+
 import {HTMLRequest} from "../scripty/core/ScriptyCore.sol";
 import {IScriptyBuilderV2} from "../scripty/interfaces/IScriptyBuilderV2.sol";
 
