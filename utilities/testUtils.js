@@ -76,6 +76,13 @@ exports.addTagWithContent = (tags, tagType, isURLSafe) => {
     return tags
 }
 
+exports.createNonContractHTMLTag = (tagOpen, tagContent, tagClose, tagType) => {
+    let tagOpenBytes = utilities.stringToBytes(tagOpen)
+    let tagCloseBytes = utilities.stringToBytes(tagClose)
+    let tagContentBytes = utilities.stringToBytes(tagContent)
+    return ["", utilities.emptyAddress, 0, tagType, tagOpenBytes, tagCloseBytes, tagContentBytes]
+}
+
 exports.getHtmlRequest = (headRequests, scriptRequests) => {
     return [
         headRequests,

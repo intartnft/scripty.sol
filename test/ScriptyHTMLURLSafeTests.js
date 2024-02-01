@@ -15,15 +15,15 @@ describe("ScriptyHTMLURLSafe Tests", function () {
         return { scriptyStorageContract, scriptyBuilderContract }
     }
 
-    async function assertHTML(title, contract, headRequests, scriptRequests) {
+    async function assertHTML(title, contract, headRequests, scriptRequests, recordMode = false) {
         const htmlRequest = testUtilities.getHtmlRequest(headRequests, scriptRequests)
 
         const htmlRaw = await contract.getHTMLURLSafe(htmlRequest)
         const htmlRawString = utilities.bytesToString(htmlRaw)
         const htmlDecodedString = utilities.parseDoubleURLEncodedDataURI(htmlRawString)
         
-        testUtilities.expectHTMLCompare(title + "_decoded", htmlDecodedString, expectedResultsPath)
-        testUtilities.expectHTMLCompare(title, htmlRawString, expectedResultsPath)
+        testUtilities.expectHTMLCompare(title + "_decoded", htmlDecodedString, expectedResultsPath, recordMode)
+        testUtilities.expectHTMLCompare(title, htmlRawString, expectedResultsPath, recordMode)
     }
 
     describe("Get URL Safe HTML Tests - Zero tags", async function () {
@@ -173,6 +173,15 @@ describe("ScriptyHTMLURLSafe Tests", function () {
 
             testUtilities.addTagWithContent(headTags, 0, false)
             testUtilities.addTagWithContent(bodyTags, 0, true)
+
+            await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headTags, bodyTags);
+        });
+
+        it("Tags with empty content - body tagType = useTagOpenAndClose", async function () {
+            const { scriptyStorageContract, scriptyBuilderContract } = await deploy()
+
+            let headTags = [testUtilities.createNonContractHTMLTag("tagOpen", "", "tagClose", 0)]
+            let bodyTags = [testUtilities.createNonContractHTMLTag("tagOpen", "", "tagClose", 0)]
 
             await assertHTML(this.test.fullTitle(), scriptyBuilderContract, headTags, bodyTags);
         });

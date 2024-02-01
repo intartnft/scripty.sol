@@ -23,8 +23,7 @@
     },
     "name": "scripty.sol",
     "description": "A generic HTML file builder and data storage solution for on-chain composable generative art and more.",
-    "version": "2.1.0",
-    "main": "hardhat.config.js",
+    "version": "2.1.1",
     "directories": {
         "example": "examples",
         "test": "test"
