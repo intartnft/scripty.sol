@@ -139,10 +139,10 @@ string memory htmlString = IScriptyBuilderV2(
 
 Both NFTs assemble PNG compressed base 64 encoded `three.js` with an uncompressed demo scene. First NFT creates some 3D cubes. Second NFT gets the first NFT scene on-chain and adds spheres.
 
-#### [p5js from EthFS FileStore V2](https://testnets.opensea.io/assets/sepolia/0x1901C748eE74E6256d58A927f90557C34Dc16181/0)
+#### [p5js from EthFS FileStore V2](https://testnets.opensea.io/assets/sepolia/0x652d9938C49b1a08B32dE62420Bd7c0f80aDfF17/0)
 Assembles base64 encoded `p5.js` that's stored in ethfs's FileStore contract with a demo scene. Metadata and animation URL are both base64 encoded.
 
-#### [p5js from EthFS FileStore V2 - URL Safe](https://testnets.opensea.io/assets/sepolia/0xEbadb9173dCb30658808f770Cb0e281A5864F5Ed/0)
+#### [p5js from EthFS FileStore V2 - URL Safe](https://testnets.opensea.io/assets/sepolia/0xda6ca4a69b775fd37f6a2b418065dc68de28cf15/0)
 Assembles base64 encoded `p5.js` that's stored in ethfs's FileStore contract with a demo scene. Metadata and animation URL are both URL encoded.
 
 #### [Random Shapes](https://testnets.opensea.io/assets/sepolia/0xe40e09F70197d4C01bAa250cbE2d0e28d4E40251/0)
