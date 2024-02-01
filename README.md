@@ -1,15 +1,16 @@
   
 # scripty.sol
 
-**scripty.sol** is a gas-efficient HTML builder tuned for stitching large JS based <scripts> together.
+**scripty.sol** is a gas-efficient HTML builder tuned for stitching large JS based <scripts> tags together.
+
 ![scripty.sol](https://3939295614-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FH5xTgJNBs6I0hLj9RCqL%2Fuploads%2FZBqLDIPkDrohu45QVMiV%2Fheader.png?alt=media)
 
 ### [Documentation](https://int-art.gitbook.io/scripty.sol-v2/)
-**scripty.sol** allows you to build HTML files that embed JS that are stored on-chain. Some benefits of using scripty.sol:
+**scripty.sol** allows you to build HTML files directly on-chain with minimal gas cost. Some benefits of using scripty.sol:
 - Gas efficient. It utilises `DynamicBuffer` to save huge amount of gas while assembling scripts together.
-- You can use already deployed storage solutions.
+- scripty.sol is storage agnostic. You can use any on-chain storage solutions available.
 - You can build modular JS based HTML files directly on-chain.
-- Supports custom HTML tags and inline contents.
+- Supports custom HTML tags and inline content.
 
 ### Platforms that use scripty.sol
 - [Art Blocks](https://www.artblocks.io)
@@ -113,7 +114,7 @@ string memory htmlString = IScriptyBuilderV2(
 -  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://sepolia.etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
 -  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://sepolia.etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
 
-### Base contracts
+### Base
 -  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://basescan.org/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
 -  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://basescan.org/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
 -  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://basescan.org/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
