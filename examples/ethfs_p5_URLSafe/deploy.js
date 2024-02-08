@@ -14,66 +14,36 @@ const delay = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function deployOrGetContracts(networkName, isForkedNetwork) {
-	// If this script runs on localhost network, deploy all the contracts
-	// Otherwise, use already deployed contracts
-	if (networkName == "localhost" && !isForkedNetwork) {
-		// ETHFSFileStorage depends on ethfs's FileStore. We deploy ETHFSFileStorage on localhost
-		// by passing ethfs's FileStore mainnet address.
-		const ethfsFileStorageAddress = deployedContracts.addressFor("ethereum", "ethfs_FileStore")
-		const ethfsFileStorageContract = await (await ethers.getContractFactory("ETHFSFileStorage")).deploy(
-			ethfsFileStorageAddress
-		)
-		await ethfsFileStorageContract.deployed()
+async function getContracts(networkName) {
+    const ethfsFileStorageAddress = deployedContracts.addressFor(networkName, "ETHFSV2FileStorage")
+    const ethfsFileStorageContract = await ethers.getContractAt(
+        "ETHFSV2FileStorage",
+        ethfsFileStorageAddress
+    );
+    console.log("ETHFSV2FileStorage is already deployed at", ethfsFileStorageAddress);
 
-		const contentStoreContract = await (await ethers.getContractFactory("ContentStore")).deploy()
-		await contentStoreContract.deployed()
 
-		const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyStorage")).deploy(
-			contentStoreContract.address
-		)
-		await scriptyStorageContract.deployed()
-		console.log("ScriptyStorage deployed");
+    const scriptyStorageAddress = deployedContracts.addressFor(networkName, "ScriptyStorageV2")
+    const scriptyStorageContract = await ethers.getContractAt(
+        "ScriptyStorageV2",
+        scriptyStorageAddress
+    );
+    console.log("ScriptyStorageV2 is already deployed at", scriptyStorageAddress);
 
-		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
-		await scriptyBuilderContract.deployed()
-		console.log("ScriptyBuilderV2 deployed");
+    const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
+    const scriptyBuilderContract = await ethers.getContractAt(
+        "ScriptyBuilderV2",
+        scriptyBuilderAddress
+    );
+    console.log("ScriptyBuilderV2 is already deployed at", scriptyBuilderAddress);
 
-		return { ethfsFileStorageContract, scriptyStorageContract, scriptyBuilderContract }
-	} else {
-		if (networkName == "localhost") {
-			networkName = "mainnet"
-		}
-		const ethfsFileStorageAddress = deployedContracts.addressFor(networkName, "ETHFSFileStorage")
-		const ethfsFileStorageContract = await ethers.getContractAt(
-			"ETHFSFileStorage",
-			ethfsFileStorageAddress
-		);
-		console.log("ETHFSFileStorage is already deployed at", ethfsFileStorageAddress);
-
-		const scriptyStorageAddress = deployedContracts.addressFor(networkName, "ScriptyStorage")
-		const scriptyStorageContract = await ethers.getContractAt(
-			"ScriptyStorage",
-			scriptyStorageAddress
-		);
-		console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
-
-		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
-		const scriptyBuilderContract = await ethers.getContractAt(
-			"ScriptyBuilderV2",
-			scriptyBuilderAddress
-		);
-		console.log("ScriptyBuilderV2 is already deployed at", scriptyBuilderAddress);
-
-		return { ethfsFileStorageContract, scriptyStorageContract, scriptyBuilderContract }
-	}
+    return { ethfsFileStorageContract, scriptyStorageContract, scriptyBuilderContract }
 }
 
-async function storeScript(storageContract, name, filePath) {
-
+async function storeContent(storageContract, name, filePath) {
 	// Check if script is already stored
-	const storedScript = await storageContract.scripts(name)
-	if (storedScript.size > 0) {
+	const storedContent = await storageContract.contents(name)
+	if (storedContent.size > 0) {
 		console.log(`${name} is already stored`);
 		return
 	}
@@ -82,13 +52,15 @@ async function storeScript(storageContract, name, filePath) {
 	const script = utilities.readFile(path.join(__dirname, filePath))
 	const scriptChunks = utilities.chunkSubstr(script, 24575)
 
-	// First create the script in the storage contract
-	await waitIfNeeded(await storageContract.createScript(name, utilities.stringToBytes(name)))
+	if (storedContent.owner == utilities.emptyAddress) {
+		// First create the script in the storage contract
+		await waitIfNeeded(await storageContract.createContent(name, utilities.stringToBytes(name)))
+	}
 
 	// Store each chunk
 	// [WARNING]: With big files this can be very costly
 	for (let i = 0; i < scriptChunks.length; i++) {
-		await waitIfNeeded(await storageContract.addChunkToScript(name, utilities.stringToBytes(scriptChunks[i])))
+		await waitIfNeeded(await storageContract.addChunkToContent(name, utilities.stringToBytes(scriptChunks[i])))
 		console.log(`${name} chunk #`, i, "/", scriptChunks.length - 1, "chunk length: ", scriptChunks[i].length);
 	}
 	console.log(`${name} is stored`);
@@ -112,10 +84,10 @@ async function main() {
 		ethfsFileStorageContract,
 		scriptyStorageContract,
 		scriptyBuilderContract
-	} = await deployOrGetContracts(hre.network.name)
+	} = await getContracts(hre.network.name)
 
-	await storeScript(scriptyStorageContract, "scriptyBase", "../../baseScripts/dist/scriptyBase.js");
-	await storeScript(scriptyStorageContract, "pointsAndLines", "scripts/pointsAndLines.js");
+	await storeContent(scriptyStorageContract, "scriptyBase", "../../baseScripts/dist/scriptyBase.js");
+	await storeContent(scriptyStorageContract, "pointsAndLines", "scripts/pointsAndLines.js");
 
 	const nftContract = await (await ethers.getContractFactory("EthFS_P5_URLSafe")).deploy(
 		ethfsFileStorageContract.address,
@@ -134,8 +106,8 @@ async function main() {
 	utilities.writeFile(path.join(__dirname, "output.html"), animationURL)
 	utilities.writeFile(path.join(__dirname, "metadata.json"), tokenURIDecoded)
 
-	// Verify contracts if network is goerli
-	if (hre.network.name == "goerli") {
+	// Verify contracts if network is ethereum_sepolia
+	if (hre.network.name == "ethereum_sepolia") {
 		console.log("Waiting a little bytecode index on Etherscan");
     	await delay(30000)
 		

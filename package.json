@@ -7,22 +7,23 @@
         "test": "npx hardhat test",
         "examples": "sh ./runAllExamples.sh",
         "examples-localhost": "npm run examples --network=localhost",
-        "examples-goerli": "npm run examples --network=goerli"
+        "examples-sepolia": "npm run examples --network=ethereum_sepolia"
     },
-    "dependencies": {},
     "devDependencies": {
         "@nomicfoundation/hardhat-toolbox": "^1.0.2",
-        "@nomiclabs/hardhat-etherscan": "^3.1.2",
+        "@nomicfoundation/hardhat-verify": "^2.0.3",
         "@nomiclabs/hardhat-solhint": "^2.0.1",
         "@openzeppelin/contracts": "^4.7.2",
-        "terser": "^5.16.1",
         "dotenv": "^16.0.2",
-        "solady": "0.0.62"
+        "hardhat": "^2.19.4",
+        "hardhat-abi-exporter": "^2.10.1",
+        "hardhat-ignore-warnings": "^0.2.9",
+        "solady": "0.0.166",
+        "terser": "^5.16.1"
     },
     "name": "scripty.sol",
     "description": "A generic HTML file builder and data storage solution for on-chain composable generative art and more.",
-    "version": "2.0.0",
-    "main": "hardhat.config.js",
+    "version": "2.1.1",
     "directories": {
         "example": "examples",
         "test": "test"
@@ -46,9 +47,10 @@
         "js",
         "html5",
         "canvas",
-        "threejs"
+        "threejs",
+        "onchain"
     ],
-    "author": "@0xthedude + @xtremetom",
+    "author": "@0xthedude, @xtremetom",
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/intartnft/scripty/issues"

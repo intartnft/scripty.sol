@@ -14,8 +14,7 @@ pragma solidity ^0.8.17;
 
 import {HTMLRequest, HTMLTagType, HTMLTag} from "./ScriptyStructs.sol";
 import {DynamicBuffer} from "./../utils/DynamicBuffer.sol";
-import {IScriptyStorage} from "./../interfaces/IScriptyStorage.sol";
-import {IContractScript} from "./../interfaces/IContractScript.sol";
+import {IScriptyContractStorage} from "./../interfaces/IScriptyContractStorage.sol";
 
 contract ScriptyCore {
     using DynamicBuffer for bytes;
@@ -223,24 +222,24 @@ contract ScriptyCore {
     /**
      * @notice Grabs requested tag content from storage
      * @dev
-     *      If given HTMLTag contains non empty tagContent
-     *      this method will return tagContent. Otherwise, 
-     *      method will fetch it from the given storage 
-     *      contract
+     *      If given HTMLTag contains non empty contractAddress
+     *      this method will fetch the content from given storage
+     *      contract. Otherwise, it will return the tagContent
+     *      from the given htmlTag.
      *
      * @param htmlTag - HTMLTag
      */
     function fetchTagContent(
         HTMLTag memory htmlTag
     ) public view returns (bytes memory) {
-        if (htmlTag.tagContent.length > 0) {
-            return htmlTag.tagContent;
+        if (htmlTag.contractAddress != address(0)) {
+            return
+                IScriptyContractStorage(htmlTag.contractAddress).getContent(
+                    htmlTag.name,
+                    htmlTag.contractData
+                );
         }
-        return
-            IContractScript(htmlTag.contractAddress).getScript(
-                htmlTag.name,
-                htmlTag.contractData
-            );
+        return htmlTag.tagContent;
     }
 
     // =============================================================
@@ -320,21 +319,17 @@ contract ScriptyCore {
      * @notice Append tags to the html buffer for tags
      * @param htmlFile - bytes buffer
      * @param htmlTags - Tags being added to buffer
-     * @param encodeTagContent - Bool to handle tag content encoding
+     * @param base64EncodeTagContent - Bool to handle tag content encoding
      */
     function _appendHTMLTags(
         bytes memory htmlFile,
         HTMLTag[] memory htmlTags,
-        bool encodeTagContent
+        bool base64EncodeTagContent
     ) internal pure {
         uint256 i;
         unchecked {
             do {
-                _appendHTMLTag(
-                    htmlFile,
-                    htmlTags[i],
-                    encodeTagContent
-                );
+                _appendHTMLTag(htmlFile, htmlTags[i], base64EncodeTagContent);
             } while (++i < htmlTags.length);
         }
     }
@@ -343,15 +338,15 @@ contract ScriptyCore {
      * @notice Append tag to the html buffer
      * @param htmlFile - bytes buffer
      * @param htmlTag - Request being added to buffer
-     * @param encodeTagContent - Bool to handle tag content encoding
+     * @param base64EncodeTagContent - Bool to handle tag content encoding
      */
     function _appendHTMLTag(
         bytes memory htmlFile,
         HTMLTag memory htmlTag,
-        bool encodeTagContent
+        bool base64EncodeTagContent
     ) internal pure {
         htmlFile.appendSafe(htmlTag.tagOpen);
-        if (encodeTagContent) {
+        if (base64EncodeTagContent) {
             htmlFile.appendSafeBase64(htmlTag.tagContent, false, false);
         } else {
             htmlFile.appendSafe(htmlTag.tagContent);

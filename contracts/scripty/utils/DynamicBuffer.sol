@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2021 the ethier authors (github.com/divergencetech/ethier)
 
-pragma solidity >=0.8.0;
+pragma solidity ^0.8.22;
 
 /// @title DynamicBuffer
 /// @author David Huber (@cxkoda) and Simon Fremaux (@dievardump). See also

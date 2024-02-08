@@ -1,12 +1,7 @@
 [
   {
     "inputs": [],
-    "name": "NotScriptOwner",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ScriptExists",
+    "name": "ContentExists",
     "type": "error"
   },
   {
@@ -17,7 +12,12 @@
         "type": "string"
       }
     ],
-    "name": "ScriptIsFrozen",
+    "name": "ContentIsFrozen",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotContentOwner",
     "type": "error"
   },
   {
@@ -55,7 +55,7 @@
         "type": "bytes"
       }
     ],
-    "name": "ScriptCreated",
+    "name": "ContentCreated",
     "type": "event"
   },
   {
@@ -74,7 +74,7 @@
         "type": "bytes"
       }
     ],
-    "name": "ScriptDetailsUpdated",
+    "name": "ContentDetailsUpdated",
     "type": "event"
   },
   {
@@ -87,7 +87,7 @@
         "type": "string"
       }
     ],
-    "name": "ScriptFrozen",
+    "name": "ContentFrozen",
     "type": "event"
   },
   {
@@ -100,13 +100,13 @@
         "type": "string"
       },
       {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "isVerified",
-        "type": "bool"
+        "indexed": true,
+        "internalType": "string",
+        "name": "fileName",
+        "type": "string"
       }
     ],
-    "name": "ScriptVerificationUpdated",
+    "name": "ContentSubmittedToEthFSFileStore",
     "type": "event"
   },
   {
@@ -122,7 +122,7 @@
         "type": "bytes"
       }
     ],
-    "name": "addChunkToScript",
+    "name": "addChunkToContent",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -140,7 +140,7 @@
         "type": "bytes"
       }
     ],
-    "name": "createScript",
+    "name": "createContent",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -154,11 +154,11 @@
       },
       {
         "internalType": "bytes",
-        "name": "details",
+        "name": "metadata",
         "type": "bytes"
       }
     ],
-    "name": "updateDetails",
+    "name": "submitToEthFSFileStore",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -171,12 +171,17 @@
         "type": "string"
       },
       {
-        "internalType": "bool",
-        "name": "isVerified",
-        "type": "bool"
+        "internalType": "string",
+        "name": "fileName",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes",
+        "name": "metadata",
+        "type": "bytes"
       }
     ],
-    "name": "updateScriptVerification",
+    "name": "submitToEthFSFileStoreWithFileName",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

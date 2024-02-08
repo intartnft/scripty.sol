@@ -1,7 +1,7 @@
 [
   {
     "inputs": [],
-    "name": "EmptyFile",
+    "name": "FileEmpty",
     "type": "error"
   },
   {
@@ -27,6 +27,44 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
+      }
+    ],
+    "name": "InvalidPointer",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint32",
+        "name": "start",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "end",
+        "type": "uint32"
+      }
+    ],
+    "name": "SliceEmpty",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "Deployed",
+    "type": "event"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -37,9 +75,9 @@
       },
       {
         "indexed": true,
-        "internalType": "bytes32",
-        "name": "checksum",
-        "type": "bytes32"
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -64,44 +102,6 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "string",
-        "name": "indexedFilename",
-        "type": "string"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "checksum",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "filename",
-        "type": "string"
-      }
-    ],
-    "name": "FileDeleted",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "contentStore",
-    "outputs": [
-      {
-        "internalType": "contract IContentStore",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "string",
@@ -109,13 +109,18 @@
         "type": "string"
       },
       {
-        "internalType": "bytes32[]",
-        "name": "checksums",
-        "type": "bytes32[]"
+        "internalType": "string",
+        "name": "contents",
+        "type": "string"
       }
     ],
     "name": "createFile",
     "outputs": [
+      {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
+      },
       {
         "components": [
           {
@@ -126,18 +131,23 @@
           {
             "components": [
               {
-                "internalType": "bytes32",
-                "name": "checksum",
-                "type": "bytes32"
-              },
-              {
                 "internalType": "address",
                 "name": "pointer",
                 "type": "address"
+              },
+              {
+                "internalType": "uint32",
+                "name": "start",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "end",
+                "type": "uint32"
               }
             ],
-            "internalType": "struct Content[]",
-            "name": "contents",
+            "internalType": "struct BytecodeSlice[]",
+            "name": "slices",
             "type": "tuple[]"
           }
         ],
@@ -157,19 +167,24 @@
         "type": "string"
       },
       {
-        "internalType": "bytes32[]",
-        "name": "checksums",
-        "type": "bytes32[]"
+        "internalType": "string",
+        "name": "contents",
+        "type": "string"
       },
       {
         "internalType": "bytes",
-        "name": "extraData",
+        "name": "metadata",
         "type": "bytes"
       }
     ],
     "name": "createFile",
     "outputs": [
       {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
+      },
+      {
         "components": [
           {
             "internalType": "uint256",
@@ -179,18 +194,23 @@
           {
             "components": [
               {
-                "internalType": "bytes32",
-                "name": "checksum",
-                "type": "bytes32"
-              },
-              {
                 "internalType": "address",
                 "name": "pointer",
                 "type": "address"
+              },
+              {
+                "internalType": "uint32",
+                "name": "start",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "end",
+                "type": "uint32"
               }
             ],
-            "internalType": "struct Content[]",
-            "name": "contents",
+            "internalType": "struct BytecodeSlice[]",
+            "name": "slices",
             "type": "tuple[]"
           }
         ],
@@ -208,11 +228,408 @@
         "internalType": "string",
         "name": "filename",
         "type": "string"
+      },
+      {
+        "internalType": "string[]",
+        "name": "chunks",
+        "type": "string[]"
+      },
+      {
+        "internalType": "bytes",
+        "name": "metadata",
+        "type": "bytes"
       }
     ],
-    "name": "deleteFile",
-    "outputs": [],
+    "name": "createFileFromChunks",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "size",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "pointer",
+                "type": "address"
+              },
+              {
+                "internalType": "uint32",
+                "name": "start",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "end",
+                "type": "uint32"
+              }
+            ],
+            "internalType": "struct BytecodeSlice[]",
+            "name": "slices",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct File",
+        "name": "file",
+        "type": "tuple"
+      }
+    ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "filename",
+        "type": "string"
+      },
+      {
+        "internalType": "string[]",
+        "name": "chunks",
+        "type": "string[]"
+      }
+    ],
+    "name": "createFileFromChunks",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "size",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "pointer",
+                "type": "address"
+              },
+              {
+                "internalType": "uint32",
+                "name": "start",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "end",
+                "type": "uint32"
+              }
+            ],
+            "internalType": "struct BytecodeSlice[]",
+            "name": "slices",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct File",
+        "name": "file",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "filename",
+        "type": "string"
+      },
+      {
+        "internalType": "address[]",
+        "name": "pointers",
+        "type": "address[]"
+      },
+      {
+        "internalType": "bytes",
+        "name": "metadata",
+        "type": "bytes"
+      }
+    ],
+    "name": "createFileFromPointers",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "size",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "pointer",
+                "type": "address"
+              },
+              {
+                "internalType": "uint32",
+                "name": "start",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "end",
+                "type": "uint32"
+              }
+            ],
+            "internalType": "struct BytecodeSlice[]",
+            "name": "slices",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct File",
+        "name": "file",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "filename",
+        "type": "string"
+      },
+      {
+        "internalType": "address[]",
+        "name": "pointers",
+        "type": "address[]"
+      }
+    ],
+    "name": "createFileFromPointers",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "size",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "pointer",
+                "type": "address"
+              },
+              {
+                "internalType": "uint32",
+                "name": "start",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "end",
+                "type": "uint32"
+              }
+            ],
+            "internalType": "struct BytecodeSlice[]",
+            "name": "slices",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct File",
+        "name": "file",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "filename",
+        "type": "string"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "pointer",
+            "type": "address"
+          },
+          {
+            "internalType": "uint32",
+            "name": "start",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "end",
+            "type": "uint32"
+          }
+        ],
+        "internalType": "struct BytecodeSlice[]",
+        "name": "slices",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "bytes",
+        "name": "metadata",
+        "type": "bytes"
+      }
+    ],
+    "name": "createFileFromSlices",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "size",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "pointer",
+                "type": "address"
+              },
+              {
+                "internalType": "uint32",
+                "name": "start",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "end",
+                "type": "uint32"
+              }
+            ],
+            "internalType": "struct BytecodeSlice[]",
+            "name": "slices",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct File",
+        "name": "file",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "filename",
+        "type": "string"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "pointer",
+            "type": "address"
+          },
+          {
+            "internalType": "uint32",
+            "name": "start",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "end",
+            "type": "uint32"
+          }
+        ],
+        "internalType": "struct BytecodeSlice[]",
+        "name": "slices",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "createFileFromSlices",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "size",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "pointer",
+                "type": "address"
+              },
+              {
+                "internalType": "uint32",
+                "name": "start",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "end",
+                "type": "uint32"
+              }
+            ],
+            "internalType": "struct BytecodeSlice[]",
+            "name": "slices",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct File",
+        "name": "file",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "deployer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -245,28 +662,9 @@
     "name": "files",
     "outputs": [
       {
-        "internalType": "bytes32",
-        "name": "checksum",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "filename",
-        "type": "string"
-      }
-    ],
-    "name": "getChecksum",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "checksum",
-        "type": "bytes32"
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -292,24 +690,48 @@
           {
             "components": [
               {
-                "internalType": "bytes32",
-                "name": "checksum",
-                "type": "bytes32"
-              },
-              {
                 "internalType": "address",
                 "name": "pointer",
                 "type": "address"
+              },
+              {
+                "internalType": "uint32",
+                "name": "start",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "end",
+                "type": "uint32"
               }
             ],
-            "internalType": "struct Content[]",
-            "name": "contents",
+            "internalType": "struct BytecodeSlice[]",
+            "name": "slices",
             "type": "tuple[]"
           }
         ],
         "internalType": "struct File",
         "name": "file",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "filename",
+        "type": "string"
+      }
+    ],
+    "name": "getPointer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "pointer",
+        "type": "address"
       }
     ],
     "stateMutability": "view",

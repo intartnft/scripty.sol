@@ -1,18 +1,29 @@
 const { expect } = require("chai");
 const utilities = require("../utilities/utilities")
-const {byteLength, bytesToString} = require("../utilities/utilities");
+const { byteLength, bytesToString } = require("../utilities/utilities");
+
+const SAFE_SINGLETON_FACTORY = "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7";
+const SAFE_SINGLETON_FACTORY_BYTECODE = "0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3";
 
 describe("ScriptyStorage Tests", function () {
     async function deploy() {
-        const contentStore = await (await ethers.getContractFactory("ContentStore")).deploy()
-        await contentStore.deployed()
 
-        const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyStorage")).deploy(
-            contentStore.address
+        await network.provider.send("hardhat_setCode", [
+            SAFE_SINGLETON_FACTORY,
+            SAFE_SINGLETON_FACTORY_BYTECODE,
+        ]);
+
+        const ethfsFileStoreContract = await (await ethers.getContractFactory("FileStore")).deploy(
+            SAFE_SINGLETON_FACTORY
+        )
+        await ethfsFileStoreContract.deployed()
+
+        const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyStorageV2")).deploy(
+            ethfsFileStoreContract.address
         )
         await scriptyStorageContract.deployed()
 
-        return { scriptyStorageContract }
+        return { scriptyStorageContract, ethfsFileStoreContract }
     }
 
     let chunk = "chunk"
@@ -23,52 +34,52 @@ describe("ScriptyStorage Tests", function () {
         // reset
         finalChunkString = "";
 
-        for(let i = 0; i < chunkCount; i++) {
+        for (let i = 0; i < chunkCount; i++) {
             const chunkData = utilities.stringToBytes(chunk + i)
             finalChunkString += `${chunk}${i}`
 
-            await expect(scriptyStorageContract.addChunkToScript("script", chunkData))
+            await expect(scriptyStorageContract.addChunkToContent("content", chunkData))
                 .to.emit(scriptyStorageContract, "ChunkStored")
-                .withArgs("script", bytesToString(chunkData).length);
+                .withArgs("content", bytesToString(chunkData).length);
         }
 
         // Test the final output is as expected
-        const storedScript = await scriptyStorageContract.getScript("script", utilities.emptyBytes())
-        const storedScriptString = utilities.bytesToString(storedScript)
-        expect(storedScriptString).to.equal(finalChunkString)
+        const storedContent = await scriptyStorageContract.getContent("content", utilities.emptyBytes())
+        const storedContentString = utilities.bytesToString(storedContent)
+        expect(storedContentString).to.equal(finalChunkString)
     }
 
     let owner, addr1;
     let scriptyStorageContract;
+    let ethfsFileStoreContract;
 
     const details = utilities.stringToBytes("details");
     const newDetails = utilities.stringToBytes("details2");
 
-    beforeEach( async() => {
+    beforeEach(async () => {
         [owner, addr1] = await ethers.getSigners();
-        const obj = await deploy()
-        scriptyStorageContract = obj.scriptyStorageContract;
+        ({scriptyStorageContract, ethfsFileStoreContract} = await deploy());
     });
 
-    describe("createScript()", async function () {
-        it("Create Script", async function () {
-            await expect(scriptyStorageContract.createScript("script", details))
-                .to.emit(scriptyStorageContract, "ScriptCreated")
-                .withArgs("script", details);
+    describe("createContent()", async function () {
+        it("Create Content", async function () {
+            await expect(scriptyStorageContract.createContent("content", details))
+                .to.emit(scriptyStorageContract, "ContentCreated")
+                .withArgs("content", details);
         });
 
-        it("Fail to create script with duplicate name", async function () {
-            await scriptyStorageContract.createScript("script", details)
+        it("Fail to create content with duplicate name", async function () {
+            await scriptyStorageContract.createContent("content", details)
             await expect(
-                scriptyStorageContract.connect(addr1).createScript("script", details)
-            ).to.be.revertedWithCustomError(scriptyStorageContract,"ScriptExists");
+                scriptyStorageContract.connect(addr1).createContent("content", details)
+            ).to.be.revertedWithCustomError(scriptyStorageContract, "ContentExists");
         });
     });
 
-    describe("addChunkToScript()", async function () {
+    describe("addChunkToContent()", async function () {
 
-        beforeEach( async() => {
-            await scriptyStorageContract.createScript("script", details)
+        beforeEach(async () => {
+            await scriptyStorageContract.createContent("content", details)
         });
 
         it("Add chunk", async function () {
@@ -81,106 +92,124 @@ describe("ScriptyStorage Tests", function () {
 
         it("Fail to add chunk as non-owner", async function () {
             await expect(
-                scriptyStorageContract.connect(addr1).addChunkToScript("script", chunkData)
-            ).to.be.revertedWithCustomError(scriptyStorageContract,"NotScriptOwner");
+                scriptyStorageContract.connect(addr1).addChunkToContent("content", chunkData)
+            ).to.be.revertedWithCustomError(scriptyStorageContract, "NotContentOwner");
         });
 
         it("Fail to add chunk as owner when frozen", async function () {
-            await scriptyStorageContract.freezeScript("script");
+            await scriptyStorageContract.freezeContent("content");
             await expect(
-                scriptyStorageContract.addChunkToScript("script", chunkData)
-            ).to.be.revertedWithCustomError(scriptyStorageContract,"ScriptIsFrozen");
+                scriptyStorageContract.addChunkToContent("content", chunkData)
+            ).to.be.revertedWithCustomError(scriptyStorageContract, "ContentIsFrozen");
         });
     });
 
-    describe("updateDetails()", async function () {
+    describe("submitToEthFSFileStore()", async function () {
 
-        beforeEach( async() => {
-            await scriptyStorageContract.createScript("script", utilities.stringToBytes("details"))
+        beforeEach(async () => {
+            await scriptyStorageContract.createContent("content", utilities.stringToBytes("details"))
         });
 
         it("Update details as owner", async function () {
-            await expect(scriptyStorageContract.updateDetails("script", newDetails))
-                .to.emit(scriptyStorageContract, "ScriptDetailsUpdated")
-                .withArgs("script", newDetails);
+            await expect(scriptyStorageContract.updateDetails("content", newDetails))
+                .to.emit(scriptyStorageContract, "ContentDetailsUpdated")
+                .withArgs("content", newDetails);
         });
 
         it("Fail to update details as non-owner", async function () {
             await expect(
-                scriptyStorageContract.connect(addr1).updateDetails("script", newDetails)
-            ).to.be.revertedWithCustomError(scriptyStorageContract,"NotScriptOwner");
+                scriptyStorageContract.connect(addr1).updateDetails("content", newDetails)
+            ).to.be.revertedWithCustomError(scriptyStorageContract, "NotContentOwner");
         });
 
         it("Fail to update details as owner when frozen", async function () {
-            await scriptyStorageContract.freezeScript("script");
+            await scriptyStorageContract.freezeContent("content");
             await expect(
-                scriptyStorageContract.updateDetails("script", newDetails)
-            ).to.be.revertedWithCustomError(scriptyStorageContract,"ScriptIsFrozen");
+                scriptyStorageContract.updateDetails("content", newDetails)
+            ).to.be.revertedWithCustomError(scriptyStorageContract, "ContentIsFrozen");
         });
     });
 
-    describe("updateScriptVerification()", async function () {
+    describe("freezeContent()", async function () {
 
-        beforeEach( async() => {
-            await scriptyStorageContract.createScript("script", utilities.stringToBytes("details"))
+        beforeEach(async () => {
+            await scriptyStorageContract.createContent("content", utilities.stringToBytes("details"))
         });
 
-        it("Set verification to true as owner", async function () {
-            await expect(scriptyStorageContract.updateScriptVerification("script", true))
-                .to.emit(scriptyStorageContract, "ScriptVerificationUpdated")
-                .withArgs("script", true);
+        it("Freeze content as owner", async function () {
+            await expect(scriptyStorageContract.freezeContent("content"))
+                .to.emit(scriptyStorageContract, "ContentFrozen")
+                .withArgs("content");
         });
 
-        it("Fail to set verification to true as non-owner", async function () {
+        it("Fail to freeze content as non-owner", async function () {
             await expect(
-                scriptyStorageContract.connect(addr1).updateScriptVerification("script", true)
-            ).to.be.revertedWithCustomError(scriptyStorageContract,"NotScriptOwner");
+                scriptyStorageContract.connect(addr1).freezeContent("content")
+            ).to.be.revertedWithCustomError(scriptyStorageContract, "NotContentOwner");
         });
 
-        it("Fail to set verification to true as owner when frozen", async function () {
-            await scriptyStorageContract.freezeScript("script");
+        it("Fail to freeze content when frozen", async function () {
+            await scriptyStorageContract.freezeContent("content");
             await expect(
-                scriptyStorageContract.updateScriptVerification("script", true)
-            ).to.be.revertedWithCustomError(scriptyStorageContract,"ScriptIsFrozen");
+                scriptyStorageContract.freezeContent("content")
+            ).to.be.revertedWithCustomError(scriptyStorageContract, "ContentIsFrozen");
         });
     });
 
-    describe("freezeScript()", async function () {
+    describe("getContentChunkPointers()", async function () {
 
-        beforeEach( async() => {
-            await scriptyStorageContract.createScript("script", utilities.stringToBytes("details"))
+        beforeEach(async () => {
+            await scriptyStorageContract.createContent("content", details)
         });
 
-        it("Freeze script as owner", async function () {
-            await expect(scriptyStorageContract.freezeScript("script"))
-                .to.emit(scriptyStorageContract, "ScriptFrozen")
-                .withArgs("script");
-        });
-
-        it("Fail to freeze script as non-owner", async function () {
-            await expect(
-                scriptyStorageContract.connect(addr1).freezeScript("script")
-            ).to.be.revertedWithCustomError(scriptyStorageContract,"NotScriptOwner");
-        });
-
-        it("Fail to freeze script when frozen", async function () {
-            await scriptyStorageContract.freezeScript("script");
-            await expect(
-                scriptyStorageContract.freezeScript("script")
-            ).to.be.revertedWithCustomError(scriptyStorageContract,"ScriptIsFrozen");
-        });
-    });
-
-    describe("getScriptChunkPointers()", async function () {
-
-        beforeEach( async() => {
-            await scriptyStorageContract.createScript("script", details)
-        });
-
-        it("Get script pointers", async function () {
+        it("Get content pointers", async function () {
             await addChunk(10);
-            const pointers = await scriptyStorageContract.getScriptChunkPointers("script");
+            const pointers = await scriptyStorageContract.getContentChunkPointers("content");
             expect(pointers.length).to.eq(10);
+        });
+    });
+
+    describe("submitToEthFSFileStore()", async function () {
+        beforeEach(async () => {
+            await scriptyStorageContract.createContent("content", details)
+        });
+
+        it("Submit content to EthFS", async function () {
+            await expect(
+                scriptyStorageContract.connect(addr1).submitToEthFSFileStore("content", utilities.emptyBytes())
+            ).to.be.revertedWithCustomError(scriptyStorageContract, "NotContentOwner");
+
+            await addChunk(10);
+            await scriptyStorageContract.submitToEthFSFileStore("content", utilities.emptyBytes());
+
+            const dataFromScriptyStorage = await scriptyStorageContract.getContent("content", utilities.emptyBytes())
+            const dataFromEthfsFileStore = await ethfsFileStoreContract.readFile("content")
+
+            expect(utilities.bytesToString(dataFromScriptyStorage)).to.equal(dataFromEthfsFileStore)
+
+            await expect(
+                scriptyStorageContract.submitToEthFSFileStore("content", utilities.emptyBytes())
+            ).to.be.revertedWithCustomError(ethfsFileStoreContract, "FilenameExists");
+        });
+    });
+
+    describe("submitToEthFSFileStoreWithFileName()", async function () {
+        beforeEach(async () => {
+            await scriptyStorageContract.createContent("content", details)
+        });
+
+        it("Submit content to EthFS with file name", async function () {
+            await addChunk(10);
+            await expect(
+                scriptyStorageContract.connect(addr1).submitToEthFSFileStoreWithFileName("content", "someFile", utilities.emptyBytes())
+            ).to.be.revertedWithCustomError(scriptyStorageContract, "NotContentOwner");
+
+            await scriptyStorageContract.submitToEthFSFileStoreWithFileName("content", "someFile", utilities.emptyBytes());
+
+            const dataFromScriptyStorage = await scriptyStorageContract.getContent("content", utilities.emptyBytes())
+            const dataFromEthfsFileStore = await ethfsFileStoreContract.readFile("someFile")
+
+            expect(utilities.bytesToString(dataFromScriptyStorage)).to.equal(dataFromEthfsFileStore)
         });
     });
 });

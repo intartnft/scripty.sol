@@ -12,12 +12,7 @@
   },
   {
     "inputs": [],
-    "name": "NotScriptOwner",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ScriptExists",
+    "name": "ContentExists",
     "type": "error"
   },
   {
@@ -28,7 +23,12 @@
         "type": "string"
       }
     ],
-    "name": "ScriptIsFrozen",
+    "name": "ContentIsFrozen",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotContentOwner",
     "type": "error"
   },
   {
@@ -55,18 +55,18 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "details",
+        "type": "bytes"
       }
     ],
-    "name": "OwnershipTransferred",
+    "name": "ContentCreated",
     "type": "event"
   },
   {
@@ -85,26 +85,7 @@
         "type": "bytes"
       }
     ],
-    "name": "ScriptCreated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "details",
-        "type": "bytes"
-      }
-    ],
-    "name": "ScriptDetailsUpdated",
+    "name": "ContentDetailsUpdated",
     "type": "event"
   },
   {
@@ -117,7 +98,7 @@
         "type": "string"
       }
     ],
-    "name": "ScriptFrozen",
+    "name": "ContentFrozen",
     "type": "event"
   },
   {
@@ -136,7 +117,26 @@
         "type": "bool"
       }
     ],
-    "name": "ScriptVerificationUpdated",
+    "name": "ContentVerificationUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
     "type": "event"
   },
   {
@@ -152,7 +152,7 @@
         "type": "bytes"
       }
     ],
-    "name": "addChunkToScript",
+    "name": "addChunkToContent",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -174,105 +174,11 @@
     "inputs": [
       {
         "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "bytes",
-        "name": "details",
-        "type": "bytes"
-      }
-    ],
-    "name": "createScript",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      }
-    ],
-    "name": "freezeScript",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
-    ],
-    "name": "getScript",
-    "outputs": [
-      {
-        "internalType": "bytes",
-        "name": "script",
-        "type": "bytes"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      }
-    ],
-    "name": "getScriptChunkPointers",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "pointers",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
         "name": "",
         "type": "string"
       }
     ],
-    "name": "scripts",
+    "name": "contents",
     "outputs": [
       {
         "internalType": "bool",
@@ -306,6 +212,100 @@
   {
     "inputs": [
       {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes",
+        "name": "details",
+        "type": "bytes"
+      }
+    ],
+    "name": "createContent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "name": "freezeContent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "getContent",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "content",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "name": "getContentChunkPointers",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "pointers",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "newOwner",
         "type": "address"
@@ -324,12 +324,12 @@
         "type": "string"
       },
       {
-        "internalType": "bytes",
-        "name": "details",
-        "type": "bytes"
+        "internalType": "bool",
+        "name": "isVerified",
+        "type": "bool"
       }
     ],
-    "name": "updateDetails",
+    "name": "updateContentVerification",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -342,12 +342,12 @@
         "type": "string"
       },
       {
-        "internalType": "bool",
-        "name": "isVerified",
-        "type": "bool"
+        "internalType": "bytes",
+        "name": "details",
+        "type": "bytes"
       }
     ],
-    "name": "updateScriptVerification",
+    "name": "updateDetails",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

@@ -9,5 +9,8 @@ exports.getContractAddresses = () => {
 const addresses = this.getContractAddresses()
 
 exports.addressFor = (networkName, name) => {
+    if (networkName === "localhost") {
+        networkName = "ethereum"
+    }
     return addresses[networkName][name]
 }

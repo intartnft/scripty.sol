@@ -15,7 +15,7 @@ describe("ScriptyCore Tests", function () {
         // covered in other tests
     });
 
-    describe("fetchScript()", async function () {
+    describe("fetchTagContent()", async function () {
         // covered in other tests
     });
 

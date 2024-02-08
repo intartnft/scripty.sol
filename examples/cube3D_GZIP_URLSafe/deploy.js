@@ -14,66 +14,48 @@ const delay = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function deployOrGetContracts(networkName) {
-	// If this script runs on localhost network, deploy all the contracts
-	// Otherwise, use already deployed contracts
-	if (networkName == "localhost") {
-		const contentStoreContract = await (await ethers.getContractFactory("ContentStore")).deploy()
-		await contentStoreContract.deployed()
+async function getContracts(networkName) {
+	const scriptyStorageAddress = deployedContracts.addressFor(networkName, "ScriptyStorageV2")
+	const scriptyStorageContract = await ethers.getContractAt(
+		"ScriptyStorageV2",
+		scriptyStorageAddress
+	);
+	console.log("ScriptyStorageV2 is already deployed at", scriptyStorageAddress);
 
-		const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyStorage")).deploy(
-			contentStoreContract.address
-		)
-		await scriptyStorageContract.deployed()
-		console.log("ScriptyStorage deployed");
+	const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
+	const scriptyBuilderContract = await ethers.getContractAt(
+		"ScriptyBuilderV2",
+		scriptyBuilderAddress
+	);
+	console.log("ScriptyBuilderV2 is already deployed at", scriptyBuilderAddress);
 
-		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
-		await scriptyBuilderContract.deployed()
-		console.log("ScriptyBuilderV2 deployed");
-
-		return { scriptyStorageContract, scriptyBuilderContract }
-	}else{
-		const scriptyStorageAddress = deployedContracts.addressFor(networkName, "ScriptyStorage")
-		const scriptyStorageContract = await ethers.getContractAt(
-			"ScriptyStorage",
-			scriptyStorageAddress
-		);
-		console.log("ScriptyStorage is already deployed at", scriptyStorageAddress);
-
-		const scriptyBuilderAddress = deployedContracts.addressFor(networkName, "ScriptyBuilderV2")
-		const scriptyBuilderContract = await ethers.getContractAt(
-			"ScriptyBuilderV2",
-			scriptyBuilderAddress
-		);
-		console.log("ScriptyBuilderV2 is already deployed at", scriptyBuilderAddress);
-
-		return { scriptyStorageContract, scriptyBuilderContract }
-	}
+	return { scriptyStorageContract, scriptyBuilderContract }
 }
 
-async function storeScript(storageContract, name, filePath) {
+async function storeContent(storageContract, name, filePath) {
+	// Check if script is already stored
+	const storedContent = await storageContract.contents(name)
+	if (storedContent.size > 0) {
+		console.log(`${name} is already stored`);
+		return
+	}
 
-    // Check if script is already stored
-    const storedScript = await storageContract.scripts(name)
-    if (storedScript.size > 0) {
-        console.log(`${name} is already stored`);
-        return
-    }
+	// Grab file and break into chunks that SSTORE2 can handle
+	const script = utilities.readFile(path.join(__dirname, filePath))
+	const scriptChunks = utilities.chunkSubstr(script, 24575)
 
-    // Grab file and break into chunks that SSTORE2 can handle
-    const script = utilities.readFile(path.join(__dirname, filePath))
-    const scriptChunks = utilities.chunkSubstr(script, 24575)
+	if (storedContent.owner == utilities.emptyAddress) {
+		// First create the script in the storage contract
+		await waitIfNeeded(await storageContract.createContent(name, utilities.stringToBytes(name)))
+	}
 
-    // First create the script in the storage contract
-    await waitIfNeeded(await storageContract.createScript(name, utilities.stringToBytes(name)))
-
-    // Store each chunk
-    // [WARNING]: With big files this can be very costly
-    for (let i = 0; i < scriptChunks.length; i++) {
-        await waitIfNeeded(await storageContract.addChunkToScript(name, utilities.stringToBytes(scriptChunks[i])))
-        console.log(`${name} chunk #`, i, "/", scriptChunks.length - 1, "chunk length: ", scriptChunks[i].length);
-    }
-    console.log(`${name} is stored`);
+	// Store each chunk
+	// [WARNING]: With big files this can be very costly
+	for (let i = 0; i < scriptChunks.length; i++) {
+		await waitIfNeeded(await storageContract.addChunkToContent(name, utilities.stringToBytes(scriptChunks[i])))
+		console.log(`${name} chunk #`, i, "/", scriptChunks.length - 1, "chunk length: ", scriptChunks[i].length);
+	}
+	console.log(`${name} is stored`);
 }
 
 async function main() {
@@ -84,12 +66,12 @@ async function main() {
 
 	// Deploy or use already deployed contracts depending on the network that script runs on
 	console.log("Deploying contracts");
-	const { scriptyStorageContract, scriptyBuilderContract } = await deployOrGetContracts(hre.network.name)
+	const { scriptyStorageContract, scriptyBuilderContract } = await getContracts(hre.network.name)
 
-	await storeScript(scriptyStorageContract, "scriptyBase", "../../baseScripts/dist/scriptyBase.js");
-	await storeScript(scriptyStorageContract, "three.min.js.gz", "../commonScripts/three.min.js.gz.txt");
-	await storeScript(scriptyStorageContract, "gunzipScripts-0.0.1", "../../baseScripts/dist/gunzipScripts-0.0.1.js");
-	await storeScript(scriptyStorageContract, "cube3D_GZIP", "scripts/cube3D_GZIP.js");
+	await storeContent(scriptyStorageContract, "scriptyBase", "../../baseScripts/dist/scriptyBase.js");
+	await storeContent(scriptyStorageContract, "three.min.js.gz", "../commonScripts/three.min.js.gz.txt");
+	await storeContent(scriptyStorageContract, "gunzipScripts-0.0.1", "../../baseScripts/dist/gunzipScripts-0.0.1.js");
+	await storeContent(scriptyStorageContract, "cube3D_GZIP", "scripts/cube3D_GZIP.js");
 
 	const nftContract = await (await ethers.getContractFactory("Cube3D_GZIP_URLSafe")).deploy(
 		scriptyStorageContract.address,
@@ -107,8 +89,8 @@ async function main() {
 	utilities.writeFile(path.join(__dirname, "output.html"), animationURL)
 	utilities.writeFile(path.join(__dirname, "metadata.json"), tokenURIDecoded)
 
-	// Verify contracts if network is goerli
-	if (hre.network.name == "goerli") {
+	// Verify contracts if network is ethereum_sepolia
+	if (hre.network.name == "ethereum_sepolia") {
 		console.log("Waiting a little bytecode index on Etherscan");
     	await delay(30000)
 		

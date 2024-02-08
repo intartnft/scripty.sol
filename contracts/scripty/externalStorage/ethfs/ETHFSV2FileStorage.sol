@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.22;
 
 ///////////////////////////////////////////////////////////
 // ░██████╗░█████╗░██████╗░██╗██████╗░████████╗██╗░░░██╗ //
@@ -11,9 +11,9 @@ pragma solidity ^0.8.17;
 ///////////////////////////////////////////////////////////
 
 import {IFileStore} from "./../../dependencies/ethfs/IFileStore.sol";
-import {IContractScript} from "./../../interfaces/IContractScript.sol";
+import {IScriptyContractStorage} from "./../../interfaces/IScriptyContractStorage.sol";
 
-contract ETHFSFileStorage is IContractScript {
+contract ETHFSV2FileStorage is IScriptyContractStorage {
     IFileStore public immutable fileStore;
 
     constructor(address _fileStoreAddress) {
@@ -25,12 +25,12 @@ contract ETHFSFileStorage is IContractScript {
     // =============================================================
 
     /**
-     * @notice Get the full script from ethfs's FileStore contract
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
+     * @notice Get the full file from ethfs's FileStore contract
+     * @param name - Name given to the file. Eg: threejs.min.js_r148
      * @param data - Arbitrary data. Not used by this contract.
-     * @return script - Full script from merged chunks
+     * @return script - Full file from merged chunks
      */
-    function getScript(
+    function getContent(
         string calldata name,
         bytes memory data
     ) external view returns (bytes memory script) {

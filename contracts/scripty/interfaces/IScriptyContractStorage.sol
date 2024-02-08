@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.22;
 
 ///////////////////////////////////////////////////////////
 // ░██████╗░█████╗░██████╗░██╗██████╗░████████╗██╗░░░██╗ //
@@ -10,18 +10,18 @@ pragma solidity ^0.8.17;
 // ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░░░░╚═╝░░░░░░╚═╝░░░ //
 ///////////////////////////////////////////////////////////
 
-interface IContractScript {
+interface IScriptyContractStorage {
     // =============================================================
     //                            GETTERS
     // =============================================================
 
     /**
-     * @notice Get the full script
+     * @notice Get the full content
      * @param name - Name given to the script. Eg: threejs.min.js_r148
      * @param data - Arbitrary data to be passed to storage
      * @return script - Full script from merged chunks
      */
-    function getScript(string calldata name, bytes memory data)
+    function getContent(string calldata name, bytes memory data)
         external
         view
         returns (bytes memory script);

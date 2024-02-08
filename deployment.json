@@ -1,18 +1,68 @@
 {
     "ethereum": {
-        "ScriptyStorage": "0x3349705FF99e44d1A42c8ea600DE7cF5bE36E034",
-        "ScriptyBuilderV2": "0x5CEB91D612a735EC5f50Ad68c7AD22a945c602FC",
-        "ETHFSFileStorage": "0xFc7453dA7bF4d0c739C1c53da57b3636dAb0e11e",
+        "deployer": "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7",
+        "ethfs_FileStore_v2": "0xFe1411d6864592549AdE050215482e4385dFa0FB",
 
-        "ethfs_ContentStore": "0xC6806fd75745bB5F5B32ADa19963898155f9DB91",
-        "ethfs_FileStore": "0x9746fD0A77829E12F8A9DBe70D7a322412325B91"
+        "ScriptyBuilderV2": "0xD7587F110E08F4D120A231bA97d3B577A81Df022",
+        "ScriptyStorageV2": "0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699",
+        "ETHFSV2FileStorage": "0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245"
     },
-    "goerli": {
-        "ScriptyStorage": "0x4e2f40eef8DFBF200f3f744a9733Afe2E9F83D28",
-        "ScriptyBuilderV2": "0xccd7E419f1EEc86fa748c9079584e3a89312f11C",
-        "ETHFSFileStorage": "0x59BF1Fc37B0b82Fa53e71dC01f9CB4BAf0AC5d64",
 
-        "ethfs_ContentStore": "0x7c1730B7bE9424D0b983B84aEb254e3a2a105d91",
-        "ethfs_FileStore": "0x5E348d0975A920E9611F8140f84458998A53af94"
+    "ethereum_goerli": {
+        "deployer": "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7",
+        "ethfs_FileStore_v2": "0xFe1411d6864592549AdE050215482e4385dFa0FB",
+
+        "ScriptyBuilderV2": "0xD7587F110E08F4D120A231bA97d3B577A81Df022",
+        "ScriptyStorageV2": "0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699",
+        "ETHFSV2FileStorage": "0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245"
+    },
+
+    "ethereum_sepolia": {
+        "deployer": "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7",
+        "ethfs_FileStore_v2": "0xFe1411d6864592549AdE050215482e4385dFa0FB",
+
+        "ScriptyBuilderV2": "0xD7587F110E08F4D120A231bA97d3B577A81Df022",
+        "ScriptyStorageV2": "0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699",
+        "ETHFSV2FileStorage": "0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245"
+    },
+
+
+
+    "base": {
+        "deployer": "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7",
+        "ethfs_FileStore_v2": "0xFe1411d6864592549AdE050215482e4385dFa0FB",
+
+        "ScriptyBuilderV2": "0xD7587F110E08F4D120A231bA97d3B577A81Df022",
+        "ScriptyStorageV2": "0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699",
+        "ETHFSV2FileStorage": "0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245"
+    },
+
+    "base_sepolia": {
+        "deployer": "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7",
+        "ethfs_FileStore_v2": "0xFe1411d6864592549AdE050215482e4385dFa0FB",
+
+        "ScriptyBuilderV2": "0xD7587F110E08F4D120A231bA97d3B577A81Df022",
+        "ScriptyStorageV2": "0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699",
+        "ETHFSV2FileStorage": "0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245"
+    },
+
+    
+
+    "optimism": {
+        "deployer": "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7",
+        "ethfs_FileStore_v2": "0xFe1411d6864592549AdE050215482e4385dFa0FB",
+
+        "ScriptyBuilderV2": "0xD7587F110E08F4D120A231bA97d3B577A81Df022",
+        "ScriptyStorageV2": "0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699",
+        "ETHFSV2FileStorage": "0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245"
+    },
+
+    "optimism_sepolia": {
+        "deployer": "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7",
+        "ethfs_FileStore_v2": "0xFe1411d6864592549AdE050215482e4385dFa0FB",
+
+        "ScriptyBuilderV2": "0xD7587F110E08F4D120A231bA97d3B577A81Df022",
+        "ScriptyStorageV2": "0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699",
+        "ETHFSV2FileStorage": "0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245"
     }
 }

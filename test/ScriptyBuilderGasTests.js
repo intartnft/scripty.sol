@@ -5,12 +5,7 @@ describe("ScriptyBuilder Gas Tests", function () {
 	const urlSafeScript = "var%2520c%2520%253D%2520document.createElement%2528%2527canvas%2527%2529%253B%2520var%2520ctx%2520%253D%2520c.getContext%2528%25272d%2527%2529%253B%2520ctx.beginPath%2528%2529%253B%2520ctx.rect%252820%252C%252020%252C%2520150%252C%2520100%2529%253B%2520ctx.stroke%2528%2529%253B%2520document.body.appendChild%2528c%2529%253B"
 
 	async function deploy() {
-		const contentStore = await (await ethers.getContractFactory("ContentStore")).deploy()
-		await contentStore.deployed()
-
-		const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyStorage")).deploy(
-			contentStore.address
-		)
+		const scriptyStorageContract = await (await ethers.getContractFactory("ScriptyMockStorage")).deploy()
 		await scriptyStorageContract.deployed()
 
 		const scriptyBuilderContract = await (await ethers.getContractFactory("ScriptyBuilderV2")).deploy()
@@ -34,8 +29,7 @@ describe("ScriptyBuilder Gas Tests", function () {
 
 		for (let i = 0; i < tagCount; i++) {
 			let scriptName = "script" + i
-			await scriptyStorageContract.createScript(scriptName, utilities.stringToBytes("details"))
-			await scriptyStorageContract.addChunkToScript(scriptName, utilities.stringToBytes(script))
+			await scriptyStorageContract.addChunkToContent(scriptName, utilities.stringToBytes(script))
 			bodyTags.push([scriptName, scriptyStorageContract.address, 0, tagType, utilities.emptyBytes(), utilities.emptyBytes(), utilities.emptyBytes()])
 		}
 		return { bodyTags, headTags }
@@ -51,8 +45,7 @@ describe("ScriptyBuilder Gas Tests", function () {
 		
 		for (let i = 0; i < tagCount; i++) {
 			let scriptName = "script" + i
-			await scriptyStorageContract.createScript(scriptName, utilities.stringToBytes("details"))
-			await scriptyStorageContract.addChunkToScript(scriptName, utilities.stringToBytes(urlSafeScript))
+			await scriptyStorageContract.addChunkToContent(scriptName, utilities.stringToBytes(urlSafeScript))
 			bodyTags.push([scriptName, scriptyStorageContract.address, 0, tagType, utilities.emptyBytes(), utilities.emptyBytes(), utilities.emptyBytes()])
 		}
 		return { bodyTags, headTags }

@@ -43,8 +43,7 @@ exports.addContractTag = async (tags, tagType, isURLSafe, scriptyStorageContract
 
     for (let i = 0; i < 2; i++) {
         const name = tagContent + storageIndex
-        await scriptyStorageContract.createScript(name, utilities.stringToBytes("details"))
-        await scriptyStorageContract.addChunkToScript(name, utilities.stringToBytes(tagContent + i))
+        await scriptyStorageContract.addChunkToContent(name, utilities.stringToBytes(tagContent + i))
         tags.push([name, scriptyStorageContract.address, 0, tagType, tagOpen, tagClose, utilities.emptyBytes()])
         storageIndex++
     }
@@ -75,6 +74,13 @@ exports.addTagWithContent = (tags, tagType, isURLSafe) => {
         tags.push(["", utilities.emptyAddress, 0, tagType, tagOpen, tagClose, utilities.stringToBytes(tagContent + i)])
     }
     return tags
+}
+
+exports.createNonContractHTMLTag = (tagOpen, tagContent, tagClose, tagType) => {
+    let tagOpenBytes = utilities.stringToBytes(tagOpen)
+    let tagCloseBytes = utilities.stringToBytes(tagClose)
+    let tagContentBytes = utilities.stringToBytes(tagContent)
+    return ["", utilities.emptyAddress, 0, tagType, tagOpenBytes, tagCloseBytes, tagContentBytes]
 }
 
 exports.getHtmlRequest = (headRequests, scriptRequests) => {

@@ -15,8 +15,7 @@ interface IScriptyStorage {
     //                            STRUCTS
     // =============================================================
 
-    struct Script {
-        bool isVerified;
+    struct Content {
         bool isFrozen;
         address owner;
         uint256 size;
@@ -29,99 +28,110 @@ interface IScriptyStorage {
     // =============================================================
 
     /**
-     * @notice Error for, The Script you are trying to create already exists
+     * @notice Error for, The content you are trying to create already exists
      */
-    error ScriptExists();
+    error ContentExists();
 
     /**
      * @notice Error for, You dont have permissions to perform this action
      */
-    error NotScriptOwner();
+    error NotContentOwner();
 
     /**
-     * @notice Error for, The Script you are trying to edit is frozen
+     * @notice Error for, The content you are trying to edit is frozen
      */
-    error ScriptIsFrozen(string name);
+    error ContentIsFrozen(string name);
 
     // =============================================================
     //                            EVENTS
     // =============================================================
 
     /**
-     * @notice Event for, Successful freezing of a script
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
+     * @notice Event for, Successful freezing of a content
+     * @param name - Name given to the content. Eg: threejs.min.js_r148
      */
-    event ScriptFrozen(string indexed name);
+    event ContentFrozen(string indexed name);
 
     /**
-     * @notice Event for, Successful update of script verification status
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
-     * @param isVerified - Verification status of the script
+     * @notice Event for, Successful creation of a content
+     * @param name - Name given to the content. Eg: threejs.min.js_r148
+     * @param details - Custom details of the content
      */
-    event ScriptVerificationUpdated(string indexed name, bool isVerified);
+    event ContentCreated(string indexed name, bytes details);
 
     /**
-     * @notice Event for, Successful creation of a script
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
-     * @param details - Custom details of the script
-     */
-    event ScriptCreated(string indexed name, bytes details);
-
-    /**
-     * @notice Event for, Successful addition of script chunk
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
+     * @notice Event for, Successful addition of content chunk
+     * @param name - Name given to the content. Eg: threejs.min.js_r148
      * @param size - Bytes size of the chunk
      */
     event ChunkStored(string indexed name, uint256 size);
 
     /**
      * @notice Event for, Successful update of custom details
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
-     * @param details - Custom details of the script
+     * @param name - Name given to the content. Eg: threejs.min.js_r148
+     * @param details - Custom details of the content
      */
-    event ScriptDetailsUpdated(string indexed name, bytes details);
+    event ContentDetailsUpdated(string indexed name, bytes details);
+
+    /**
+     * @notice Event for, submitting content to EthFS FileStore
+     * @param name - Name given to the content. Eg: threejs.min.js_r148
+     * @param fileName - Name given to the file in File Store.
+     */
+    event ContentSubmittedToEthFSFileStore(string indexed name, string indexed fileName);
 
     // =============================================================
     //                      MANAGEMENT OPERATIONS
     // =============================================================
 
     /**
-     * @notice Create a new script
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
-     * @param details - Any details the owner wishes to store about the script
+     * @notice Create a new content
+     * @param name - Name given to the content. Eg: threejs.min.js_r148
+     * @param details - Any details the owner wishes to store about the content
      *
-     * Emits an {ScriptCreated} event.
+     * Emits an {ContentCreated} event.
      */
-    function createScript(string calldata name, bytes calldata details)
-        external;
+    function createContent(
+        string calldata name,
+        bytes calldata details
+    ) external;
 
     /**
-     * @notice Add a code chunk to the script
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
-     * @param chunk - Next sequential code chunk
+     * @notice Add a content chunk to the content
+     * @param name - Name given to the content. Eg: threejs.min.js_r148
+     * @param chunk - Next sequential content chunk
      *
      * Emits an {ChunkStored} event.
      */
-    function addChunkToScript(string calldata name, bytes calldata chunk)
-        external;
+    function addChunkToContent(
+        string calldata name,
+        bytes calldata chunk
+    ) external;
 
     /**
-     * @notice Edit the script details
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
-     * @param details - Any details the owner wishes to store about the script
+     * @notice Submit content to EthFS V2 FileStore
+     * @param name - Name given to the content. Eg: threejs.min.js_r148
+     * @param metadata - metadata for EthFS V2 File
      *
-     * Emits an {ScriptDetailsUpdated} event.
+     * Uses name as file name.
+     * Emits an {ContentSubmittedToFileStore} event.
      */
-    function updateDetails(string calldata name, bytes calldata details)
-        external;
+    function submitToEthFSFileStore(
+        string calldata name,
+        bytes memory metadata
+    ) external;
 
     /**
-     * @notice Update the verification status of the script
-     * @param name - Name given to the script. Eg: threejs.min.js_r148
-     * @param isVerified - The verification status
+     * @notice Submit content to EthFS V2 FileStore
+     * @param name - Name given to the content. Eg: threejs.min.js_r148
+     * @param fileName - Name given to the File in FileStore
+     * @param metadata - metadata for EthFS V2 File
      *
-     * Emits an {ScriptVerificationUpdated} event.
+     * Emits an {ContentSubmittedToFileStore} event.
      */
-    function updateScriptVerification(string calldata name, bool isVerified)
-        external;
+    function submitToEthFSFileStoreWithFileName(
+        string calldata name,
+        string calldata fileName,
+        bytes memory metadata
+    ) external;
 }
