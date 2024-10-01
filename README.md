@@ -114,6 +114,11 @@ string memory htmlString = IScriptyBuilderV2(
 -  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://sepolia.etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
 -  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://sepolia.etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
 
+### Ethereum Holesky
+-  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://holesky.etherscan.io/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
+-  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://holesky.etherscan.io/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
+-  **ETHFSV2FileStorage** - [0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245](https://holesky.etherscan.io/address/0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245)
+
 ### Base
 -  **ScriptyStorageV2** - [0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699](https://basescan.org/address/0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699)
 -  **ScriptyBuilderV2** - [0xD7587F110E08F4D120A231bA97d3B577A81Df022](https://basescan.org/address/0xD7587F110E08F4D120A231bA97d3B577A81Df022)
