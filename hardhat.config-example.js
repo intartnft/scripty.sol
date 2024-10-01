@@ -45,6 +45,10 @@ module.exports = {
             url: process.env.ETH_SEPOLIA_PROVIDER,
             accounts: [process.env.ETH_SEPOLIA_PRIVATE_KEY],
         },
+        eth_holesky: {
+            url: process.env.ETH_HOLESKY_PROVIDER,
+            accounts: [process.env.ETH_HOLESKY_PRIVATE_KEY],
+        },
         base: {
             url: process.env.BASE_PROVIDER,
             accounts: [process.env.BASE_PRIVATE_KEY],
@@ -67,6 +71,7 @@ module.exports = {
             ethereum: process.env.ETHEREUM_ETHERSCAN_APIKEY,
             goerli: process.env.ETHEREUM_ETHERSCAN_APIKEY,
             sepolia: process.env.ETHEREUM_ETHERSCAN_APIKEY,
+            holesky: process.env.ETHEREUM_ETHERSCAN_APIKEY,
             
             base: process.env.BASE_ETHERSCAN_APIKEY,
             base_sepolia: process.env.BASE_ETHERSCAN_APIKEY,
@@ -74,6 +79,14 @@ module.exports = {
             optimism_sepolia: process.env.OPTIMISM_SEPOLIA_ETHERSCAN_APIKEY
         },
         customChains: [
+            {
+                network: "holesky",
+                chainId: 17000,
+                urls: {
+                    apiURL: "https://api-holesky.etherscan.io/api",
+                    browserURL: "https://holesky.etherscan.io"
+                }
+            },
             {
                 network: "base",
                 chainId: 8453,
