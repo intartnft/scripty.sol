@@ -47,7 +47,7 @@ bodyTags[1].tagContent = 'const canvas=document.getElementById("myCanvas"),ctx=c
 bodyTags[1].tagType = HTMLTagType.script;
 
 // Create HTML request with head and body tags
-HTMLRequest memory headTags;
+HTMLRequest memory htmlRequest;
 htmlRequest.headTags = headTags;
 htmlRequest.bodyTags = bodyTags;
 
