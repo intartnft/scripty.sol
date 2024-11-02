@@ -26,7 +26,14 @@
         "ETHFSV2FileStorage": "0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245"
     },
 
+    "ethereum_holesky": {
+        "deployer": "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7",
+        "ethfs_FileStore_v2": "0xFe1411d6864592549AdE050215482e4385dFa0FB",
 
+        "ScriptyBuilderV2": "0xD7587F110E08F4D120A231bA97d3B577A81Df022",
+        "ScriptyStorageV2": "0xbD11994aABB55Da86DC246EBB17C1Be0af5b7699",
+        "ETHFSV2FileStorage": "0x8FAA1AAb9DA8c75917C43Fb24fDdb513edDC3245"
+    },
 
     "base": {
         "deployer": "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7",
