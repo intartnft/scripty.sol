@@ -1,7 +1,7 @@
   
 # scripty.sol
 
-**scripty.sol** is a gas-efficient, on-chain HTML builder that's tuned for stitching large JS based <scripts> tags together.
+**scripty.sol** is a gas efficient, storage agnostic, on-chain HTML builder optimised for stitching together large JavaScript based tags.
 
 ![scripty.sol](https://3939295614-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FH5xTgJNBs6I0hLj9RCqL%2Fuploads%2FZBqLDIPkDrohu45QVMiV%2Fheader.png?alt=media)
 
