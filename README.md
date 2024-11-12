@@ -1,7 +1,7 @@
   
 # scripty.sol
 
-**scripty.sol** is a gas-efficient on-chain HTML builder service that's tuned for stitching large JS based <scripts> tags together.
+**scripty.sol** is a gas-efficient, on-chain HTML builder that's tuned for stitching large JS based <scripts> tags together.
 
 ![scripty.sol](https://3939295614-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FH5xTgJNBs6I0hLj9RCqL%2Fuploads%2FZBqLDIPkDrohu45QVMiV%2Fheader.png?alt=media)
 
@@ -12,16 +12,19 @@
 - You can build modular JS based HTML files directly on-chain.
 - You can dynamically inject data into your HTML.
 
-### Platforms that use scripty.sol
+### Platforms using scripty.sol
 - [Art Blocks](https://www.artblocks.io)
 - [Alba](https://www.alba.art)
 
-### Projects that use scripty.sol
+### Projects using scripty.sol
 - [CryptoCoaster](https://www.cryptocoaster.fun/)
 - [the metro](https://drops.int.art/the-metro)
 - [GOLD](https://www.making.gold/)
 - [Terraform Navigator](https://etherscan.io/address/0xad41bf1c7f22f0ec988dac4c0ae79119cab9bb7e#code)
 - [Panopticon](https://panopticon.teto.io)
+
+### Protocols using scripty.sol
+- [Mint](https://mint.vv.xyz)
 
 ## Installation
 Contracts and verified scripts(JS) are published through npm:
